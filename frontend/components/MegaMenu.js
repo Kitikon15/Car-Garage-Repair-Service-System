@@ -358,6 +358,8 @@ export default function MegaMenu({
   onClose,
   onSelectItem,
   onSelectBrand,
+  onGoToJobs,
+  onGoToVehicleSearch,
 }) {
   const modalRef = useRef(null);
 
@@ -598,69 +600,90 @@ export default function MegaMenu({
               ))}
             </div>
 
-            {/* คอลัมน์ที่ 3: ตารางแบรนด์สินค้าชั้นนำ */}
+            {/* คอลัมน์ที่ 3: ศูนย์บริการและงานช่างประจำอู่ ServiceGarage (แทนที่แบรนด์สินค้า) */}
             <div className="col-12 col-md-4 ps-md-4">
               <div
-                className="p-3 rounded-4"
+                className="p-3 rounded-4 shadow-sm"
                 style={{
-                  backgroundColor: "#fdfdfd",
-                  border: "1px solid #f1f5f9",
+                  backgroundColor: "#fffdfa",
+                  border: "1px solid #fed7aa",
                 }}
               >
-                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-warning-subtle">
                   <div className="d-flex align-items-center gap-2">
-                    <i className="bi bi-patch-check-fill text-warning fs-5"></i>
-                    <span className="fw-bold text-dark" style={{ fontSize: "0.95rem" }}>
-                      แบรนด์ผู้ผลิตชั้นนำ
-                    </span>
+                    <div
+                      className="p-2 rounded-3 bg-warning text-dark d-flex align-items-center justify-content-center"
+                      style={{ width: "32px", height: "32px" }}
+                    >
+                      <i className="bi bi-tools fs-6"></i>
+                    </div>
+                    <div>
+                      <span className="fw-black text-dark" style={{ fontSize: "0.95rem" }}>
+                        บริการงานช่าง &amp; อู่ซ่อม
+                      </span>
+                    </div>
                   </div>
-                  <span className="badge bg-light text-muted border small" style={{ fontSize: "0.68rem" }}>
-                    {category.brands?.length || 0} แบรนด์
+                  <span className="badge bg-warning-subtle text-dark border border-warning small fw-bold" style={{ fontSize: "0.68rem" }}>
+                    Service Garage
                   </span>
                 </div>
 
-                <div className="row g-2 justify-content-center align-items-center">
-                  {category.brands?.map((brand, bIdx) => (
-                    <div className="col-4 text-center" key={bIdx}>
-                      <div
-                        className="mega-brand-card d-flex align-items-center justify-content-center p-2"
-                        style={{
-                          height: "64px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          onSelectBrand && onSelectBrand(brand.name);
-                          onClose();
-                        }}
-                        title={`เลือกดูสินค้าแบรนด์ ${brand.name}`}
-                      >
-                        <img
-                          src={brand.logo}
-                          alt={brand.name}
-                          className="img-fluid"
-                          style={{
-                            maxHeight: "44px",
-                            maxWidth: "76px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                <p className="text-muted small mb-3" style={{ fontSize: "0.82rem", lineHeight: "1.5" }}>
+                  มีบริการตรวจเช็กสภาพและเปลี่ยนอะไหล่โดยช่างผู้เชี่ยวชาญ พร้อมระบบคำนวณราคาอัตโนมัติตามหลัก OOP
+                </p>
+
+                <div className="d-flex flex-column gap-2 mb-3">
+                  <div className="d-flex align-items-start gap-2 small">
+                    <i className="bi bi-check-circle-fill text-success mt-1"></i>
+                    <span className="text-dark">
+                      <strong>ออกใบสั่งซ่อมทันที:</strong> แยกงานซ่อม (Repair) และเช็กระยะ (Maintenance)
+                    </span>
+                  </div>
+                  <div className="d-flex align-items-start gap-2 small">
+                    <i className="bi bi-check-circle-fill text-success mt-1"></i>
+                    <span className="text-dark">
+                      <strong>ตัดสต็อกอัตโนมัติ:</strong> เชื่อมต่อคลังอะไหล่ (Encapsulated Inventory)
+                    </span>
+                  </div>
+                  <div className="d-flex align-items-start gap-2 small">
+                    <i className="bi bi-check-circle-fill text-success mt-1"></i>
+                    <span className="text-dark">
+                      <strong>คำนวณภาษี &amp; ส่วนลด:</strong> Polymorphic Cost Calculation
+                    </span>
+                  </div>
                 </div>
 
-                <div className="text-center mt-3 pt-2 border-top">
-                  <small className="text-muted fw-semibold" style={{ fontSize: "0.74rem" }}>
-                    <i className="bi bi-shield-lock-fill text-success me-1"></i>
-                    อะไหล่แท้เบิกศูนย์และ OEM 100%
-                  </small>
+                <div className="d-flex flex-column gap-2 pt-2 border-top">
+                  <button
+                    type="button"
+                    className="btn btn-garage-unique w-100 py-2 btn-sm fw-bold shadow-sm"
+                    onClick={() => {
+                      if (onGoToJobs) onGoToJobs();
+                      onClose();
+                    }}
+                  >
+                    <i className="bi bi-calculator-fill me-1"></i>
+                    <span>ประเมินราคาซ่อม &amp; ค่าแรงทันที</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger w-100 py-2 btn-sm fw-semibold"
+                    onClick={() => {
+                      if (onGoToVehicleSearch) onGoToVehicleSearch();
+                      onClose();
+                    }}
+                  >
+                    <i className="bi bi-car-front-fill me-1"></i>
+                    <span>ค้นหาอะไหล่ตามรุ่นรถยนต์</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* แถบล่าง Mega Menu (Footer Trust Badges) */}
+        {/* แถบล่าง Mega Menu (Footer Garage Badges) */}
         <div
           className="d-flex flex-wrap align-items-center justify-content-between p-3 px-md-4 border-top"
           style={{
@@ -670,20 +693,20 @@ export default function MegaMenu({
         >
           <div className="d-flex flex-wrap align-items-center gap-3 text-muted">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-patch-check-fill text-success"></i> สินค้าแท้เบิกศูนย์และ OEM 100%
+              <i className="bi bi-tools text-danger"></i> บริการซ่อมบำรุงและติดตั้ง ณ ศูนย์ ServiceGarage
             </span>
             <span className="opacity-50 d-none d-sm-inline">•</span>
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-truck text-danger"></i> จัดส่งด่วน กทม. ภายใน 3 ชม.
+              <i className="bi bi-cpu text-primary"></i> สถาปัตยกรรมเชิงวัตถุ OOP Python FastAPI
             </span>
             <span className="opacity-50 d-none d-md-inline">•</span>
             <span className="d-flex align-items-center gap-1 d-none d-md-inline-flex">
-              <i className="bi bi-receipt text-primary"></i> ออกใบเสร็จ / ใบกำกับภาษีเต็มรูป
+              <i className="bi bi-receipt text-success"></i> ออกใบสั่งซ่อมและใบแจ้งหนี้อัตโนมัติ
             </span>
           </div>
 
           <div className="small text-muted fw-semibold mt-1 mt-sm-0">
-            <i className="bi bi-info-circle text-warning me-1"></i> คลิกเลือกหมวดหรือแบรนด์เพื่อดูสินค้า
+            <i className="bi bi-info-circle text-warning me-1"></i> คลิกเลือกหมวดหมู่เพื่อค้นหาอะไหล่
           </div>
         </div>
       </div>

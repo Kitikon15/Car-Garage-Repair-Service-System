@@ -866,3 +866,31 @@ body.mode-bw .badge.bg-danger {
   align-items: center;
   gap: 0.25rem;
 }
+
+/* Workshop OEM and Stock Badges */
+.badge-oem-spec {
+  background-color: #1e293b;
+  color: #fbbf24;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.badge-stock-status {
+  background-color: #ecfdf5;
+  color: #047857;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid #a7f3d0;
+}
+

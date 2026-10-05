@@ -146,14 +146,19 @@ export default function CartView({
 
   return (
     <div className="cart-page pb-5">
-      {/* 1. ส่วนหัวแถบสีเทาเข้ม ชาร์โคล (Top Charcoal Banner ตรงตาม media_1791176507880.png) */}
+      {/* 1. ส่วนหัวแถบรายการเบิกอะไหล่และคำสั่งซื้อ (Parts Requisition Hub) */}
       <div className="shop-charcoal-banner shadow-sm mb-4">
         <div className="container-fluid px-3 px-lg-4">
           <div className="d-flex align-items-center justify-content-between mb-3">
-            <h1 className="shop-charcoal-title mb-0 d-flex align-items-center gap-2">
-              <i className="bi bi-cart3 text-warning"></i>
-              <span>ตะกร้าสินค้า</span>
-            </h1>
+            <div>
+              <h1 className="shop-charcoal-title mb-1 d-flex align-items-center gap-2">
+                <i className="bi bi-cart-check-fill text-warning"></i>
+                <span>รายการเบิกอะไหล่ &amp; คำสั่งซื้อ</span>
+              </h1>
+              <p className="text-light opacity-75 small mb-0">
+                สรุปรายการชิ้นส่วนอะไหล่ คำนวณภาษี และบันทึกประวัติการเบิกใช้อะไหล่ของศูนย์บริการ
+              </p>
+            </div>
 
             <button
               className="btn btn-outline-light btn-sm px-3 py-2 rounded-3"
@@ -167,23 +172,23 @@ export default function CartView({
           <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pb-1">
             <span className="shop-banner-link active">
               <i className="bi bi-bag-check-fill"></i>
-              <span>รายการสินค้าในตะกร้า ({totalItemCount} ชิ้น)</span>
+              <span>รายการเบิกในตะกร้า ({totalItemCount} ชิ้น)</span>
             </span>
             <span className="shop-banner-link">
-              <i className="bi bi-truck text-warning"></i>
-              <span>จัดส่งด่วน กทม. ภายใน 3 ชม.</span>
+              <i className="bi bi-shield-check text-warning"></i>
+              <span>ตรวจสอบสเปกชิ้นส่วนตรงรุ่น</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-patch-check-fill text-success"></i>
-              <span>รับประกันสินค้าแท้ 100%</span>
+              <span>อะไหล่แท้ห้างและเกรดพรีเมียม</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-credit-card-2-front-fill text-info"></i>
-              <span>รองรับ QR พร้อมเพย์ & บัตรเครดิต</span>
+              <span>รองรับชำระเงินหลายรูปแบบ &amp; โอนชำระ</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-receipt"></i>
-              <span>ออกใบเสร็จ / ใบกำกับภาษีเต็มรูป</span>
+              <span>ออกใบเสร็จรับเงิน / ใบสั่งซ่อมทางการ</span>
             </span>
           </div>
         </div>
@@ -200,11 +205,11 @@ export default function CartView({
             </li>
             <li className="breadcrumb-item">
               <a href="#" className="text-decoration-none text-muted" onClick={(e) => { e.preventDefault(); onContinueShopping(); }}>
-                ร้านค้า
+                คลังเบิก-จ่ายอะไหล่
               </a>
             </li>
             <li className="breadcrumb-item active text-dark" aria-current="page">
-              ตะกร้าสินค้า
+              รายการเบิกอะไหล่
             </li>
           </ol>
         </nav>

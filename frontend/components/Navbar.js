@@ -24,10 +24,10 @@ export default function Navbar({
   const navItems = [
     { id: "dashboard", label: "หน้าแรก", icon: "bi-house-door-fill" },
     { id: "vehicleSearch", label: "ค้นหาตามรุ่นรถ", icon: "bi-car-front-fill" },
-    { id: "order", label: "สั่งซื้ออะไหล่ (ร้านค้า)", icon: "bi-bag-check-fill" },
-    { id: "parts", label: "หมวดหมู่อะไหล่ (คลังสินค้า)", icon: "bi-boxes" },
+    { id: "order", label: "คลังเบิก-จ่ายอะไหล่", icon: "bi-bag-check-fill" },
+    { id: "parts", label: "จัดการสต็อกอะไหล่", icon: "bi-boxes" },
     { id: "jobs", label: "ใบสั่งซ่อมและใบเสร็จ", icon: "bi-file-earmark-text-fill" },
-    { id: "contact", label: "ติดต่อเรา & สาขา", icon: "bi-geo-alt-fill" },
+    { id: "contact", label: "ติดต่อศูนย์บริการ", icon: "bi-geo-alt-fill" },
   ];
 
   const handleSearchSubmit = (e) => {
@@ -41,20 +41,20 @@ export default function Navbar({
 
   return (
     <header className="sticky-top shadow-sm">
-      {/* 1. แถบประกาศข้อมูล ServiceGarage ด้านบนสุด (Top Bar) */}
+      {/* 1. แถบประกาศข้อมูลระบบงานอู่และคลังอะไหล่ (Garage Management System Top Bar) */}
       <div className="sp-top-bar py-1 px-3 px-lg-4 d-none d-md-block">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3">
             <span className="text-white fw-semibold d-flex align-items-center gap-1">
-              <i className="bi bi-shield-fill-check text-warning"></i> ServiceGarage ศูนย์รวมอะไหล่ครบวงจร ประสบการณ์กว่า 40 ปี
+              <i className="bi bi-wrench-adjustable-circle-fill text-warning"></i> ระบบบริหารงานอู่ซ่อมรถและบริการอะไหล่ (Car Garage System)
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light">
-              <i className="bi bi-truck text-info"></i> ส่งด่วน กทม. ภายใน 3 ชม. • ทั่วไทย 1-2 วัน
+              <i className="bi bi-cpu-fill text-warning"></i> ระบบคำนวณราคาซ่อม Polymorphic Engine
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light">
-              <i className="bi bi-patch-check-fill text-success"></i> อะไหล่แท้ห้างและ OEM 100%
+              <i className="bi bi-clipboard2-check-fill text-success"></i> บันทึกงานซ่อม &amp; สต็อกอะไหล่ Real-time
             </span>
           </div>
 
@@ -98,12 +98,12 @@ export default function Navbar({
             <div>
               <div className="d-flex align-items-center gap-1">
                 <span className="fs-3 fw-black text-sp-blue tracking-tight" style={{ letterSpacing: "-0.5px" }}>
-                  Service<span className="text-warning">Garage</span>
+                  Car<span className="text-warning">Garage</span>
                 </span>
-                <span className="badge bg-danger ms-1 small">AUTO</span>
+                <span className="badge bg-danger ms-1 small">SYSTEM</span>
               </div>
               <div className="text-muted" style={{ fontSize: "0.72rem", marginTop: "-3px" }}>
-                ศูนย์รวมอะไหล่รถยนต์ออนไลน์ ครบวงจร
+                ระบบบริหารจัดการอู่ซ่อมรถและบริการอะไหล่ (Garage Management)
               </div>
             </div>
           </a>
@@ -366,7 +366,7 @@ export default function Navbar({
         </div>
       </nav>
 
-      {/* 4. แถบหมวดหมู่สินค้าและ Mega Menu ตามแบบ Superpart (Exact match to media_1791176439057.png) */}
+      {/* 4. แถบหมวดหมู่ระบบอะไหล่และงานบริการอู่ซ่อม (Garage Subsystem Navigation) */}
       <CategoryNav
         onSelectCategoryItem={(searchTerm, catId) => {
           if (setSearchQuery) setSearchQuery(searchTerm);
@@ -383,6 +383,12 @@ export default function Navbar({
           } else if (setActiveTab) {
             setActiveTab("order");
           }
+        }}
+        onGoToJobs={() => {
+          if (setActiveTab) setActiveTab("jobs");
+        }}
+        onGoToVehicleSearch={() => {
+          if (setActiveTab) setActiveTab("vehicleSearch");
         }}
       />
     </header>

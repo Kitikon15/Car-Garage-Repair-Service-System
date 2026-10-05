@@ -33,31 +33,29 @@ export default function OrderCatalog({
   }, [initialSearch]);
 
   const bannerLinks = [
-    { id: "flash", label: "FLASH SALE", isFlash: true, icon: "bi-lightning-charge-fill" },
-    { id: "suspension", label: "ช่วงล่างและระบบเบรก", icon: "bi-bezier2" },
-    { id: "body", label: "ชิ้นส่วนตัวถัง", icon: "bi-car-front" },
-    { id: "fluids", label: "น้ำมันเครื่องและของเหลว", icon: "bi-droplet-half" },
-    { id: "exterior-care", label: "ผลิตภัณฑ์ดูแลรถยนต์ภายนอก", icon: "bi-stars" },
-    { id: "cooling", label: "ระบบระบายความร้อน", icon: "bi-fan" },
-    { id: "engine", label: "ระบบเครื่องยนต์และส่งกำลัง", icon: "bi-gear-wide-connected" },
-    { id: "genuine", label: "สินค้าแท้ห้าง", icon: "bi-patch-check-fill" },
-    { id: "heavy", label: "อะไหล่รถใหญ่", icon: "bi-truck" },
-    { id: "tools", label: "เครื่องมือช่างและอุปกรณ์", icon: "bi-tools" },
-    { id: "care", label: "การดูแลรถยนต์และอุปกรณ์", icon: "bi-shield-check" },
-    { id: "all", label: "สินค้าอื่นๆ", icon: "bi-grid" },
+    { id: "all", label: "อะไหล่ทั้งหมดในคลัง", icon: "bi-grid-fill" },
+    { id: "fluids", label: "น้ำมันเครื่อง & ของเหลว", icon: "bi-droplet-half" },
+    { id: "suspension", label: "ช่วงล่าง & ระบบเบรก", icon: "bi-bezier2" },
+    { id: "engine", label: "เครื่องยนต์ & ระบบส่งกำลัง", icon: "bi-gear-wide-connected" },
+    { id: "cooling", label: "ระบบระบายความร้อน & หม้อน้ำ", icon: "bi-fan" },
+    { id: "electrical", label: "ระบบไฟ & แบตเตอรี่", icon: "bi-lightning-charge-fill" },
+    { id: "filters", label: "ไส้กรอง & งานเช็กระยะ", icon: "bi-funnel-fill" },
+    { id: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ", icon: "bi-car-front" },
+    { id: "genuine", label: "อะไหล่แท้ศูนย์ (OEM)", icon: "bi-patch-check-fill" },
+    { id: "tools", label: "เครื่องมือช่าง & อุปกรณ์อู่", icon: "bi-tools" },
   ];
 
   const sidebarCategories = [
-    { id: "flash", label: "FLASH SALE", isFlash: true },
-    { id: "care", label: "การดูแลรถยนต์และอุปกรณ์" },
-    { id: "suspension", label: "ช่วงล่างและระบบเบรก" },
-    { id: "body", label: "ชิ้นส่วนตัวถัง" },
-    { id: "fluids", label: "น้ำมันเครื่องและของเหลว" },
-    { id: "exterior-care", label: "ผลิตภัณฑ์ดูแลรถยนต์ภายนอก" },
-    { id: "cooling", label: "ระบบระบายความร้อน" },
-    { id: "engine", label: "ระบบเครื่องยนต์และส่งกำลัง" },
-    { id: "tools", label: "เครื่องมือช่างและอุปกรณ์" },
-    { id: "all", label: "สินค้าทั้งหมดในระบบ" },
+    { id: "all", label: "อะไหล่ทั้งหมดในคลัง (All Parts)" },
+    { id: "fluids", label: "น้ำมันเครื่อง & ของเหลว (Fluids)" },
+    { id: "suspension", label: "ช่วงล่าง & ระบบเบรก (Brakes & Shocks)" },
+    { id: "engine", label: "เครื่องยนต์ & ส่งกำลัง (Engine & Belts)" },
+    { id: "cooling", label: "ระบบระบายความร้อน (Cooling)" },
+    { id: "electrical", label: "ระบบไฟ & แบตเตอรี่ (Electrical)" },
+    { id: "filters", label: "ไส้กรอง & เช็กระยะ (Maintenance Filters)" },
+    { id: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ (Body & Lights)" },
+    { id: "genuine", label: "อะไหล่แท้ศูนย์ OEM (Genuine Parts)" },
+    { id: "tools", label: "เครื่องมือช่าง & อุปกรณ์งานซ่อม (Garage Tools)" },
   ];
 
   const brandOptions = [
@@ -159,9 +157,8 @@ export default function OrderCatalog({
       }
     }
 
-    // กรองหมวดหมู่
+    // กรองหมวดหมู่ระบบอะไหล่
     if (selectedCategory === "all") return true;
-    if (selectedCategory === "flash") return p.price > 700; // สินค้าราคาพิเศษ Flash sale
     if (selectedCategory === "fluids" || selectedCategory === "engine-fluids") {
       return (
         p.part_name.includes("น้ำมัน") ||
@@ -177,16 +174,22 @@ export default function OrderCatalog({
       return p.part_name.includes("หล่อเย็น") || p.part_name.includes("หม้อน้ำ") || p.part_name.includes("พัดลม");
     }
     if (selectedCategory === "engine") {
-      return p.part_name.includes("หัวเทียน") || p.part_name.includes("สายพาน") || p.part_name.includes("กรอง");
+      return p.part_name.includes("หัวเทียน") || p.part_name.includes("สายพาน") || p.part_name.includes("เครื่อง");
     }
-    if (selectedCategory === "care" || selectedCategory === "exterior-care") {
-      return p.part_name.includes("จารบี") || p.part_name.includes("กรอง") || p.part_name.includes("หล่อเย็น");
+    if (selectedCategory === "electrical") {
+      return p.part_name.includes("แบตเตอรี่") || p.part_name.includes("หัวเทียน") || p.part_name.includes("ไฟ");
+    }
+    if (selectedCategory === "filters") {
+      return p.part_name.includes("กรอง");
     }
     if (selectedCategory === "body") {
-      return p.part_name.includes("ไฟ") || p.part_name.includes("กระจก") || p.part_name.includes("จาน");
+      return p.part_name.includes("ไฟ") || p.part_name.includes("กระจก") || p.part_name.includes("จาน") || p.part_name.includes("ตัวถัง");
     }
     if (selectedCategory === "genuine") {
-      return p.part_name.includes("TOYOTA") || p.part_name.includes("HONDA");
+      return p.part_name.toUpperCase().includes("TOYOTA") || p.part_name.toUpperCase().includes("HONDA") || p.part_name.toUpperCase().includes("DENSO");
+    }
+    if (selectedCategory === "tools") {
+      return p.part_name.includes("จารบี") || p.part_name.includes("เครื่องมือ") || p.part_name.includes("อุปกรณ์");
     }
     return true;
   });
@@ -220,22 +223,27 @@ export default function OrderCatalog({
 
   return (
     <div className="order-catalog-page pb-5">
-      {/* 1. ส่วนหัวแถบสีเทาเข้ม ชาร์โคล (Top Charcoal Banner ตรงตาม media_1791176507880.png) */}
+      {/* 1. แถบหัวข้อคลังเบิก-จ่ายอะไหล่ยานยนต์ (Workshop Spare Parts Inventory & Requisition Hub) */}
       <div className="shop-charcoal-banner shadow-sm mb-4">
         <div className="container-fluid px-3 px-lg-4">
           <div className="d-flex align-items-center justify-content-between mb-3">
-            <h1 className="shop-charcoal-title mb-0 d-flex align-items-center gap-2">
-              <i className="bi bi-shop text-warning"></i>
-              <span>ร้านค้า</span>
-            </h1>
+            <div>
+              <h1 className="shop-charcoal-title mb-1 d-flex align-items-center gap-2">
+                <i className="bi bi-boxes text-warning"></i>
+                <span>คลังเบิก-จ่ายอะไหล่ยานยนต์</span>
+              </h1>
+              <p className="text-light opacity-75 small mb-0">
+                ระบบจัดการชิ้นส่วนอะไหล่แท้ห้าง OEM และเทียบเท่า สำหรับงานซ่อมบำรุงในอู่ (Workshop Parts Inventory)
+              </p>
+            </div>
 
-            {/* ปุ่มทางลัดไปตะกร้า */}
+            {/* ปุ่มทางลัดไปตะกร้า / รายการเบิก */}
             <button
               className="btn btn-garage-fire btn-sm px-3 py-2 shadow"
               onClick={onGoToCart}
             >
               <i className="bi bi-cart3 fs-6"></i>
-              <span>เปิดดูตะกร้าสินค้า</span>
+              <span>รายการเบิกอะไหล่ &amp; ตะกร้า</span>
             </button>
           </div>
 
@@ -292,7 +300,7 @@ export default function OrderCatalog({
                 </a>
               </li>
               <li className="breadcrumb-item active text-dark" aria-current="page">
-                ร้านค้า {selectedCategory !== "all" ? `(${selectedCategory})` : ""}
+                คลังเบิก-จ่ายอะไหล่ {selectedCategory !== "all" ? `(${selectedCategory})` : ""}
               </li>
             </ol>
           </nav>
@@ -505,19 +513,21 @@ export default function OrderCatalog({
                 }`}
               >
                 {displayParts.map((part) => {
-                  const originalPrice = Math.round(part.price * 1.35); // คิดส่วนลด 35% ตรงตามป้าย -35%
+                  const isOEM = ["TOYOTA", "HONDA", "DENSO", "BREMBO", "SHELL", "NGK", "GS", "TRW"].some((b) =>
+                    part.part_name.toUpperCase().includes(b)
+                  );
                   const currentQty = quantities[part.part_id] || 1;
 
                   return (
                     <div className="col" key={part.part_id}>
                       <div className="shop-grid-card">
-                        {/* ป้ายส่วนลด -35% และป้ายส่งด่วน ซ้อนบนภาพเหมือนใน screenshot */}
+                        {/* ป้ายมาตรฐานชิ้นส่วนงานช่าง และสถานะพร้อมเบิกใช้งาน */}
                         <div className="d-flex align-items-center justify-content-between mb-2 position-relative" style={{ zIndex: 2 }}>
-                          <span className="badge-discount-round shadow-sm">
-                            -35%
+                          <span className="badge-oem-spec shadow-sm">
+                            <i className="bi bi-patch-check-fill text-warning"></i> {isOEM ? "แท้ห้าง OEM" : "เกรดพรีเมียม"}
                           </span>
-                          <span className="badge-express-delivery shadow-sm">
-                            <i className="bi bi-lightning-fill"></i> ส่งด่วน
+                          <span className="badge-stock-status shadow-sm">
+                            <i className="bi bi-box-seam-fill"></i> สต็อกอู่
                           </span>
                         </div>
 
@@ -540,11 +550,11 @@ export default function OrderCatalog({
                           </span>
                           {part.stock_qty > 5 ? (
                             <span className="text-success small fw-semibold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
-                              <i className="bi bi-check-circle-fill"></i> มีสินค้าพร้อมส่ง
+                              <i className="bi bi-check-circle-fill"></i> พร้อมเบิกใช้งาน
                             </span>
                           ) : (
                             <span className="text-danger small fw-bold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
-                              <i className="bi bi-exclamation-circle-fill"></i> เหลือ {part.stock_qty} ชิ้น
+                              <i className="bi bi-exclamation-circle-fill"></i> เหลือในคลัง {part.stock_qty} ชิ้น
                             </span>
                           )}
                         </div>
@@ -566,13 +576,16 @@ export default function OrderCatalog({
                           {part.part_name}
                         </h6>
 
-                        {/* ราคา: ราคาเดิมขีดฆ่า และราคาลดพิเศษ */}
-                        <div className="d-flex align-items-baseline gap-2 mb-3">
-                          <span className="text-muted text-decoration-line-through small" style={{ fontSize: "0.8rem" }}>
-                            ฿{originalPrice.toLocaleString("th-TH")}
-                          </span>
-                          <span className="fw-black text-danger fs-5" style={{ letterSpacing: "-0.5px" }}>
-                            ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
+                        {/* ราคาเบิกอะไหล่มาตรฐานประจำศูนย์ */}
+                        <div className="d-flex align-items-baseline justify-content-between mb-3">
+                          <div>
+                            <div className="text-muted small" style={{ fontSize: "0.72rem" }}>ราคาเบิก / หน่วย</div>
+                            <span className="fw-black text-danger fs-5" style={{ letterSpacing: "-0.5px" }}>
+                              ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
+                            </span>
+                          </div>
+                          <span className="badge bg-light text-secondary border small">
+                            รวมภาษีมูลค่าเพิ่ม
                           </span>
                         </div>
 
@@ -604,7 +617,7 @@ export default function OrderCatalog({
                             </button>
                           </div>
 
-                          {/* ปุ่มสั่งซื้อสไตล์ Unique Gradient */}
+                          {/* ปุ่มเบิกจ่ายอะไหล่สไตล์ Custom Unique */}
                           <button
                             type="button"
                             className="btn btn-garage-unique btn-sm flex-grow-1 py-2"
@@ -612,7 +625,7 @@ export default function OrderCatalog({
                             disabled={part.stock_qty === 0}
                           >
                             <i className="bi bi-cart-plus-fill"></i>
-                            <span>ใส่ตะกร้า</span>
+                            <span>เบิก / ใส่ตะกร้า</span>
                           </button>
                         </div>
                       </div>

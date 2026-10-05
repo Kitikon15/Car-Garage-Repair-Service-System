@@ -6,18 +6,20 @@ import MegaMenu, { megaMenuData } from "./MegaMenu";
 export default function CategoryNav({
   onSelectCategoryItem,
   onSelectBrand,
+  onGoToJobs,
+  onGoToVehicleSearch,
 }) {
   const [activeMegaCategory, setActiveMegaCategory] = useState(null);
   const navContainerRef = useRef(null);
 
   const categories = [
-    { key: "fluids", label: "น้ำมันเครื่องและของเหลว" },
-    { key: "body", label: "ชิ้นส่วนตัวถัง" },
-    { key: "suspension", label: "ช่วงล่างและระบบเบรก" },
+    { key: "fluids", label: "น้ำมันเครื่อง & ของเหลว" },
+    { key: "suspension", label: "ช่วงล่าง & ระบบเบรก" },
+    { key: "engine", label: "เครื่องยนต์ & ส่งกำลัง" },
     { key: "cooling", label: "ระบบระบายความร้อน" },
-    { key: "engine", label: "ระบบเครื่องยนต์และส่งกำลัง" },
-    { key: "paint", label: "ซ่อมสีและตัวถัง" },
-    { key: "care", label: "สินค้าดูแลรถยนต์" },
+    { key: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ" },
+    { key: "care", label: "เคมีภัณฑ์ & การบำรุงรักษา" },
+    { key: "paint", label: "สี & ตัวถังยานยนต์" },
   ];
 
   // สลับเปิด/ปิด เมนูเมื่อคลิกเท่านั้น (Click to open/toggle)
@@ -100,6 +102,8 @@ export default function CategoryNav({
           }
           setActiveMegaCategory(null);
         }}
+        onGoToJobs={onGoToJobs}
+        onGoToVehicleSearch={onGoToVehicleSearch}
       />
     </div>
   );
