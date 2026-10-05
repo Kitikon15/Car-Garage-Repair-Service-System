@@ -45,15 +45,6 @@ export default function Navbar({
     }
   };
 
-  const handleCategoryNavClick = (catId) => (e) => {
-    e.preventDefault();
-    if (setActiveCategory) setActiveCategory(catId);
-    if (onPerformSearch) {
-      onPerformSearch("", catId);
-    } else if (setActiveTab) {
-      setActiveTab("order");
-    }
-  };
 
   return (
     <header className="sticky-top shadow-sm" style={{ zIndex: 1050 }}>
@@ -264,81 +255,9 @@ export default function Navbar({
                 );
               })}
             </ul>
-
-            <div className="d-none d-xl-flex align-items-center text-white small gap-2 py-1 text-nowrap">
-              <span className="badge bg-success bg-opacity-75 text-white" style={{ fontSize: "0.72rem", padding: "0.28rem 0.55rem" }}>
-                <i className="bi bi-circle-fill me-1" style={{ fontSize: "0.45rem" }}></i>
-                อู่เปิดบริการ
-              </span>
-              <span className="text-light opacity-90" style={{ fontSize: "0.78rem" }}>
-                พร้อมตรวจเช็ก
-              </span>
-            </div>
           </div>
         </div>
       </nav>
-
-      {/* 4. แถบระบบอะไหล่และงานซ่อมด่วน (Quick Garage Subsystem Access Strip) */}
-      <div className="bg-white border-bottom shadow-2xs py-2 px-3 px-lg-4">
-        <div className="container-fluid d-flex align-items-center justify-content-between overflow-x-auto scrollbar-none gap-2">
-          <div className="d-flex align-items-center gap-1 flex-nowrap">
-            <span className="text-muted small fw-bold me-2 d-none d-md-inline" style={{ fontSize: "0.78rem" }}>
-              <i className="bi bi-layers-fill text-danger me-1"></i>ระบบอะไหล่:
-            </span>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("fluids")}
-            >
-              <i className="bi bi-droplet-half text-danger me-1"></i>ของเหลว &amp; น้ำมันเครื่อง
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("suspension")}
-            >
-              <i className="bi bi-bezier2 text-primary me-1"></i>ระบบเบรก &amp; ช่วงล่าง
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("engine")}
-            >
-              <i className="bi bi-gear-wide-connected text-warning me-1"></i>เครื่องยนต์ &amp; ส่งกำลัง
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("cooling")}
-            >
-              <i className="bi bi-fan text-info me-1"></i>ระบบระบายความร้อน
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("electrical")}
-            >
-              <i className="bi bi-lightning-charge-fill text-warning me-1"></i>แบตเตอรี่ &amp; ระบบไฟ
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
-              onClick={handleCategoryNavClick("filters")}
-            >
-              <i className="bi bi-funnel-fill text-success me-1"></i>ไส้กรอง &amp; เช็กระยะ
-            </button>
-          </div>
-
-          <div className="d-none d-xl-flex align-items-center gap-2 flex-nowrap small text-muted">
-            <span className="badge bg-light text-dark border">
-              <i className="bi bi-shield-check text-success me-1"></i>มาตรฐาน OEM
-            </span>
-            <span className="badge bg-light text-dark border">
-              <i className="bi bi-receipt text-danger me-1"></i>คำนวณราคาอัตโนมัติ
-            </span>
-          </div>
-        </div>
-      </div>
     </header>
   );
 }
