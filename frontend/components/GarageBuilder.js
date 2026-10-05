@@ -1,16 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductImage from "./ProductImage";
 
 export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCart, apiUrl }) {
   // สล็อตการจัดสเปกบำรุงรักษาและซ่อมรถ (คล้ายจัดสเปกคอม iHaveCPU)
-  const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0] || null);
-  const [selectedOil, setSelectedOil] = useState(parts.find((p) => p.part_id === "PART-002") || null);
-  const [selectedFilter, setSelectedFilter] = useState(parts.find((p) => p.part_id === "PART-003") || null);
-  const [selectedBrake, setSelectedBrake] = useState(parts.find((p) => p.part_id === "PART-001") || null);
+  const [selectedVehicle, setSelectedVehicle] = useState(vehicles?.[0] || null);
+  const [selectedOil, setSelectedOil] = useState(parts?.find((p) => p.part_id === "PART-002") || null);
+  const [selectedFilter, setSelectedFilter] = useState(parts?.find((p) => p.part_id === "PART-003") || null);
+  const [selectedBrake, setSelectedBrake] = useState(parts?.find((p) => p.part_id === "PART-001") || null);
   const [selectedBattery, setSelectedBattery] = useState(null);
   const [selectedSuspension, setSelectedSuspension] = useState(null);
+
+  // Sync state when data loads from API
+  useEffect(() => {
+    if (!selectedVehicle && vehicles?.length > 0) {
+      setSelectedVehicle(vehicles[0]);
+    }
+  }, [vehicles, selectedVehicle]);
+
+  useEffect(() => {
+    if (!selectedOil && parts?.length > 0) {
+      setSelectedOil(parts.find((p) => p.part_id === "PART-002") || null);
+    }
+    if (!selectedFilter && parts?.length > 0) {
+      setSelectedFilter(parts.find((p) => p.part_id === "PART-003") || null);
+    }
+    if (!selectedBrake && parts?.length > 0) {
+      setSelectedBrake(parts.find((p) => p.part_id === "PART-001") || null);
+    }
+  }, [parts, selectedOil, selectedFilter, selectedBrake]);
 
   // ประเภทงานบริการ
   const [jobType, setJobType] = useState("MAINTENANCE"); // "MAINTENANCE" หรือ "REPAIR"

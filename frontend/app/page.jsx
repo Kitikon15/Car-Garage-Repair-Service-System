@@ -31,14 +31,25 @@ export default function Dashboard() {
   const [selectedCatalogCategory, setSelectedCatalogCategory] = useState("all");
   const [selectedSearchBrand, setSelectedSearchBrand] = useState("Toyota");
 
-  // โหมดขาวดำ (Monochrome / Black & White Mode)
+  // ระบบเลือกธีมสีและโหมดขาวดำ (Multi-Theme System & B&W Mode)
+  const [currentTheme, setCurrentTheme] = useState("cyber"); // 'cyber' | 'racing' | 'emerald' | 'monochrome'
   const [isBWMode, setIsBWMode] = useState(false);
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("garage_bw_mode");
-      if (saved === "true") {
+      const savedTheme = localStorage.getItem("garage_active_theme");
+      const savedBW = localStorage.getItem("garage_bw_mode");
+      if (savedTheme) {
+        setCurrentTheme(savedTheme);
+        document.body.setAttribute("data-garage-theme", savedTheme);
+        if (savedTheme === "monochrome" || savedBW === "true") {
+          setIsBWMode(true);
+          document.body.classList.add("mode-bw");
+        }
+      } else if (savedBW === "true") {
         setIsBWMode(true);
+        setCurrentTheme("monochrome");
+        document.body.setAttribute("data-garage-theme", "monochrome");
         document.body.classList.add("mode-bw");
       }
     } catch (e) {
@@ -46,18 +57,33 @@ export default function Dashboard() {
     }
   }, []);
 
+  const handleSelectTheme = (themeName) => {
+    setCurrentTheme(themeName);
+    document.body.setAttribute("data-garage-theme", themeName);
+    try {
+      localStorage.setItem("garage_active_theme", themeName);
+    } catch (e) {}
+
+    if (themeName === "monochrome") {
+      setIsBWMode(true);
+      document.body.classList.add("mode-bw");
+      try { localStorage.setItem("garage_bw_mode", "true"); } catch (e) {}
+    } else {
+      setIsBWMode(false);
+      document.body.classList.remove("mode-bw");
+      try { localStorage.setItem("garage_bw_mode", "false"); } catch (e) {}
+    }
+  };
+
   const toggleBWMode = () => {
-    setIsBWMode((prev) => {
-      const next = !prev;
-      if (next) {
-        document.body.classList.add("mode-bw");
-        try { localStorage.setItem("garage_bw_mode", "true"); } catch (e) {}
-      } else {
-        document.body.classList.remove("mode-bw");
-        try { localStorage.setItem("garage_bw_mode", "false"); } catch (e) {}
-      }
-      return next;
-    });
+    if (isBWMode) {
+      // สลับกลับเป็นโหมดสี (ถ้าเดิมเคยเป็น cyber, racing, emerald ให้กลับไป หรือ default เป็น cyber)
+      const prevColorTheme = currentTheme === "monochrome" ? "cyber" : currentTheme;
+      handleSelectTheme(prevColorTheme);
+    } else {
+      // สลับเป็นโหมดขาวดำ
+      handleSelectTheme("monochrome");
+    }
   };
 
   const [apiOnline, setApiOnline] = useState(false);
@@ -196,6 +222,8 @@ export default function Dashboard() {
         searchQuery={headerSearchQuery}
         setSearchQuery={setHeaderSearchQuery}
         onPerformSearch={handlePerformSearch}
+        currentTheme={currentTheme}
+        onSelectTheme={handleSelectTheme}
         isBWMode={isBWMode}
         toggleBWMode={toggleBWMode}
       />

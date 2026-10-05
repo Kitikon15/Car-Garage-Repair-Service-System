@@ -131,10 +131,32 @@ export default function OrderCatalog({
 
     if (!matchesSearch) return false;
 
-    // กรองแบรนด์
+    // กรองแบรนด์สินค้า
     if (selectedBrand !== "all") {
       const partBrand = detectBrand(p.part_name);
       if (partBrand !== selectedBrand) return false;
+    }
+
+    // กรองยี่ห้อรถยนต์ (Maker)
+    if (selectedMaker !== "all") {
+      const makerLower = selectedMaker.toLowerCase();
+      const mentionsOtherMaker = ["toyota", "honda", "isuzu", "mazda", "nissan", "mitsubishi", "suzuki", "ford"].some(
+        (m) => m !== makerLower && p.part_name.toLowerCase().includes(m)
+      );
+      if (mentionsOtherMaker && !p.part_name.toLowerCase().includes(makerLower)) {
+        return false;
+      }
+    }
+
+    // กรองรุ่นรถยนต์ (Model)
+    if (selectedModel !== "all") {
+      const modelLower = selectedModel.toLowerCase();
+      const mentionsOtherModel = ["civic", "city", "accord", "camry", "altis", "vios", "yaris", "d-max", "ranger", "triton"].some(
+        (mo) => mo !== modelLower && p.part_name.toLowerCase().includes(mo)
+      );
+      if (mentionsOtherModel && !p.part_name.toLowerCase().includes(modelLower)) {
+        return false;
+      }
     }
 
     // กรองหมวดหมู่

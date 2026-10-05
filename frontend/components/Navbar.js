@@ -13,10 +13,13 @@ export default function Navbar({
   searchQuery = "",
   setSearchQuery,
   onPerformSearch,
+  currentTheme = "cyber",
+  onSelectTheme,
   isBWMode = false,
   toggleBWMode,
 }) {
   const [searchCategory, setSearchCategory] = useState("all");
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
 
   const navItems = [
     { id: "dashboard", label: "หน้าแรก", icon: "bi-house-door-fill" },
@@ -136,21 +139,133 @@ export default function Navbar({
             </form>
           </div>
 
-          {/* Right Section: B&W Mode, Register Vehicle & Cart */}
+          {/* Right Section: Theme Selector, B&W Mode, Register Vehicle & Cart */}
           <div className="d-flex align-items-center gap-2 gap-sm-3">
-            {/* ปุ่มสลับโหมดขาวดำ (Monochrome / B&W Mode Toggle) */}
+            {/* 1. ปุ่มเลือกธีมสีพิเศษ (Multi-Theme Selector) */}
+            <div className="position-relative">
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2 py-2 px-3 rounded-pill fw-bold border bg-white shadow-sm"
+                onClick={() => setShowThemeMenu((prev) => !prev)}
+                title="เลือกธีมสีของระบบ"
+              >
+                <span
+                  className="rounded-circle d-inline-block"
+                  style={{
+                    width: "14px",
+                    height: "14px",
+                    backgroundColor:
+                      currentTheme === "racing"
+                        ? "#dc2626"
+                        : currentTheme === "emerald"
+                        ? "#059669"
+                        : currentTheme === "monochrome"
+                        ? "#18181b"
+                        : "#2563eb",
+                    boxShadow: "0 0 6px rgba(0,0,0,0.25)",
+                  }}
+                />
+                <span className="d-none d-md-inline small">
+                  {currentTheme === "racing"
+                    ? "Midnight Racing"
+                    : currentTheme === "emerald"
+                    ? "British Emerald"
+                    : currentTheme === "monochrome"
+                    ? "Monochrome"
+                    : "Cyber Cobalt"}
+                </span>
+                <i className="bi bi-palette-fill text-muted small"></i>
+              </button>
+
+              {/* Theme Dropdown Menu */}
+              {showThemeMenu && (
+                <>
+                  <div
+                    className="position-fixed top-0 start-0 w-100 h-100"
+                    style={{ zIndex: 1055 }}
+                    onClick={() => setShowThemeMenu(false)}
+                  />
+                  <div
+                    className="position-absolute end-0 mt-2 bg-white rounded-3 shadow-lg border p-2"
+                    style={{ zIndex: 1060, width: "210px" }}
+                  >
+                    <div className="small fw-bold text-muted px-2 py-1 mb-1 border-bottom">
+                      เลือกธีมสีระบบ (Auto Theme)
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
+                        currentTheme === "cyber" ? "bg-primary-subtle text-primary fw-bold" : "btn-light"
+                      }`}
+                      onClick={() => {
+                        onSelectTheme && onSelectTheme("cyber");
+                        setShowThemeMenu(false);
+                      }}
+                    >
+                      <span className="rounded-circle p-1 bg-primary d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>Cyber Cobalt (ค่าเริ่มต้น)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
+                        currentTheme === "racing" ? "bg-danger-subtle text-danger fw-bold" : "btn-light"
+                      }`}
+                      onClick={() => {
+                        onSelectTheme && onSelectTheme("racing");
+                        setShowThemeMenu(false);
+                      }}
+                    >
+                      <span className="rounded-circle p-1 bg-danger d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>Midnight Racing (สปอร์ต)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
+                        currentTheme === "emerald" ? "bg-success-subtle text-success fw-bold" : "btn-light"
+                      }`}
+                      onClick={() => {
+                        onSelectTheme && onSelectTheme("emerald");
+                        setShowThemeMenu(false);
+                      }}
+                    >
+                      <span className="rounded-circle p-1 bg-success d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>British Emerald (พรีเมียม)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 ${
+                        currentTheme === "monochrome" || isBWMode ? "bg-dark text-white fw-bold" : "btn-light"
+                      }`}
+                      onClick={() => {
+                        onSelectTheme && onSelectTheme("monochrome");
+                        setShowThemeMenu(false);
+                      }}
+                    >
+                      <span className="rounded-circle p-1 bg-dark border border-white d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>Monochrome (ขาวดำ)</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* 2. ปุ่มสลับโหมดขาวดำโดยตรง (Quick B&W Mode Toggle) */}
             <button
               type="button"
               className={`btn btn-sm d-flex align-items-center gap-1 py-2 px-3 rounded-pill fw-bold transition-all ${
                 isBWMode
                   ? "btn-dark text-white border border-light shadow"
-                  : "btn-outline-dark border"
+                  : "btn-outline-dark border bg-white"
               }`}
               onClick={toggleBWMode}
               title={isBWMode ? "สลับกลับสู่โหมดสีสัน" : "เปลี่ยนเป็นโหมดขาวดำ (Black & White Mode)"}
             >
               <i className={`bi ${isBWMode ? "bi-palette-fill text-warning" : "bi-circle-half text-dark"}`}></i>
-              <span className="d-none d-md-inline">{isBWMode ? "โหมดสีสัน" : "โหมดขาวดำ"}</span>
+              <span className="d-none d-lg-inline">{isBWMode ? "โหมดสีสัน" : "โหมดขาวดำ"}</span>
             </button>
 
             {/* ปุ่มลงทะเบียนรถ/ลูกค้า */}

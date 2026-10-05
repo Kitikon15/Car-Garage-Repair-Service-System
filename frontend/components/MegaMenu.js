@@ -341,6 +341,14 @@ export default function MegaMenu({
 }) {
   const modalRef = useRef(null);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   if (!activeCategoryKey || !megaMenuData[activeCategoryKey]) {
     return null;
   }
@@ -371,13 +379,22 @@ export default function MegaMenu({
           maxWidth: "1040px",
           borderRadius: "18px",
           zIndex: 1050,
-          marginTop: "6px",
+          marginTop: "0px",
           padding: "2rem 2.5rem",
           animation: "megaMenuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)",
         }}
         onMouseLeave={onClose}
       >
+        {/* Mobile close button */}
+        <button
+          type="button"
+          className="btn btn-sm btn-light rounded-circle position-absolute top-0 end-0 m-3 d-md-none"
+          onClick={onClose}
+          aria-label="Close menu"
+        >
+          <i className="bi bi-x-lg"></i>
+        </button>
         <div className="row g-4">
           {/* คอลัมน์ที่ 1: หมวดหมู่ย่อยกลุ่มที่ 1 */}
           <div className="col-12 col-md-4">

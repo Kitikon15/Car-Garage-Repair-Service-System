@@ -7,6 +7,7 @@ export default function ProductImage({
   partName = "อะไหล่รถยนต์",
   imageUrl,
   size = "card", // 'sm' | 'md' | 'lg' | 'card'
+  height,
   className = "",
   style = {},
 }) {
@@ -66,6 +67,11 @@ export default function ProductImage({
       background: "radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%)",
     };
     imgMaxHeight = "145px";
+  }
+
+  if (height) {
+    containerStyle.height = height;
+    imgMaxHeight = `calc(${height} - 16px)`;
   }
 
   if (imgError) {
