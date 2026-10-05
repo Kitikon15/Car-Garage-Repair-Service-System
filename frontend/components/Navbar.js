@@ -83,7 +83,7 @@ export default function Navbar({
       </div>
 
       {/* 2. ส่วนหัวหลัก (Main Header with Search & Garage Branding) */}
-      <div className="sp-main-header py-3 px-3 px-lg-4">
+      <div className="sp-main-header py-2 px-3 px-lg-4">
         <div className="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3">
           {/* Garage Branding Logo */}
           <a
@@ -96,18 +96,18 @@ export default function Navbar({
           >
             <div
               className="bg-sp-blue text-white rounded-3 p-2 d-flex align-items-center justify-content-center shadow-sm"
-              style={{ width: "46px", height: "46px" }}
+              style={{ width: "42px", height: "42px" }}
             >
-              <i className="bi bi-wrench-adjustable fs-3 text-warning"></i>
+              <i className="bi bi-wrench-adjustable fs-4 text-warning"></i>
             </div>
             <div>
               <div className="d-flex align-items-center gap-1">
-                <span className="fs-3 fw-black text-sp-blue tracking-tight" style={{ letterSpacing: "-0.5px" }}>
+                <span className="fs-4 fw-black text-sp-blue tracking-tight" style={{ letterSpacing: "-0.5px" }}>
                   Car<span className="text-warning">Garage</span>
                 </span>
                 <span className="badge bg-danger ms-1 small fw-bold">PRO</span>
               </div>
-              <div className="text-muted" style={{ fontSize: "0.72rem", marginTop: "-3px" }}>
+              <div className="text-muted" style={{ fontSize: "0.7rem", marginTop: "-2px" }}>
                 ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function Navbar({
           <div className="d-flex align-items-center gap-2 gap-sm-3">
             {/* ปุ่มเปิดใบสั่งซ่อมด่วน */}
             <button
-              className="btn btn-warning text-dark btn-sm d-flex align-items-center gap-1 py-2 px-3 rounded-pill fw-bold shadow-sm"
+              className="btn btn-warning text-dark btn-sm d-flex align-items-center gap-1 py-1.5 px-3 rounded-pill fw-bold shadow-sm"
               onClick={() => {
                 if (setActiveTab) setActiveTab("jobs");
               }}
@@ -181,7 +181,7 @@ export default function Navbar({
 
             {/* ปุ่มลงทะเบียนรถ/ลูกค้า */}
             <button
-              className="btn btn-outline-sp-primary btn-sm d-flex align-items-center gap-1 py-2 px-3 rounded-pill"
+              className="btn btn-outline-sp-primary btn-sm d-flex align-items-center gap-1 py-1.5 px-3 rounded-pill"
               onClick={onOpenRegister}
               title="ลงทะเบียนรถยนต์ / เจ้าของ"
             >
@@ -191,7 +191,7 @@ export default function Navbar({
 
             {/* ปุ่มรายการเบิกอะไหล่ (Cart) */}
             <button
-              className={`btn d-flex align-items-center gap-2 py-2 px-3 rounded-pill ${
+              className={`btn d-flex align-items-center gap-2 py-1.5 px-3 rounded-pill ${
                 activeTab === "cart"
                   ? "btn-garage-fire shadow-lg"
                   : cartCount > 0
@@ -234,7 +234,7 @@ export default function Navbar({
       <nav className="sp-navbar navbar navbar-expand-lg navbar-dark py-0">
         <div className="container-fluid px-3 px-lg-4">
           <button
-            className="navbar-toggler my-2 border-0"
+            className="navbar-toggler my-1 border-0"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#serviceGarageNav"
@@ -246,7 +246,7 @@ export default function Navbar({
           </button>
 
           <div className="collapse navbar-collapse" id="serviceGarageNav">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0 gap-1 py-1">
+            <ul className="navbar-nav me-auto mb-0 gap-1 py-1 align-items-center">
               {navItems.map((item) => {
                 const isActive = activeTab === item.id;
                 return (
@@ -265,12 +265,14 @@ export default function Navbar({
               })}
             </ul>
 
-            <div className="d-none d-lg-flex align-items-center text-white small gap-2 py-2">
-              <span className="badge bg-success bg-opacity-75 text-white me-1">
-                <i className="bi bi-circle-fill me-1 small" style={{ fontSize: "0.55rem" }}></i>
-                อู่เปิดให้บริการ
+            <div className="d-none d-xl-flex align-items-center text-white small gap-2 py-1 text-nowrap">
+              <span className="badge bg-success bg-opacity-75 text-white" style={{ fontSize: "0.72rem", padding: "0.28rem 0.55rem" }}>
+                <i className="bi bi-circle-fill me-1" style={{ fontSize: "0.45rem" }}></i>
+                อู่เปิดบริการ
               </span>
-              <span className="text-light opacity-90">ช่างเทคนิคประจำการพร้อมตรวจเช็ก</span>
+              <span className="text-light opacity-90" style={{ fontSize: "0.78rem" }}>
+                พร้อมตรวจเช็ก
+              </span>
             </div>
           </div>
         </div>
