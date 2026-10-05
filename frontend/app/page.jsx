@@ -650,24 +650,6 @@ export default function Dashboard() {
         onRefresh={fetchData}
         apiUrl={API_BASE_URL}
       />
-      {/* Floating Theme Switcher Button (ปุ่มลอยสลับโหมดขาวดำ / สีสัน สะดวกทุกที่ในหน้าเว็บ) */}
-      <div className="bw-mode-indicator">
-        <button
-          type="button"
-          className={`btn ${
-            isBWMode
-              ? "btn-dark text-white border border-light"
-              : "btn-garage-unique"
-          } rounded-pill px-3 py-2 shadow-lg d-flex align-items-center gap-2 fw-bold`}
-          onClick={toggleBWMode}
-          title={isBWMode ? "คลิกเพื่อสลับกลับสู่โหมดสี" : "คลิกเพื่อเปลี่ยนเป็นโหมดขาวดำ (B&W Mode)"}
-        >
-          <i className={`bi ${isBWMode ? "bi-circle-half text-warning" : "bi-moon-stars-fill"}`}></i>
-          <span style={{ fontSize: "0.85rem" }}>
-            {isBWMode ? "โหมดขาวดำ (คลิกสลับสี)" : "สลับโหมดขาวดำ"}
-          </span>
-        </button>
-      </div>
     </div>
   );
 }

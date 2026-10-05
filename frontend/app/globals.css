@@ -685,18 +685,10 @@ body.mode-bw .badge.bg-danger {
   color: #ffffff !important;
 }
 
-/* Floating B&W indicator pill */
-.bw-mode-indicator {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1060;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  animation: fadeIn 0.3s ease;
-}
+
 
 /* ========================================================
-   SHOP & CART CHARCOAL BANNER & LAYOUT (ตรงตาม media_1791176507880.png)
+   SHOP & CART CHARCOAL BANNER & LAYOUT
    ======================================================== */
 .shop-charcoal-banner {
   background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 60%, #1c1917 100%);
@@ -714,38 +706,51 @@ body.mode-bw .badge.bg-danger {
 }
 
 .shop-banner-link {
-  color: #e2e8f0;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
   text-decoration: none;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 50rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.shop-banner-link i {
+  color: #dc2626 !important;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease;
 }
 
 .shop-banner-link:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #f8fafc !important;
+  color: #dc2626 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.shop-banner-link:hover i {
+  transform: scale(1.15);
+  color: #b91c1c !important;
 }
 
 .shop-banner-link.active {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
   color: #0f172a !important;
-  background-color: var(--sp-yellow);
-  font-weight: 700;
+  border: 1px solid #d97706 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45) !important;
 }
 
-.shop-banner-link.flash-sale {
-  color: #ffb703;
-  font-weight: 700;
-}
-
-.shop-banner-link.flash-sale:hover {
-  background-color: rgba(255, 183, 3, 0.2);
-  color: #ffffff;
+.shop-banner-link.active i {
+  color: #0f172a !important;
 }
 
 /* Vehicle / Brand Filter Bar (4 Rounded Select Boxes) */

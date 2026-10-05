@@ -99,13 +99,10 @@ export default function Footer({ setActiveTab }) {
           </div>
         </div>
 
-        {/* แถบลิขสิทธิ์และข้อมูลโครงงาน OOP */}
-        <div className="d-flex flex-wrap align-items-center justify-content-between pt-3 gap-2 small text-light opacity-75">
+        {/* แถบลิขสิทธิ์ */}
+        <div className="d-flex flex-wrap align-items-center justify-content-center pt-3 gap-2 small text-light opacity-75 border-top border-secondary border-opacity-25 mt-3">
           <div>
-            © 2026 <strong>ServiceGarage</strong> ศูนย์รวมอะไหล่และบริการอู่ซ่อมรถครบวงจร • All Rights Reserved.
-          </div>
-          <div>
-            โครงงานวิชา Object-Oriented Analysis &amp; Design (OOAD) • สมาชิกในทีม: 2 คน • ระยะเวลาดำเนินการ: 2 สัปดาห์
+            © 2026 <strong>CarGarage</strong> ระบบบริหารจัดการอู่ซ่อมรถและบริการอะไหล่ • All Rights Reserved.
           </div>
         </div>
       </div>

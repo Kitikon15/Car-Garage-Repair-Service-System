@@ -155,7 +155,7 @@ export default function CartView({
                 <i className="bi bi-cart-check-fill text-warning"></i>
                 <span>รายการเบิกอะไหล่ &amp; คำสั่งซื้อ</span>
               </h1>
-              <p className="text-light opacity-75 small mb-0">
+              <p className="text-white opacity-90 small mb-0 fw-medium">
                 สรุปรายการชิ้นส่วนอะไหล่ คำนวณภาษี และบันทึกประวัติการเบิกใช้อะไหล่ของศูนย์บริการ
               </p>
             </div>
@@ -169,21 +169,21 @@ export default function CartView({
           </div>
 
           {/* รายการลิงก์ย่อยในแถบชาร์โคล */}
-          <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pb-1">
+          <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pt-2 pb-1">
             <span className="shop-banner-link active">
               <i className="bi bi-bag-check-fill"></i>
               <span>รายการเบิกในตะกร้า ({totalItemCount} ชิ้น)</span>
             </span>
             <span className="shop-banner-link">
-              <i className="bi bi-shield-check text-warning"></i>
+              <i className="bi bi-shield-check"></i>
               <span>ตรวจสอบสเปกชิ้นส่วนตรงรุ่น</span>
             </span>
             <span className="shop-banner-link">
-              <i className="bi bi-patch-check-fill text-success"></i>
+              <i className="bi bi-patch-check-fill"></i>
               <span>อะไหล่แท้ห้างและเกรดพรีเมียม</span>
             </span>
             <span className="shop-banner-link">
-              <i className="bi bi-credit-card-2-front-fill text-info"></i>
+              <i className="bi bi-credit-card-2-front-fill"></i>
               <span>รองรับชำระเงินหลายรูปแบบ &amp; โอนชำระ</span>
             </span>
             <span className="shop-banner-link">

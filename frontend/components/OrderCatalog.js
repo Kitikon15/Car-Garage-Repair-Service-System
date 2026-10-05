@@ -292,7 +292,7 @@ export default function OrderCatalog({
                 <i className="bi bi-boxes text-warning"></i>
                 <span>คลังเบิก-จ่ายอะไหล่ยานยนต์</span>
               </h1>
-              <p className="text-light opacity-75 small mb-0">
+              <p className="text-white opacity-90 small mb-0 fw-medium">
                 ระบบจัดการชิ้นส่วนอะไหล่แท้ห้าง OEM และเทียบเท่า สำหรับงานซ่อมบำรุงในอู่ (Workshop Parts Inventory)
               </p>
             </div>
@@ -307,17 +307,15 @@ export default function OrderCatalog({
             </button>
           </div>
 
-          {/* รายการลิงก์ย่อยในแถบชาร์โคล */}
-          <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pb-1">
+          {/* รายการปุ่มหมวดหมู่ระบบงานช่าง */}
+          <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pt-2 pb-1">
             {bannerLinks.map((link) => {
               const isActive = selectedCategory === link.id;
               return (
                 <button
                   key={link.id}
                   type="button"
-                  className={`shop-banner-link ${link.isFlash ? "flash-sale" : ""} ${
-                    isActive ? "active" : ""
-                  }`}
+                  className={`shop-banner-link ${isActive ? "active" : ""}`}
                   onClick={() => setSelectedCategory(link.id)}
                 >
                   <i className={`bi ${link.icon}`}></i>
