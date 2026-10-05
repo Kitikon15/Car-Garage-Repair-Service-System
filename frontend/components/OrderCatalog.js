@@ -1,0 +1,607 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import ProductImage from "./ProductImage";
+
+export default function OrderCatalog({
+  parts,
+  onAddToCart,
+  onGoToCart,
+  initialSearch = "",
+  initialCategory = "all",
+}) {
+  const [search, setSearch] = useState(initialSearch);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || "all");
+  const [selectedBrand, setSelectedBrand] = useState("all");
+  const [selectedMaker, setSelectedMaker] = useState("all");
+  const [selectedModel, setSelectedModel] = useState("all");
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [layoutMode, setLayoutMode] = useState("grid-4"); // 'list' | 'grid-3' | 'grid-4'
+  const [sortBy, setSortBy] = useState("popular");
+  const [quantities, setQuantities] = useState({});
+  const [addedNotice, setAddedNotice] = useState("");
+
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
+
+  const bannerLinks = [
+    { id: "flash", label: "FLASH SALE", isFlash: true, icon: "bi-lightning-charge-fill" },
+    { id: "suspension", label: "ช่วงล่างและระบบเบรก", icon: "bi-bezier2" },
+    { id: "body", label: "ชิ้นส่วนตัวถัง", icon: "bi-car-front" },
+    { id: "fluids", label: "น้ำมันเครื่องและของเหลว", icon: "bi-droplet-half" },
+    { id: "exterior-care", label: "ผลิตภัณฑ์ดูแลรถยนต์ภายนอก", icon: "bi-stars" },
+    { id: "cooling", label: "ระบบระบายความร้อน", icon: "bi-fan" },
+    { id: "engine", label: "ระบบเครื่องยนต์และส่งกำลัง", icon: "bi-gear-wide-connected" },
+    { id: "genuine", label: "สินค้าแท้ห้าง", icon: "bi-patch-check-fill" },
+    { id: "heavy", label: "อะไหล่รถใหญ่", icon: "bi-truck" },
+    { id: "tools", label: "เครื่องมือช่างและอุปกรณ์", icon: "bi-tools" },
+    { id: "care", label: "การดูแลรถยนต์และอุปกรณ์", icon: "bi-shield-check" },
+    { id: "all", label: "สินค้าอื่นๆ", icon: "bi-grid" },
+  ];
+
+  const sidebarCategories = [
+    { id: "flash", label: "FLASH SALE", isFlash: true },
+    { id: "care", label: "การดูแลรถยนต์และอุปกรณ์" },
+    { id: "suspension", label: "ช่วงล่างและระบบเบรก" },
+    { id: "body", label: "ชิ้นส่วนตัวถัง" },
+    { id: "fluids", label: "น้ำมันเครื่องและของเหลว" },
+    { id: "exterior-care", label: "ผลิตภัณฑ์ดูแลรถยนต์ภายนอก" },
+    { id: "cooling", label: "ระบบระบายความร้อน" },
+    { id: "engine", label: "ระบบเครื่องยนต์และส่งกำลัง" },
+    { id: "tools", label: "เครื่องมือช่างและอุปกรณ์" },
+    { id: "all", label: "สินค้าทั้งหมดในระบบ" },
+  ];
+
+  const brandOptions = [
+    { id: "all", label: "แบรนด์ทั้งหมด" },
+    { id: "SHELL", label: "Shell (เชลล์)" },
+    { id: "BREMBO", label: "Brembo (เบรมโบ้)" },
+    { id: "VALVOLINE", label: "Valvoline (วาโวลีน)" },
+    { id: "TOYOTA", label: "Toyota Genuine" },
+    { id: "HONDA", label: "Honda Genuine" },
+    { id: "DENSO", label: "Denso" },
+    { id: "NGK", label: "NGK Spark Plugs" },
+    { id: "GS BATTERY", label: "GS Battery" },
+    { id: "BANDO", label: "Bando Belts" },
+    { id: "MONROE", label: "Monroe Shocks" },
+    { id: "TRW", label: "TRW Braking" },
+    { id: "TRANE", label: "Trane Grease" },
+  ];
+
+  const makerOptions = [
+    { id: "all", label: "ยี่ห้อรถ (ทั้งหมด)" },
+    { id: "Toyota", label: "Toyota" },
+    { id: "Honda", label: "Honda" },
+    { id: "Isuzu", label: "Isuzu" },
+    { id: "Mazda", label: "Mazda" },
+    { id: "Nissan", label: "Nissan" },
+    { id: "Mitsubishi", label: "Mitsubishi" },
+    { id: "Suzuki", label: "Suzuki" },
+    { id: "Ford", label: "Ford" },
+  ];
+
+  const modelOptions = [
+    { id: "all", label: "รุ่นรถ (ทั้งหมด)" },
+    { id: "Civic", label: "Civic" },
+    { id: "City", label: "City" },
+    { id: "Accord", label: "Accord" },
+    { id: "Camry", label: "Camry" },
+    { id: "Corolla Altis", label: "Corolla Altis" },
+    { id: "Vios", label: "Vios" },
+    { id: "Yaris", label: "Yaris" },
+    { id: "D-Max", label: "D-Max" },
+    { id: "Ranger", label: "Ranger" },
+    { id: "Triton", label: "Triton" },
+  ];
+
+  const yearOptions = [
+    { id: "all", label: "รุ่นปี (ทั้งหมด)" },
+    { id: "2024", label: "2024" },
+    { id: "2023", label: "2023" },
+    { id: "2022", label: "2022" },
+    { id: "2021", label: "2021" },
+    { id: "2020", label: "2020" },
+    { id: "2019", label: "2019" },
+    { id: "2018", label: "2018" },
+    { id: "2015", label: "2015 - 2017" },
+  ];
+
+  // ค้นหาแบรนด์ในชื่อสินค้า
+  const detectBrand = (name) => {
+    for (const b of ["BREMBO", "SHELL", "TOYOTA", "NGK", "DENSO", "GS BATTERY", "BANDO", "VALVOLINE", "TRW", "MONROE", "HONDA", "TRANE"]) {
+      if (name.toUpperCase().includes(b)) return b;
+    }
+    return "OEM";
+  };
+
+  const filteredParts = (parts || []).filter((p) => {
+    const term = search.toLowerCase().trim();
+    const matchesSearch =
+      !term ||
+      p.part_name.toLowerCase().includes(term) ||
+      p.part_id.toLowerCase().includes(term);
+
+    if (!matchesSearch) return false;
+
+    // กรองแบรนด์
+    if (selectedBrand !== "all") {
+      const partBrand = detectBrand(p.part_name);
+      if (partBrand !== selectedBrand) return false;
+    }
+
+    // กรองหมวดหมู่
+    if (selectedCategory === "all") return true;
+    if (selectedCategory === "flash") return p.price > 700; // สินค้าราคาพิเศษ Flash sale
+    if (selectedCategory === "fluids" || selectedCategory === "engine-fluids") {
+      return (
+        p.part_name.includes("น้ำมัน") ||
+        p.part_name.includes("หล่อเย็น") ||
+        p.part_name.includes("เกียร์") ||
+        p.part_name.includes("จารบี")
+      );
+    }
+    if (selectedCategory === "suspension") {
+      return p.part_name.includes("โช้ค") || p.part_name.includes("เบรก") || p.part_name.includes("จานเบรก");
+    }
+    if (selectedCategory === "cooling") {
+      return p.part_name.includes("หล่อเย็น") || p.part_name.includes("หม้อน้ำ") || p.part_name.includes("พัดลม");
+    }
+    if (selectedCategory === "engine") {
+      return p.part_name.includes("หัวเทียน") || p.part_name.includes("สายพาน") || p.part_name.includes("กรอง");
+    }
+    if (selectedCategory === "care" || selectedCategory === "exterior-care") {
+      return p.part_name.includes("จารบี") || p.part_name.includes("กรอง") || p.part_name.includes("หล่อเย็น");
+    }
+    if (selectedCategory === "body") {
+      return p.part_name.includes("ไฟ") || p.part_name.includes("กระจก") || p.part_name.includes("จาน");
+    }
+    if (selectedCategory === "genuine") {
+      return p.part_name.includes("TOYOTA") || p.part_name.includes("HONDA");
+    }
+    return true;
+  });
+
+  // จัดเรียง
+  const sortedParts = [...filteredParts].sort((a, b) => {
+    if (sortBy === "price-low") return a.price - b.price;
+    if (sortBy === "price-high") return b.price - a.price;
+    if (sortBy === "stock") return b.stock_qty - a.stock_qty;
+    return 0; // popular / default
+  });
+
+  const displayParts = sortedParts.slice(0, itemsPerPage);
+
+  const handleQtyChange = (partId, delta, maxStock) => {
+    const current = quantities[partId] || 1;
+    const nextVal = Math.max(1, Math.min(maxStock, current + delta));
+    setQuantities({ ...quantities, [partId]: nextVal });
+  };
+
+  const handleAdd = (part) => {
+    const qty = quantities[part.part_id] || 1;
+    if (qty > part.stock_qty) {
+      alert("จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!");
+      return;
+    }
+    onAddToCart(part, qty);
+    setAddedNotice(`เพิ่ม "${part.part_name}" (${qty} ชิ้น) ลงในตะกร้าเรียบร้อยแล้ว!`);
+    setTimeout(() => setAddedNotice(""), 3500);
+  };
+
+  return (
+    <div className="order-catalog-page pb-5">
+      {/* 1. ส่วนหัวแถบสีเทาเข้ม ชาร์โคล (Top Charcoal Banner ตรงตาม media_1791176507880.png) */}
+      <div className="shop-charcoal-banner shadow-sm mb-4">
+        <div className="container-fluid px-3 px-lg-4">
+          <div className="d-flex align-items-center justify-content-between mb-3">
+            <h1 className="shop-charcoal-title mb-0 d-flex align-items-center gap-2">
+              <i className="bi bi-shop text-warning"></i>
+              <span>ร้านค้า</span>
+            </h1>
+
+            {/* ปุ่มทางลัดไปตะกร้า */}
+            <button
+              className="btn btn-garage-fire btn-sm px-3 py-2 shadow"
+              onClick={onGoToCart}
+            >
+              <i className="bi bi-cart3 fs-6"></i>
+              <span>เปิดดูตะกร้าสินค้า</span>
+            </button>
+          </div>
+
+          {/* รายการลิงก์ย่อยในแถบชาร์โคล */}
+          <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pb-1">
+            {bannerLinks.map((link) => {
+              const isActive = selectedCategory === link.id;
+              return (
+                <button
+                  key={link.id}
+                  type="button"
+                  className={`shop-banner-link ${link.isFlash ? "flash-sale" : ""} ${
+                    isActive ? "active" : ""
+                  }`}
+                  onClick={() => setSelectedCategory(link.id)}
+                >
+                  <i className={`bi ${link.icon}`}></i>
+                  <span>{link.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="container-fluid px-3 px-lg-4">
+        {/* Notice แจ้งเตือนเมื่อกดใส่ตะกร้า */}
+        {addedNotice && (
+          <div
+            className="alert alert-success border-0 shadow-sm d-flex align-items-center justify-content-between mb-4 py-3 px-4 rounded-3"
+            style={{ backgroundColor: "#ecfdf5", color: "#065f46" }}
+          >
+            <div className="d-flex align-items-center gap-2">
+              <i className="bi bi-check-circle-fill text-success fs-5"></i>
+              <span className="fw-semibold">{addedNotice}</span>
+            </div>
+            <button
+              className="btn btn-garage-unique btn-sm px-3 py-1"
+              onClick={onGoToCart}
+            >
+              ดูตะกร้าสินค้า <i className="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        )}
+
+        {/* 2. แถบ Breadcrumb และปุ่มสลับมุมมอง / จำนวนสินค้า */}
+        <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+          {/* Breadcrumb */}
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mb-0 fw-semibold" style={{ fontSize: "0.95rem" }}>
+              <li className="breadcrumb-item">
+                <a href="#" className="text-decoration-none text-muted" onClick={(e) => { e.preventDefault(); setSelectedCategory("all"); setSearch(""); }}>
+                  หน้าแรก
+                </a>
+              </li>
+              <li className="breadcrumb-item active text-dark" aria-current="page">
+                ร้านค้า {selectedCategory !== "all" ? `(${selectedCategory})` : ""}
+              </li>
+            </ol>
+          </nav>
+
+          {/* Controls: แสดงสินค้า, สลับ Grid/List, ตัวเลือกจัดเรียง */}
+          <div className="d-flex align-items-center gap-3 flex-wrap">
+            {/* จำนวนสินค้า */}
+            <div className="d-flex align-items-center gap-2 small text-muted">
+              <span>แสดงสินค้า :</span>
+              {[9, 12, 18, 24].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  className={`btn btn-link p-0 text-decoration-none fw-bold ${
+                    itemsPerPage === num ? "text-sp-blue border-bottom border-sp-blue border-2" : "text-muted"
+                  }`}
+                  onClick={() => setItemsPerPage(num)}
+                  style={{ fontSize: "0.88rem" }}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+
+            {/* สลับมุมมอง List / Grid-3 / Grid-4 */}
+            <div className="btn-group btn-group-sm bg-white rounded-3 shadow-sm border p-1">
+              <button
+                type="button"
+                className={`btn btn-sm ${layoutMode === "list" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
+                onClick={() => setLayoutMode("list")}
+                title="มุมมองแบบรายการ (List)"
+              >
+                <i className="bi bi-list fs-6"></i>
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${layoutMode === "grid-3" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
+                onClick={() => setLayoutMode("grid-3")}
+                title="มุมมอง 3 คอลัมน์"
+              >
+                <i className="bi bi-grid fs-6"></i>
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${layoutMode === "grid-4" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
+                onClick={() => setLayoutMode("grid-4")}
+                title="มุมมอง 4 คอลัมน์"
+              >
+                <i className="bi bi-grid-3x3-gap-fill fs-6"></i>
+              </button>
+            </div>
+
+            {/* ตัวเลือกจัดเรียง */}
+            <select
+              className="form-select form-select-sm bg-white shadow-sm fw-semibold text-dark border"
+              style={{ width: "160px", borderRadius: "10px" }}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="popular">สินค้ายอดนิยม ▾</option>
+              <option value="price-low">ราคา: ต่ำ - สูง</option>
+              <option value="price-high">ราคา: สูง - ต่ำ</option>
+              <option value="stock">สต็อกคงเหลือมากสุด</option>
+            </select>
+          </div>
+        </div>
+
+        {/* 3. แถบตัวกรอง 4 ช่องสไตล์โมเดิร์น (แบรนด์, ยี่ห้อรถ, รุ่นรถ, รุ่นปี) ตรงตามภาพตัวอย่าง */}
+        <div className="row g-3 mb-4">
+          <div className="col-12 col-sm-6 col-lg-3">
+            <select
+              className="shop-filter-select-box"
+              value={selectedBrand}
+              onChange={(e) => setSelectedBrand(e.target.value)}
+            >
+              {brandOptions.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-12 col-sm-6 col-lg-3">
+            <select
+              className="shop-filter-select-box"
+              value={selectedMaker}
+              onChange={(e) => setSelectedMaker(e.target.value)}
+            >
+              {makerOptions.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-12 col-sm-6 col-lg-3">
+            <select
+              className="shop-filter-select-box"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+            >
+              {modelOptions.map((mo) => (
+                <option key={mo.id} value={mo.id}>
+                  {mo.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-12 col-sm-6 col-lg-3">
+            <select
+              className="shop-filter-select-box"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              {yearOptions.map((y) => (
+                <option key={y.id} value={y.id}>
+                  {y.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* 4. ส่วนเนื้อหาหลัก: แถบข้างหมวดหมู่สินค้าซ้ายมือ + ตารางแสดงสินค้าขวามือ */}
+        <div className="row g-4">
+          {/* แถบข้างซ้าย: หมวดหมู่สินค้า (Sidebar Accordion ตรงตามภาพตัวอย่าง) */}
+          <div className="col-12 col-lg-3">
+            <div className="shop-sidebar-card mb-4 sticky-top" style={{ top: "140px" }}>
+              <div className="shop-sidebar-title d-flex align-items-center justify-content-between">
+                <span>หมวดหมู่สินค้า</span>
+                <span className="badge bg-sp-blue-light text-sp-blue rounded-pill small">
+                  {filteredParts.length} รายการ
+                </span>
+              </div>
+
+              <div className="d-flex flex-column gap-1">
+                {sidebarCategories.map((cat) => {
+                  const isActive = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      className={`shop-sidebar-item ${cat.isFlash ? "flash-sale-side" : ""} ${
+                        isActive ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedCategory(cat.id)}
+                    >
+                      <div className="d-flex align-items-center gap-2">
+                        {cat.isFlash && <i className="bi bi-lightning-charge-fill text-danger"></i>}
+                        <span>{cat.label}</span>
+                      </div>
+                      <i className={`bi bi-chevron-right small text-muted ${isActive ? "text-sp-blue fw-bold" : ""}`}></i>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* ช่องค้นหาเพิ่มเติมใน Sidebar */}
+              <div className="mt-4 pt-3 border-top">
+                <label className="form-label small fw-bold text-muted mb-2">ค้นหาชื่ออะไหล่ / รหัส</label>
+                <div className="input-group input-group-sm">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="พิมพ์ชื่อสินค้า..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  {search && (
+                    <button
+                      className="btn btn-outline-secondary"
+                      type="button"
+                      onClick={() => setSearch("")}
+                    >
+                      <i className="bi bi-x"></i>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* รายการสินค้าขวามือ (Product Grid) */}
+          <div className="col-12 col-lg-9">
+            {displayParts.length === 0 ? (
+              <div className="card bg-white border-0 shadow-sm p-5 text-center">
+                <i className="bi bi-search text-muted fs-1 mb-3"></i>
+                <h5 className="fw-bold text-dark">ไม่พบรายการอะไหล่ตามเงื่อนไขที่เลือก</h5>
+                <p className="text-muted small">ลองเปลี่ยนหมวดหมู่หรือคำค้นหาเพื่อค้นหาชิ้นส่วนอื่นในคลัง</p>
+                <div>
+                  <button
+                    className="btn btn-garage-unique btn-sm px-4 py-2 mt-2"
+                    onClick={() => {
+                      setSelectedCategory("all");
+                      setSelectedBrand("all");
+                      setSearch("");
+                    }}
+                  >
+                    ล้างตัวกรองทั้งหมด
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`row g-3 ${
+                  layoutMode === "list" ? "row-cols-1" : layoutMode === "grid-3" ? "row-cols-1 row-cols-sm-2 row-cols-md-3" : "row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4"
+                }`}
+              >
+                {displayParts.map((part) => {
+                  const originalPrice = Math.round(part.price * 1.35); // คิดส่วนลด 35% ตรงตามป้าย -35%
+                  const currentQty = quantities[part.part_id] || 1;
+
+                  return (
+                    <div className="col" key={part.part_id}>
+                      <div className="shop-grid-card">
+                        {/* ป้ายส่วนลด -35% และป้ายส่งด่วน ซ้อนบนภาพเหมือนใน screenshot */}
+                        <div className="d-flex align-items-center justify-content-between mb-2 position-relative" style={{ zIndex: 2 }}>
+                          <span className="badge-discount-round shadow-sm">
+                            -35%
+                          </span>
+                          <span className="badge-express-delivery shadow-sm">
+                            <i className="bi bi-lightning-fill"></i> ส่งด่วน
+                          </span>
+                        </div>
+
+                        {/* ภาพสินค้าจริง สไตล์สตูดิโอคมชัด */}
+                        <div
+                          className="d-flex align-items-center justify-content-center my-2 p-2 rounded-3 bg-white"
+                          style={{ minHeight: "160px" }}
+                        >
+                          <ProductImage
+                            partId={part.part_id}
+                            partName={part.part_name}
+                            height="145px"
+                          />
+                        </div>
+
+                        {/* รหัสชิ้นส่วนและสถานะคลัง */}
+                        <div className="d-flex align-items-center justify-content-between mt-auto mb-1">
+                          <span className="badge bg-light text-secondary border font-monospace" style={{ fontSize: "0.72rem" }}>
+                            {part.part_id}
+                          </span>
+                          {part.stock_qty > 5 ? (
+                            <span className="text-success small fw-semibold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
+                              <i className="bi bi-check-circle-fill"></i> มีสินค้าพร้อมส่ง
+                            </span>
+                          ) : (
+                            <span className="text-danger small fw-bold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
+                              <i className="bi bi-exclamation-circle-fill"></i> เหลือ {part.stock_qty} ชิ้น
+                            </span>
+                          )}
+                        </div>
+
+                        {/* ชื่อสินค้า */}
+                        <h6
+                          className="fw-bold text-dark mb-2"
+                          style={{
+                            fontSize: "0.92rem",
+                            lineHeight: "1.35",
+                            minHeight: "2.6rem",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                          title={part.part_name}
+                        >
+                          {part.part_name}
+                        </h6>
+
+                        {/* ราคา: ราคาเดิมขีดฆ่า และราคาลดพิเศษ */}
+                        <div className="d-flex align-items-baseline gap-2 mb-3">
+                          <span className="text-muted text-decoration-line-through small" style={{ fontSize: "0.8rem" }}>
+                            ฿{originalPrice.toLocaleString("th-TH")}
+                          </span>
+                          <span className="fw-black text-danger fs-5" style={{ letterSpacing: "-0.5px" }}>
+                            ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
+                          </span>
+                        </div>
+
+                        {/* แถบปรับจำนวนและปุ่มกดสั่งซื้อแบบ Custom Unique */}
+                        <div className="d-flex align-items-center gap-2 mt-auto">
+                          {/* ปุ่มปรับจำนวน (+ / -) */}
+                          <div className="input-group input-group-sm" style={{ width: "95px" }}>
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary px-2"
+                              onClick={() => handleQtyChange(part.part_id, -1, part.stock_qty)}
+                              disabled={currentQty <= 1}
+                            >
+                              -
+                            </button>
+                            <input
+                              type="text"
+                              className="form-control text-center px-1 fw-bold"
+                              value={currentQty}
+                              readOnly
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary px-2"
+                              onClick={() => handleQtyChange(part.part_id, 1, part.stock_qty)}
+                              disabled={currentQty >= part.stock_qty}
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          {/* ปุ่มสั่งซื้อสไตล์ Unique Gradient */}
+                          <button
+                            type="button"
+                            className="btn btn-garage-unique btn-sm flex-grow-1 py-2"
+                            onClick={() => handleAdd(part)}
+                            disabled={part.stock_qty === 0}
+                          >
+                            <i className="bi bi-cart-plus-fill"></i>
+                            <span>ใส่ตะกร้า</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,746 @@
+/* ========================================================
+   ServiceGarage THEME STYLES (ServiceGarage System)
+   Automotive Parts & Service Garage System
+   ======================================================== */
+
+:root {
+  --sp-blue: #034ea2;
+  --sp-blue-hover: #023c7d;
+  --sp-blue-dark: #002752;
+  --sp-blue-darker: #001a38;
+  --sp-blue-light: #eef4fc;
+  --sp-blue-subtle: #f0f6ff;
+  --sp-yellow: #fdb813;
+  --sp-yellow-hover: #e5a408;
+  --sp-red: #e31b23;
+  --sp-gray-bg: #f4f6f9;
+  --sp-border: #e2e8f0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Thai", sans-serif;
+  color: #1e293b;
+  background-color: var(--sp-gray-bg);
+}
+
+/* ServiceGarage Brand Classes */
+.bg-sp-blue {
+  background-color: var(--sp-blue) !important;
+  color: #ffffff !important;
+}
+
+.text-sp-blue {
+  color: var(--sp-blue) !important;
+}
+
+.bg-sp-dark {
+  background-color: var(--sp-blue-dark) !important;
+  color: #ffffff !important;
+}
+
+.bg-sp-yellow {
+  background-color: var(--sp-yellow) !important;
+  color: #002752 !important;
+}
+
+.text-sp-yellow {
+  color: var(--sp-yellow) !important;
+}
+
+.text-sp-red {
+  color: var(--sp-red) !important;
+}
+
+/* ServiceGarage Primary Buttons */
+.btn-sp-primary {
+  background-color: var(--sp-blue);
+  border-color: var(--sp-blue);
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-sp-primary:hover,
+.btn-sp-primary:focus {
+  background-color: var(--sp-blue-hover);
+  border-color: var(--sp-blue-hover);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.25);
+}
+
+.btn-outline-sp-primary {
+  color: var(--sp-blue);
+  border-color: var(--sp-blue);
+  font-weight: 600;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-sp-primary:hover {
+  background-color: var(--sp-blue);
+  color: #ffffff;
+}
+
+.btn-sp-yellow {
+  background-color: var(--sp-yellow);
+  border-color: var(--sp-yellow);
+  color: #002752;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-sp-yellow:hover {
+  background-color: var(--sp-yellow-hover);
+  border-color: var(--sp-yellow-hover);
+  color: #001a38;
+  box-shadow: 0 4px 12px rgba(253, 184, 19, 0.35);
+}
+
+/* Top Announcement Bar */
+.sp-top-bar {
+  background-color: var(--sp-blue-darker);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+}
+
+/* Header & Navbar */
+.sp-main-header {
+  background-color: #ffffff;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.sp-navbar {
+  background-color: var(--sp-blue);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.15);
+}
+
+.sp-nav-item {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 0.65rem 1rem !important;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.sp-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+}
+
+.sp-nav-item.active {
+  background-color: var(--sp-yellow);
+  color: #002752 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ServiceGarage Search Bar */
+.sp-search-container {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--sp-blue);
+  border-radius: 50rem;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.08);
+}
+
+.sp-search-select {
+  border: none;
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-right: 1px solid #e2e8f0;
+  outline: none;
+}
+
+.sp-search-input {
+  border: none;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.925rem;
+  flex: 1;
+  outline: none;
+}
+
+.sp-search-btn {
+  background-color: var(--sp-blue);
+  color: #ffffff;
+  border: none;
+  padding: 0.55rem 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.sp-search-btn:hover {
+  background-color: var(--sp-blue-hover);
+}
+
+/* Card Styling */
+.card {
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--sp-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(3, 78, 162, 0.12);
+  border-color: #bfdbfe;
+}
+
+/* Product Card - ServiceGarage Style */
+.sp-product-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sp-product-card:hover {
+  border-color: var(--sp-blue);
+  box-shadow: 0 10px 25px rgba(3, 78, 162, 0.12);
+  transform: translateY(-4px);
+}
+
+.sp-brand-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.35rem;
+  background-color: var(--sp-blue-light);
+  color: var(--sp-blue);
+}
+
+.sp-product-img-box {
+  height: 160px;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e9eef5;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.sp-product-card:hover .sp-product-img-box img,
+.sp-product-card:hover .sp-img-container img {
+  transform: scale(1.06);
+}
+
+/* Builder Slot Item */
+.builder-slot {
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.builder-slot:hover {
+  border-color: var(--sp-blue);
+  background: #f8fafc;
+}
+
+.builder-slot.active-selected {
+  border: 2px solid var(--sp-blue);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.1);
+}
+
+.builder-summary-card {
+  position: sticky;
+  top: 90px;
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 2px solid var(--sp-blue);
+}
+
+/* Category Filter Pills */
+.category-pill {
+  border-radius: 50rem;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+}
+
+.category-pill:hover,
+.category-pill.active {
+  background: var(--sp-blue);
+  color: #ffffff;
+  border-color: var(--sp-blue);
+}
+
+/* Vehicle Brand Badge / Pill */
+.sp-brand-pill {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sp-brand-pill:hover,
+.sp-brand-pill.active {
+  background-color: var(--sp-blue);
+  color: #ffffff;
+  border-color: var(--sp-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(3, 78, 162, 0.15);
+}
+
+/* Table Polish */
+.table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #475569;
+  background-color: #f1f5f9;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+}
+
+/* Footer Styling */
+.sp-footer {
+  background-color: var(--sp-blue-dark);
+  color: #cbd5e1;
+}
+
+.sp-footer-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.sp-footer-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--sp-yellow);
+  border-radius: 2px;
+}
+
+.sp-footer a {
+  color: #94a3b8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sp-footer a:hover {
+  color: var(--sp-yellow);
+}
+
+/* Backward compatibility for text/btn/bg-ihave */
+.text-ihave { color: var(--sp-blue) !important; }
+.bg-ihave { background-color: var(--sp-blue) !important; color: #ffffff !important; }
+.btn-ihave { background-color: var(--sp-blue); border-color: var(--sp-blue); color: #ffffff; }
+.btn-ihave:hover { background-color: var(--sp-blue-hover); border-color: var(--sp-blue-hover); color: #ffffff; }
+.btn-outline-ihave { color: var(--sp-blue); border-color: var(--sp-blue); }
+.btn-outline-ihave:hover { background-color: var(--sp-blue); color: #ffffff; }
+
+/* Utility: Hide scrollbar */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ========================================================
+   Mega Menu & Category Navigation Styles
+   ======================================================== */
+.sp-category-bar {
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sp-cat-link {
+  color: #034ea2 !important;
+  transition: all 0.15s ease-in-out;
+}
+
+.sp-cat-link:hover,
+.sp-cat-link-active {
+  color: #ea580c !important;
+  background-color: rgba(234, 88, 12, 0.08) !important;
+}
+
+@keyframes megaMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.mega-item-link {
+  color: #0f172a !important;
+  transition: color 0.15s ease;
+}
+
+.mega-item-link:hover {
+  color: #ea580c !important;
+}
+
+.mega-sub-link {
+  color: #334155 !important;
+  transition: all 0.15s ease;
+}
+
+.mega-sub-link:hover {
+  color: #034ea2 !important;
+  transform: translateX(3px);
+  font-weight: 500;
+}
+
+.mega-brand-card {
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.mega-brand-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ========================================================
+   UNIQUE THEME & CUSTOM BUTTON DESIGNS
+   ======================================================== */
+.btn-garage-unique {
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-garage-unique:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+  filter: brightness(1.1);
+  color: #ffffff !important;
+}
+
+.btn-garage-unique:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-garage-fire {
+  background: linear-gradient(135deg, #ff4500 0%, #ea580c 50%, #dc2626 100%);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-garage-fire:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45);
+  filter: brightness(1.1);
+  color: #ffffff !important;
+}
+
+.btn-garage-dark {
+  background: linear-gradient(135deg, #2b303a 0%, #1a1e24 100%);
+  color: #f8fafc !important;
+  border: 1px solid #475569;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-garage-dark:hover {
+  background: linear-gradient(135deg, #373e4b 0%, #222730 100%);
+  border-color: #94a3b8;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.btn-garage-pill {
+  border-radius: 50rem !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+/* ========================================================
+   BLACK & WHITE / MONOCHROME MODE (โหมดขาวดำ)
+   ======================================================== */
+body.mode-bw {
+  filter: grayscale(100%) contrast(106%);
+  transition: filter 0.35s ease;
+  background-color: #f1f1f1 !important;
+}
+
+body.mode-bw .bg-sp-blue,
+body.mode-bw .sp-main-header,
+body.mode-bw .sp-navbar {
+  background-color: #1a1a1a !important;
+}
+
+body.mode-bw .text-sp-blue {
+  color: #1a1a1a !important;
+}
+
+body.mode-bw .btn-garage-unique {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.mode-bw .btn-garage-fire {
+  background: #2b2b2b !important;
+  color: #ffffff !important;
+  border-color: #777777 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.mode-bw .badge.bg-danger {
+  background-color: #000000 !important;
+  border: 1px solid #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Floating B&W indicator pill */
+.bw-mode-indicator {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1060;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.3s ease;
+}
+
+/* ========================================================
+   SHOP & CART CHARCOAL BANNER & LAYOUT (ตรงตาม media_1791176507880.png)
+   ======================================================== */
+.shop-charcoal-banner {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 2.2rem 1.5rem 1.8rem;
+  border-bottom: 2px solid #222222;
+}
+
+.shop-charcoal-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+.shop-banner-link {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.shop-banner-link:hover,
+.shop-banner-link.active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.shop-banner-link.flash-sale {
+  color: #ffb703;
+  font-weight: 700;
+}
+
+.shop-banner-link.flash-sale:hover {
+  background-color: rgba(255, 183, 3, 0.2);
+  color: #ffffff;
+}
+
+/* Vehicle / Brand Filter Bar (4 Rounded Select Boxes) */
+.shop-filter-select-box {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.85rem 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #034ea2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23034ea2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 14px 10px;
+}
+
+.shop-filter-select-box:focus,
+.shop-filter-select-box:hover {
+  border-color: #034ea2;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.12);
+  outline: none;
+}
+
+/* Shop Sidebar */
+.shop-sidebar-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.shop-sidebar-title {
+  color: #034ea2;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.shop-sidebar-item {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.shop-sidebar-item:hover,
+.shop-sidebar-item.active {
+  background-color: #eef4fc;
+  color: #034ea2;
+}
+
+.shop-sidebar-item.flash-sale-side {
+  color: #d90429;
+  font-weight: 700;
+}
+
+.shop-sidebar-item.flash-sale-side:hover {
+  background-color: #fef2f2;
+}
+
+/* Product Cards matching screenshot */
+.shop-grid-card {
+  background-color: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 14px;
+  padding: 1.1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.shop-grid-card:hover {
+  transform: translateY(-4px);
+  border-color: #cbd5e1;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+}
+
+.badge-discount-round {
+  background-color: #dc2626;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 50rem;
+}
+
+.badge-express-delivery {
+  background-color: #dc2626;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
