@@ -8,23 +8,194 @@
 
 ## 📋 สารบัญ (Table of Contents)
 1. [ภาพรวมของระบบ (System Overview)](#-1-ภาพรวมของระบบ-system-overview)
-2. [สถาปัตยกรรม OOP & OOAD Design](#-2-สถาปัตยกรรม-oop--ooad-design)
-3. [หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)](#-3-หลักการ-oop-ทั้ง-4-เสาหลัก-core-oop-principles)
-4. [ฟังก์ชันเด่นของระบบ (Key System Features)](#-4-ฟังก์ชันเด่นของระบบ-key-system-features)
-5. [โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)](#-5-โครงสร้างโฟลเดอร์โปรเจกต์-project-structure)
-6. [ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)](#-6-ขั้นตอนการติดตั้งและเริ่มใช้งาน-getting-started)
-7. [การทดสอบ API ด้วย cURL / Swagger](#-7-การทดสอบ-api-ด้วย-curl--swagger)
-8. [การออกแบบ UI/UX & ระบบธีม (Design & Themes)](#-8-การออกแบบ-uiux--ระบบธีม-design--themes)
+2. [แผนภาพยูสเคสและบทบาทผู้ใช้งาน (Use Case Diagram & System Actors)](#-2-แผนภาพยูสเคสและบทบาทผู้ใช้งาน-use-case-diagram--system-actors)
+3. [รายละเอียดข้อกำหนดยูสเคสเชิงลึก (Detailed Use Case Specifications)](#-3-รายละเอียดข้อกำหนดยูสเคสเชิงลึก-detailed-use-case-specifications)
+4. [สถาปัตยกรรม OOP & OOAD Design (Class Diagram)](#-4-สถาปัตยกรรม-oop--ooad-design-class-diagram)
+5. [หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)](#-5-หลักการ-oop-ทั้ง-4-เสาหลัก-core-oop-principles)
+6. [ฟังก์ชันเด่นของระบบ (Key System Features)](#-6-ฟังก์ชันเด่นของระบบ-key-system-features)
+7. [โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)](#-7-โครงสร้างโฟลเดอร์โปรเจกต์-project-structure)
+8. [ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)](#-8-ขั้นตอนการติดตั้งและเริ่มใช้งาน-getting-started)
+9. [การทดสอบ API ด้วย cURL / Swagger](#-9-การทดสอบ-api-ด้วย-curl--swagger)
+10. [การออกแบบ UI/UX & ระบบธีม (Design & Themes)](#-10-การออกแบบ-uiux--ระบบธีม-design--themes)
 
 ---
 
 ## 🌟 1. ภาพรวมของระบบ (System Overview)
 
-**CarGarage PRO** เป็นระบบบริหารจัดการงานซ่อมบำรุงและศูนย์บริการรถยนต์ ออกแบบตามหลักการเขียนโปรแกรมเชิงวัตถุ (**Object-Oriented Programming: OOP**) เพื่อจำลองกระบวนการทำงานจริงของอู่ซ่อมรถยนต์ ตั้งแต่การลงทะเบียนรถยนต์ของลูกค้า, การเปิดใบสั่งซ่อมบำรุง, การคำนวณราคาประเมินค่าแรงช่าง, การเบิกจ่ายอะไหล่พร้อมตัดสต็อกคลังอัตโนมัติ ไปจนถึงการออกใบแจ้งหนี้และบันทึกการชำระเงิน
+**CarGarage PRO** เป็นระบบบริหารจัดการงานซ่อมบำรุงและศูนย์บริการรถยนต์ ออกแบบตามหลักการเขียนโปรแกรมเชิงวัตถุ (**Object-Oriented Programming: OOP**) และการวิเคราะห์ออกแบบเชิงวัตถุ (**OOAD**) เพื่อจำลองกระบวนการทำงานจริงของศูนย์บริการยานยนต์มาตรฐาน ตั้งแต่การลงทะเบียนรถยนต์, การเปิดใบสั่งซ่อมบำรุง, การคำนวณราคาประเมินค่าแรงช่าง, การเบิกจ่ายอะไหล่พร้อมตัดสต็อกคลังอัตโนมัติ ไปจนถึงการออกใบแจ้งหนี้และบันทึกการชำระเงิน
 
 ---
 
-## 🏛️ 2. สถาปัตยกรรม OOP & OOAD Design
+## 🎯 2. แผนภาพยูสเคสและบทบาทผู้ใช้งาน (Use Case Diagram & System Actors)
+
+ระบบแบ่งบทบาทของผู้ใช้งาน (Actors) ออกเป็น 5 กลุ่ม เพื่อรองรับขั้นตอนการทำงานในอู่ซ่อมรถยนต์ได้อย่างสมบูรณ์:
+1. **👤 ลูกค้า / เจ้าของรถ (Customer):** นำรถเข้าตรวจเช็ก, ดูประวัติการซ่อม, ประเมินราคา และชำระเงิน
+2. **👨‍💼 พนักงานรับรถ / ที่ปรึกษางานบริการ (Service Advisor):** ลงทะเบียนรถ, เปิดใบสั่งซ่อม (Repair/Maintenance), ประเมินราคา และประสานงาน
+3. **👨‍🔧 ช่างเทคนิคประจำอู่ (Technician / Mechanic):** ดำเนินการซ่อมบำรุง, ตรวจสอบอะไหล่ และเบิกใช้อะไหล่ตรงรุ่น
+4. **📦 ผู้ดูแลคลังอะไหล่ (Parts Storekeeper):** ตรวจสอบจำนวนอะไหล่, เติมสต็อกสินค้า (Restock) และจัดการแคตตาล็อกอะไหล่
+5. **🧑‍💼 เจ้าหน้าที่การเงิน / แคชเชียร์ (Cashier):** ตรวจสอบใบแจ้งหนี้, แจกแจงภาษี VAT 7% และบันทึกการชำระเงิน
+
+### 📊 แผนภาพ Use Case Diagram (UML)
+
+```mermaid
+flowchart LR
+    %% Actors
+    Customer["👤 ลูกค้า / เจ้าของรถ\n(Customer)"]
+    Advisor["👨‍💼 พนักงานรับรถ\n(Service Advisor)"]
+    Mechanic["👨‍🔧 ช่างเทคนิคประจำอู่\n(Mechanic / Technician)"]
+    Storekeeper["📦 ผู้ดูแลคลังอะไหล่\n(Parts Storekeeper)"]
+    Cashier["🧑‍💼 เจ้าหน้าที่การเงิน\n(Cashier)"]
+
+    %% System Boundary
+    subgraph SystemBoundary ["🚘 ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ (CarGarage PRO)"]
+        direction TB
+        UC1(["UC-01: ลงทะเบียนลูกค้าและยานพาหนะ\n(Register Customer & Vehicle)"])
+        UC2(["UC-02: จำลองและประเมินราคาซ่อม\n(Estimate Service Cost)"])
+        UC3(["UC-03: เปิดใบสั่งซ่อมทั่วไป\n(Create Repair Job)"])
+        UC4(["UC-04: เปิดใบสั่งงานเช็กระยะตามรอบ\n(Create Maintenance Job)"])
+        UC5(["UC-05: ตรวจสอบและตัดสต็อกอะไหล่\n(Deduct Parts Stock)"])
+        UC6(["UC-06: จัดการและเติมสต็อกอะไหล่\n(Manage & Restock Parts)"])
+        UC7(["UC-07: ค้นหาประวัติรถและทะเบียน\n(Search Vehicle & History)"])
+        UC8(["UC-08: สร้างใบแจ้งหนี้และคำนวณภาษี\n(Generate Invoice & Tax)"])
+        UC9(["UC-09: บันทึกการชำระเงิน\n(Process Payment)"])
+        UC10(["UC-10: คัดกรองและเบิกอะไหล่ในคลัง\n(Browse & Order Parts)"])
+    end
+
+    %% Actor Connections
+    Customer --> UC1
+    Customer --> UC2
+    Customer --> UC7
+
+    Advisor --> UC1
+    Advisor --> UC2
+    Advisor --> UC3
+    Advisor --> UC4
+    Advisor --> UC7
+
+    Mechanic --> UC3
+    Mechanic --> UC4
+    Mechanic --> UC10
+
+    Storekeeper --> UC5
+    Storekeeper --> UC6
+    Storekeeper --> UC10
+
+    Cashier --> UC8
+    Cashier --> UC9
+
+    %% Use Case Relationships
+    UC3 -.->|"<<include>>"| UC5
+    UC4 -.->|"<<include>>"| UC5
+    UC3 -.->|"<<include>>"| UC8
+    UC4 -.->|"<<include>>"| UC8
+    UC2 -.->|"<<extend>>"| UC3
+    UC8 -.->|"<<include>>"| UC9
+```
+
+---
+
+## 📝 3. รายละเอียดข้อกำหนดยูสเคสเชิงลึก (Detailed Use Case Specifications)
+
+### 📌 UC-01: ลงทะเบียนลูกค้าและยานพาหนะ (Register Customer & Vehicle)
+- **Primary Actor:** พนักงานรับรถ (Service Advisor) / ลูกค้า (Customer)
+- **Pre-conditions:** ระบบเปิดใช้งาน และเชื่อมต่อฐานข้อมูลได้ปกติ
+- **Main Flow:**
+  1. ผู้ใช้เปิดหน้าต่าง "ลงทะเบียนรถ/ลูกค้า" (Register Modal)
+  2. ระบุข้อมูลลูกค้า: รหัสลูกค้า, ชื่อ-นามสกุล, เบอร์โทรศัพท์
+  3. ระบุข้อมูลรถยนต์: ป้ายทะเบียน, ยี่ห้อ (Brand), รุ่น (Model)
+  4. ระบบตรวจสอบความถูกต้องของข้อมูล (Data Validation) ผ่าน Pydantic Schema
+  5. ระบบบันทึกข้อมูล Association ระหว่าง `Vehicle` กับ `Customer`
+- **Post-conditions:** รถยนต์และลูกค้าถูกผูกเข้าด้วยกัน พร้อมสำหรับการเปิดใบสั่งซ่อมบำรุง
+- **OOP Mapping:** `Customer` class (`customer.py`), `Vehicle` class (`vehicle.py`)
+
+---
+
+### 📌 UC-02: จำลองและประเมินราคาซ่อม (Estimate Service Cost)
+- **Primary Actor:** พนักงานรับรถ (Service Advisor) / ลูกค้า (Customer)
+- **Pre-conditions:** มีข้อมูลรถยนต์และรายการอะไหล่ในระบบ
+- **Main Flow:**
+  1. ผู้ใช้เลือกยี่ห้อและรุ่นรถยนต์ที่ต้องการประเมิน
+  2. เลือกระบบงานซ่อม (เครื่องยนต์, เบรก, น้ำมันเครื่อง, ระบบไฟ ฯลฯ)
+  3. เลือกรายการอะไหล่และระบุจำนวนที่ต้องการใช้
+  4. กำหนดค่าแรงช่างตามความซับซ้อนของงาน
+  5. ระบบคำนวณค่าอะไหล่รวม ค่าแรง และภาษีมูลค่าเพิ่ม 7% แบบเรียลไทม์
+  6. ผู้ใช้สามารถส่งข้อมูลประเมินราคาไปเปิดใบสั่งซ่อมจริงได้ทันที (`<<extend>>`)
+- **Post-conditions:** แสดงตารางสรุปราคาประเมินค่าซ่อมเบื้องต้นแก่ลูกค้า
+- **OOP Mapping:** `GarageBuilder.js`, `ServiceJob.calculate_cost()`
+
+---
+
+### 📌 UC-03: เปิดใบสั่งซ่อมบำรุงทั่วไป (Create Repair Job)
+- **Primary Actor:** พนักงานรับรถ (Service Advisor) / ช่างเทคนิค (Mechanic)
+- **Pre-conditions:** รถยนต์ต้องลงทะเบียนในระบบแล้ว และอะไหล่ในคลังมีเพียงพอ
+- **Main Flow:**
+  1. เลือกป้ายทะเบียนรถที่เข้ารับบริการ
+  2. ระบุรายละเอียดความเสียหาย และระดับความรุนแรง (`MINOR`, `MODERATE`, `MAJOR`)
+  3. เลือกอะไหล่ที่ต้องใช้ พร้อมระบุจำนวน
+  4. ระบบตรวจสอบจำนวนสต็อกอะไหล่ (`part.is_low_stock()`)
+  5. ระบบหักจำนวนอะไหล่จากคลังอัตโนมัติ (`part.deduct_stock()`) — `<<include>> UC-05`
+  6. ระบบคำนวณราคางานซ่อมแบบ Polymorphic:  
+     $$\text{Total Cost} = \text{Labor Cost} + \text{Parts Total} + \text{Severity Fee}$$
+  7. ระบบสร้างใบแจ้งหนี้อัตโนมัติ (`auto_generate_invoice = true`) — `<<include>> UC-08`
+- **Alternate Flow (สต็อกไม่พอ):** ระบบแจ้งเตือนสต็อกไม่เพียงพอ และยกเลิกการสร้างใบสั่งซ่อมเพื่อป้องกันสต็อกติดลบ
+- **OOP Mapping:** `RepairJob` class (`service_job.py`), `Part.deduct_stock()` (`part.py`)
+
+---
+
+### 📌 UC-04: เปิดใบสั่งงานเช็กระยะตามรอบ (Create Maintenance Job)
+- **Primary Actor:** พนักงานรับรถ (Service Advisor)
+- **Pre-conditions:** รถยนต์ลงทะเบียนแล้ว และมีแพ็กเกจระยะทางรองรับ
+- **Main Flow:**
+  1. เลือกทะเบียนรถยนต์ และเลือกแพ็กเกจเช็กระยะ (`PERIODIC_10K`, `PERIODIC_20K`, `PERIODIC_50K`, `PERIODIC_100K`)
+  2. เลือกรายการของเหลว ไส้กรอง และอะไหล่ตามรอบ
+  3. ระบบตัดสต็อกอะไหล่ในคลัง — `<<include>> UC-05`
+  4. ระบบคำนวณราคางานเช็กระยะแบบ Polymorphic พร้อมหักส่วนลดแพ็กเกจ:  
+     $$\text{Total Cost} = (\text{Labor Cost} + \text{Parts Total}) - \text{Package Discount}$$
+  5. ระบบสร้างใบแจ้งหนี้เพื่อรอชำระเงิน — `<<include>> UC-08`
+- **OOP Mapping:** `MaintenanceJob` class (`service_job.py`)
+
+---
+
+### 📌 UC-05: ตรวจสอบและตัดสต็อกอะไหล่ (Deduct Parts Stock)
+- **Primary Actor:** ระบบอัตโนมัติ (System) / ผู้ดูแลคลังอะไหล่ (Parts Storekeeper)
+- **Pre-conditions:** มีคำสั่งเบิกจ่ายอะไหล่จากใบสั่งซ่อมหรือตะกร้าสินค้า
+- **Main Flow:**
+  1. รับคำขอเบิกอะไหล่ตาม `part_id` และจำนวน `quantity`
+  2. เมธอด `deduct_stock(quantity)` ตรวจสอบว่า `stock_qty >= quantity` หรือไม่
+  3. หากผ่านเงื่อนไข ระบบจะลดจำนวนคงเหลือในคลังทันที
+  4. หากสต็อกคงเหลือต่ำกว่าเกณฑ์ ระบบจะติดสถานะ `Low Stock Alert`
+- **OOP Mapping:** Encapsulation ใน `Part` class (`part.py`)
+
+---
+
+### 📌 UC-06: จัดการและเติมสต็อกอะไหล่ (Manage & Restock Parts)
+- **Primary Actor:** ผู้ดูแลคลังอะไหล่ (Parts Storekeeper)
+- **Pre-conditions:** เข้าสู่แท็บจัดการสต็อกอะไหล่ (Parts Inventory)
+- **Main Flow:**
+  1. ผู้ใช้ดูรายการอะไหล่ทั้งหมด 27 รายการ พร้อมตัวกรองสถานะสต็อก
+  2. กดปุ่ม "เติมสต็อก" (Restock) ที่รายการที่ต้องการ
+  3. ระบุจำนวนที่ต้องการนำเข้าคลัง
+  4. เมธอด `part.add_stock(qty)` ทำการเพิ่มจำนวนสต็อกเข้าสู่ระบบ
+- **Post-conditions:** จำนวนสต็อกในคลังอัปเดตแบบเรียลไทม์
+- **OOP Mapping:** `Part.add_stock()` (`part.py`), `PartsInventory.js`
+
+---
+
+### 📌 UC-07: ออกใบแจ้งหนี้และบันทึกการชำระเงิน (Generate Invoice & Process Payment)
+- **Primary Actor:** เจ้าหน้าที่การเงิน (Cashier) / ลูกค้า (Customer)
+- **Pre-conditions:** ใบสั่งซ่อม (RepairJob หรือ MaintenanceJob) ถูกสร้างเรียบร้อยแล้ว
+- **Main Flow:**
+  1. ระบบนำอ็อบเจกต์ `ServiceJob` ส่งต่อให้คลาส `Invoice`
+  2. คลาส `Invoice` เรียก `service_job.calculate_cost()` แบบ Polymorphic เพื่อหายอดรวมสุทธิ
+  3. ระบบคำนวณแจกแจง: ค่าแรง, ค่าอะไหล่, ส่วนลด, ภาษีมูลค่าเพิ่ม (VAT 7%)
+  4. เจ้าหน้าที่การเงินกดปุ่ม "บันทึกการชำระเงิน" (Mark as Paid)
+  5. เมธอด `invoice.mark_as_paid()` เปลี่ยนสถานะเป็น `PAID`
+- **Post-conditions:** ใบแจ้งหนี้ถูกบันทึกสถานะชำระเงินเรียบร้อย สามารถพิมพ์หรือดูใบเสร็จย้อนหลังได้
+- **OOP Mapping:** `Invoice` class (`invoice.py`), `InvoiceModal.js`
+
+---
+
+## 🏛️ 4. สถาปัตยกรรม OOP & OOAD Design (Class Diagram)
 
 ระบบได้รับการออกแบบโครงสร้างคลาสตามมาตรฐาน OOAD โดยแยกความรับผิดชอบของแต่ละโมเดลอย่างชัดเจน (Single Responsibility Principle) แสดงความสัมพันธ์ผ่าน **Mermaid Class Diagram**:
 
@@ -134,7 +305,7 @@ classDiagram
 
 ---
 
-## 🧩 3. หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)
+## 🧩 5. หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)
 
 | หลักการ OOP | การประยุกต์ใช้ในโค้ด (Implementation Details) |
 | :--- | :--- |
@@ -145,7 +316,7 @@ classDiagram
 
 ---
 
-## ⚡ 4. ฟังก์ชันเด่นของระบบ (Key System Features)
+## ⚡ 6. ฟังก์ชันเด่นของระบบ (Key System Features)
 
 1. **Garage Operations Command Center (ศูนย์ควบคุมการปฏิบัติการหน้าแรก)**:
    - แบนเนอร์ฮีโร่พร้อมตัวนับสถิติสด (Live Metrics) รถในระบบ, อะไหล่ในคลัง, ใบสั่งซ่อม และสถานะเซิร์ฟเวอร์
@@ -169,7 +340,7 @@ classDiagram
 
 ---
 
-## 📂 5. โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)
+## 📂 7. โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)
 
 ```text
 car-garage/
@@ -214,7 +385,7 @@ car-garage/
 
 ---
 
-## 🚀 6. ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)
+## 🚀 8. ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)
 
 ### ความต้องการของระบบ (Prerequisites)
 - **Python:** เวอร์ชัน 3.9 หรือใหม่กว่า
@@ -259,7 +430,7 @@ npm run dev
 
 ---
 
-## 🧪 7. การทดสอบ API ด้วย cURL / Swagger
+## 🧪 9. การทดสอบ API ด้วย cURL / Swagger
 
 ### 1. ดูรายการอะไหล่ทั้งหมดในคลัง (Parts Catalog)
 ```bash
@@ -305,7 +476,7 @@ curl -X POST http://127.0.0.1:8000/api/invoices/INV-001/pay
 
 ---
 
-## 🎨 8. การออกแบบ UI/UX & ระบบธีม (Design & Themes)
+## 🎨 10. การออกแบบ UI/UX & ระบบธีม (Design & Themes)
 
 - **โทนสีหลัก (Primary Palette):** Racing Red (`#dc2626`) ผสานความหรูหราด้วยสีทอง Radiant Gold (`#f59e0b` / `#fbbf24`) และพื้นหลังขาวสบายตา
 - **สัดส่วนที่กะทัดรัด (Streamlined Navigation):** แถบเมนูด้านบนเพรียวบาง ไม่ซ้อนทับหลายชั้น ไม่บดบังพื้นที่ทำงาน
