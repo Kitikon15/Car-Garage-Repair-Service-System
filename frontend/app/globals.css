@@ -407,15 +407,15 @@ body {
 
 /* Footer Styling */
 .sp-footer {
-  background-color: #0f172a;
-  color: #e2e8f0;
-  border-top: 3px solid var(--sp-blue, #dc2626);
+  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  color: #ffffff;
+  border-top: 4px solid var(--sp-yellow, #f59e0b);
 }
 
 .sp-footer-title {
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   margin-bottom: 1.25rem;
   position: relative;
   padding-bottom: 0.5rem;
@@ -427,24 +427,47 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 28px;
+  width: 32px;
   height: 3px;
   background-color: var(--sp-yellow, #f59e0b);
   border-radius: 4px;
 }
 
 .sp-footer a {
-  color: #cbd5e1;
+  color: #ffffff !important;
   text-decoration: none;
-  font-size: 0.88rem;
-  transition: all 0.18s ease-in-out;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
+  opacity: 0.95;
 }
 
 .sp-footer a:hover {
-  color: #fbbf24 !important;
+  color: #fde047 !important;
+  opacity: 1;
   transform: translateX(4px);
+}
+
+.sp-footer a i {
+  color: #fbbf24 !important;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.sp-footer a:hover i {
+  color: #fde047 !important;
+  transform: translateX(2px);
+}
+
+.sp-footer p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.sp-footer .badge {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Backward compatibility for text/btn/bg-ihave */

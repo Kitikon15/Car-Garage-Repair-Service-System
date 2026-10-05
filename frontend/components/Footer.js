@@ -27,7 +27,7 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
                 Service<span className="text-warning">Garage</span>
               </span>
             </div>
-            <p className="text-light opacity-75 small pe-lg-4" style={{ lineHeight: "1.8", maxWidth: "540px" }}>
+            <p className="text-white small pe-lg-4" style={{ lineHeight: "1.8", maxWidth: "540px", opacity: 0.95 }}>
               ศูนย์รวมสินค้าและอะไหล่สำหรับรถยนต์ครบวงจร ทั้งกลุ่มอะไหล่แท้จากศูนย์ผู้ผลิตและอะไหล่ทดแทนมาตรฐาน OEM ชั้นนำระดับโลก พร้อมระบบประเมินราคาซ่อมและออกใบสั่งซ่อมบำรุงมาตรฐานสากล
             </p>
             <div className="d-flex flex-wrap gap-2 mt-3">
@@ -119,7 +119,7 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
         </div>
 
         {/* แถบลิขสิทธิ์ */}
-        <div className="d-flex flex-wrap align-items-center justify-content-center pt-3 gap-2 small text-light opacity-75 border-top border-secondary border-opacity-25 mt-3">
+        <div className="d-flex flex-wrap align-items-center justify-content-center pt-3 gap-2 small text-white border-top border-white border-opacity-25 mt-3" style={{ opacity: 0.9 }}>
           <div>
             © 2026 <strong>CarGarage</strong> ระบบบริหารจัดการอู่ซ่อมรถและบริการอะไหล่ • All Rights Reserved.
           </div>
