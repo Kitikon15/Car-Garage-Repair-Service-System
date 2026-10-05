@@ -42,19 +42,19 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
   const matchedParts = parts?.filter((p) => {
     // กรองตามหมวดหมู่
     if (selectedCategory === "engine") {
-      if (!p.part_name.includes("น้ำมัน") && !p.part_name.includes("หล่อเย็น") && !p.part_name.includes("จารบี")) return false;
+      if (!p.part_name.includes("น้ำมัน") && !p.part_name.includes("หล่อเย็น") && !p.part_name.includes("จารบี") && !p.part_name.includes("เครื่อง") && !p.part_name.includes("สายพาน") && !p.part_name.includes("ปั๊มน้ำ") && !p.part_name.includes("วาล์วน้ำ")) return false;
     }
     if (selectedCategory === "brake") {
-      if (!p.part_name.includes("เบรก")) return false;
+      if (!p.part_name.includes("เบรก") && !p.part_name.includes("จาน")) return false;
     }
     if (selectedCategory === "filter") {
       if (!p.part_name.includes("กรอง")) return false;
     }
     if (selectedCategory === "battery") {
-      if (!p.part_name.includes("แบตเตอรี่") && !p.part_name.includes("หัวเทียน")) return false;
+      if (!p.part_name.includes("แบตเตอรี่") && !p.part_name.includes("หัวเทียน") && !p.part_name.includes("คอยล์") && !p.part_name.includes("ไดชาร์จ") && !p.part_name.includes("ไฟ")) return false;
     }
     if (selectedCategory === "suspension") {
-      if (!p.part_name.includes("โช้ค") && !p.part_name.includes("สายพาน")) return false;
+      if (!p.part_name.includes("โช้ค") && !p.part_name.includes("ลูกหมาก") && !p.part_name.includes("ลูกปืน") && !p.part_name.includes("เพลา")) return false;
     }
 
     // กรองตามแบรนด์รถ (ถ้ามีระบุในชื่อ ให้ตรงแบรนด์ หรือถ้าเป็นอะไหล่สากล universal ให้แสดงได้)

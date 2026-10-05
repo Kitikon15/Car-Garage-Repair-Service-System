@@ -60,17 +60,27 @@ export default function OrderCatalog({
 
   const brandOptions = [
     { id: "all", label: "แบรนด์ทั้งหมด" },
-    { id: "SHELL", label: "Shell (เชลล์)" },
-    { id: "BREMBO", label: "Brembo (เบรมโบ้)" },
-    { id: "VALVOLINE", label: "Valvoline (วาโวลีน)" },
     { id: "TOYOTA", label: "Toyota Genuine" },
     { id: "HONDA", label: "Honda Genuine" },
     { id: "DENSO", label: "Denso" },
+    { id: "BREMBO", label: "Brembo (เบรมโบ้)" },
+    { id: "SHELL", label: "Shell (เชลล์)" },
+    { id: "BOSCH", label: "Bosch (บ๊อช)" },
+    { id: "AISIN", label: "Aisin (ไอชิน)" },
+    { id: "KOYORAD", label: "Koyorad (โคโยแรด)" },
+    { id: "555", label: "555 Three Five" },
+    { id: "GATES", label: "Gates PowerGrip" },
+    { id: "NSK", label: "NSK Bearings" },
+    { id: "SEIKEN", label: "Seiken Japan" },
+    { id: "OSRAM", label: "Osram Lighting" },
+    { id: "LIQUI MOLY", label: "Liqui Moly" },
+    { id: "TAMA", label: "Tama Thermostats" },
     { id: "NGK", label: "NGK Spark Plugs" },
     { id: "GS BATTERY", label: "GS Battery" },
     { id: "BANDO", label: "Bando Belts" },
     { id: "MONROE", label: "Monroe Shocks" },
     { id: "TRW", label: "TRW Braking" },
+    { id: "VALVOLINE", label: "Valvoline" },
     { id: "TRANE", label: "Trane Grease" },
   ];
 
@@ -114,7 +124,12 @@ export default function OrderCatalog({
 
   // ค้นหาแบรนด์ในชื่อสินค้า
   const detectBrand = (name) => {
-    for (const b of ["BREMBO", "SHELL", "TOYOTA", "NGK", "DENSO", "GS BATTERY", "BANDO", "VALVOLINE", "TRW", "MONROE", "HONDA", "TRANE"]) {
+    const brands = [
+      "BREMBO", "SHELL", "TOYOTA", "NGK", "DENSO", "GS BATTERY", "BANDO",
+      "VALVOLINE", "TRW", "MONROE", "HONDA", "TRANE", "KOYORAD", "555",
+      "GATES", "AISIN", "NSK", "SEIKEN", "OSRAM", "BOSCH", "LIQUI MOLY", "TAMA"
+    ];
+    for (const b of brands) {
       if (name.toUpperCase().includes(b)) return b;
     }
     return "OEM";
@@ -164,32 +179,77 @@ export default function OrderCatalog({
         p.part_name.includes("น้ำมัน") ||
         p.part_name.includes("หล่อเย็น") ||
         p.part_name.includes("เกียร์") ||
-        p.part_name.includes("จารบี")
+        p.part_name.includes("จารบี") ||
+        p.part_name.includes("Cleaner")
       );
     }
     if (selectedCategory === "suspension") {
-      return p.part_name.includes("โช้ค") || p.part_name.includes("เบรก") || p.part_name.includes("จานเบรก");
+      return (
+        p.part_name.includes("โช้ค") ||
+        p.part_name.includes("เบรก") ||
+        p.part_name.includes("จานเบรก") ||
+        p.part_name.includes("ลูกหมาก") ||
+        p.part_name.includes("ลูกปืน") ||
+        p.part_name.includes("เพลา")
+      );
     }
     if (selectedCategory === "cooling") {
-      return p.part_name.includes("หล่อเย็น") || p.part_name.includes("หม้อน้ำ") || p.part_name.includes("พัดลม");
+      return (
+        p.part_name.includes("หล่อเย็น") ||
+        p.part_name.includes("หม้อน้ำ") ||
+        p.part_name.includes("พัดลม") ||
+        p.part_name.includes("ปั๊มน้ำ") ||
+        p.part_name.includes("วาล์วน้ำ")
+      );
     }
     if (selectedCategory === "engine") {
-      return p.part_name.includes("หัวเทียน") || p.part_name.includes("สายพาน") || p.part_name.includes("เครื่อง");
+      return (
+        p.part_name.includes("หัวเทียน") ||
+        p.part_name.includes("สายพาน") ||
+        p.part_name.includes("เครื่อง") ||
+        p.part_name.includes("แท่นเครื่อง") ||
+        p.part_name.includes("ไทม์มิ่ง")
+      );
     }
     if (selectedCategory === "electrical") {
-      return p.part_name.includes("แบตเตอรี่") || p.part_name.includes("หัวเทียน") || p.part_name.includes("ไฟ");
+      return (
+        p.part_name.includes("แบตเตอรี่") ||
+        p.part_name.includes("หัวเทียน") ||
+        p.part_name.includes("คอยล์") ||
+        p.part_name.includes("ไดชาร์จ") ||
+        p.part_name.includes("ไฟ") ||
+        p.part_name.includes("LED")
+      );
     }
     if (selectedCategory === "filters") {
       return p.part_name.includes("กรอง");
     }
     if (selectedCategory === "body") {
-      return p.part_name.includes("ไฟ") || p.part_name.includes("กระจก") || p.part_name.includes("จาน") || p.part_name.includes("ตัวถัง");
+      return (
+        p.part_name.includes("ไฟ") ||
+        p.part_name.includes("กระจก") ||
+        p.part_name.includes("ตัวถัง") ||
+        p.part_name.includes("ใบปัดน้ำฝน")
+      );
     }
     if (selectedCategory === "genuine") {
-      return p.part_name.toUpperCase().includes("TOYOTA") || p.part_name.toUpperCase().includes("HONDA") || p.part_name.toUpperCase().includes("DENSO");
+      return (
+        p.part_name.toUpperCase().includes("TOYOTA") ||
+        p.part_name.toUpperCase().includes("HONDA") ||
+        p.part_name.toUpperCase().includes("DENSO") ||
+        p.part_name.toUpperCase().includes("AISIN") ||
+        p.part_name.toUpperCase().includes("BREMBO") ||
+        p.part_name.toUpperCase().includes("BOSCH")
+      );
     }
     if (selectedCategory === "tools") {
-      return p.part_name.includes("จารบี") || p.part_name.includes("เครื่องมือ") || p.part_name.includes("อุปกรณ์");
+      return (
+        p.part_name.includes("จารบี") ||
+        p.part_name.includes("เครื่องมือ") ||
+        p.part_name.includes("อุปกรณ์") ||
+        p.part_name.includes("น้ำยา") ||
+        p.part_name.includes("Cleaner")
+      );
     }
     return true;
   });

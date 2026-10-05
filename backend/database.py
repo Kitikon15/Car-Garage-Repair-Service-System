@@ -45,7 +45,7 @@ class GarageDatabase:
         for v in [v1, v2, v3]:
             self.vehicles[v.license_plate] = v
 
-        # 3. Seed Parts (อะไหล่แท้และอะไหล่เทียบมาตรฐานสากล สไตล์ ServiceGarage)
+        # 3. Seed Parts (อะไหล่แท้และอะไหล่เทียบมาตรฐานสากล สำหรับอู่ซ่อมรถยนต์)
         part_data = [
             ("PART-001", "ผ้าเบรกหน้า BREMBO Premium Ceramic (คู่) - Toyota Camry / Altis", 1850.00, 18),
             ("PART-002", "น้ำมันเครื่องสังเคราะห์แท้ SHELL HELIX ULTRA 5W-30 (6L+1L)", 2150.00, 24),
@@ -59,6 +59,21 @@ class GarageDatabase:
             ("PART-010", "โช้คอัพแก๊สคู่หน้า MONROE OE Spectrum สเปกศูนย์ (คู่)", 5800.00, 5),
             ("PART-011", "น้ำมันเกียร์ออโต้ HONDA แท้ห้าง ATF DW-1 ขนาด 3L", 1350.00, 12),
             ("PART-012", "จารบีทนความร้อนสูง TRANE SUPER HT ขนาด 5KG", 980.00, 20),
+            ("PART-013", "น้ำมันเบรกสังเคราะห์แท้ BREMBO DOT 4 Premium 1L", 450.00, 25),
+            ("PART-014", "ไส้กรองอากาศเครื่องยนต์ HONDA แท้ศูนย์ (17220-55A-Z01) - City / Jazz", 620.00, 22),
+            ("PART-015", "หม้อน้ำอะลูมิเนียมเกรดแท้ KOYORAD Radiator - Toyota Altis / Vios", 2900.00, 6),
+            ("PART-016", "ลูกหมากปีกนกล่างแท้ 555 THREE FIVE (คู่) - Toyota Camry / Wish", 1650.00, 14),
+            ("PART-017", "ไดชาร์จรถยนต์ DENSO Alternator 12V 100A แท้ศูนย์", 5200.00, 4),
+            ("PART-018", "ชุดสายพานไทม์มิ่งราวลิ้น GATES PowerGrip Timing Belt Kit", 3400.00, 9),
+            ("PART-019", "ปั๊มน้ำเครื่องยนต์ AISIN Engine Water Pump - Toyota 1NZ / 2NZ", 1750.00, 11),
+            ("PART-020", "คอยล์จุดระเบิดอิเล็กทรอนิกส์ DENSO Ignition Coil (ชุด 4 ตัว)", 4200.00, 8),
+            ("PART-021", "ลูกปืนล้อหน้าพร้อมเซนเซอร์ ABS แท้ NSK Hub Bearing Assembly (คู่)", 3100.00, 7),
+            ("PART-022", "ยางหุ้มเพลาขับนอก-ใน SEIKEN Driveshaft Boot Kit (ชุด 4 ชิ้น)", 1100.00, 18),
+            ("PART-023", "หลอดไฟหน้ารถยนต์ LED OSRAM LEDriving HL H4 6000K แท้", 2450.00, 16),
+            ("PART-024", "ใบปัดน้ำฝนซิลิโคนพรีเมียม BOSCH Aerotwin Plus (คู่หน้า)", 890.00, 32),
+            ("PART-025", "น้ำยาล้างระบบหัวฉีดและวาล์ว LIQUI MOLY Injection Cleaner 300ml", 520.00, 28),
+            ("PART-026", "ชุดซีลแท่นเครื่องยนต์ไฮดรอลิก TOYOTA แท้ศูนย์ Engine Mount", 2850.00, 5),
+            ("PART-027", "วาล์วน้ำระบายความร้อน TAMA Thermostat 82°C สเปกแท้ญี่ปุ่น", 720.00, 15),
         ]
         for pid, name, price, qty in part_data:
             self.parts[pid] = Part(pid, name, price, qty)
