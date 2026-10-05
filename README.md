@@ -1,15 +1,32 @@
-# 🚗 Car Garage & Repair Service System
-
-> **Course Project:** Object-Oriented Programming (OOP) & Object-Oriented Analysis & Design (OOAD)  
-> **Team Size:** 2 Persons  
-> **Project Duration:** 2 Weeks  
-> **Tech Stack:** Python FastAPI (Backend) + Next.js App Router & Bootstrap 5 (Frontend)
+# 🚗 Car Garage & Repair Service Management System (CarGarage PRO)
+> **ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร**  
+> **Course Project:** Object-Oriented Programming (OOP) & Object-Oriented Analysis and Design (OOAD)  
+> **Architecture:** Decoupled RESTful Architecture — Python FastAPI (Backend) + Next.js App Router & Bootstrap 5 (Frontend)  
+> **Repository:** [Kitikon15/Car-Garage-Repair-Service-System](https://github.com/Kitikon15/Car-Garage-Repair-Service-System)
 
 ---
 
-## 📌 1. System Architecture & OOP Design
+## 📋 สารบัญ (Table of Contents)
+1. [ภาพรวมของระบบ (System Overview)](#-1-ภาพรวมของระบบ-system-overview)
+2. [สถาปัตยกรรม OOP & OOAD Design](#-2-สถาปัตยกรรม-oop--ooad-design)
+3. [หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)](#-3-หลักการ-oop-ทั้ง-4-เสาหลัก-core-oop-principles)
+4. [ฟังก์ชันเด่นของระบบ (Key System Features)](#-4-ฟังก์ชันเด่นของระบบ-key-system-features)
+5. [โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)](#-5-โครงสร้างโฟลเดอร์โปรเจกต์-project-structure)
+6. [ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)](#-6-ขั้นตอนการติดตั้งและเริ่มใช้งาน-getting-started)
+7. [การทดสอบ API ด้วย cURL / Swagger](#-7-การทดสอบ-api-ด้วย-curl--swagger)
+8. [การออกแบบ UI/UX & ระบบธีม (Design & Themes)](#-8-การออกแบบ-uiux--ระบบธีม-design--themes)
 
-The system models a commercial garage handling vehicle intake, technician work orders, parts inventory control, and billing. It strictly adheres to the **Four Pillars of OOP** and standard OOAD relationships:
+---
+
+## 🌟 1. ภาพรวมของระบบ (System Overview)
+
+**CarGarage PRO** เป็นระบบบริหารจัดการงานซ่อมบำรุงและศูนย์บริการรถยนต์ ออกแบบตามหลักการเขียนโปรแกรมเชิงวัตถุ (**Object-Oriented Programming: OOP**) เพื่อจำลองกระบวนการทำงานจริงของอู่ซ่อมรถยนต์ ตั้งแต่การลงทะเบียนรถยนต์ของลูกค้า, การเปิดใบสั่งซ่อมบำรุง, การคำนวณราคาประเมินค่าแรงช่าง, การเบิกจ่ายอะไหล่พร้อมตัดสต็อกคลังอัตโนมัติ ไปจนถึงการออกใบแจ้งหนี้และบันทึกการชำระเงิน
+
+---
+
+## 🏛️ 2. สถาปัตยกรรม OOP & OOAD Design
+
+ระบบได้รับการออกแบบโครงสร้างคลาสตามมาตรฐาน OOAD โดยแยกความรับผิดชอบของแต่ละโมเดลอย่างชัดเจน (Single Responsibility Principle) แสดงความสัมพันธ์ผ่าน **Mermaid Class Diagram**:
 
 ```mermaid
 classDiagram
@@ -117,140 +134,190 @@ classDiagram
 
 ---
 
-## 🏛️ 2. Core OOP Principles Explained
+## 🧩 3. หลักการ OOP ทั้ง 4 เสาหลัก (Core OOP Principles)
 
-| OOP Principle | Where & How It Is Implemented in Code |
+| หลักการ OOP | การประยุกต์ใช้ในโค้ด (Implementation Details) |
 | :--- | :--- |
-| **1. Encapsulation** | - In `backend/models/part.py`: `_stock_qty` and `_price` are protected attributes accessed via getters and setters.<br>- Method `deduct_stock(qty)` guards against negative stock and overselling by validating stock levels before deducting.<br>- In `backend/models/customer.py` and `backend/models/vehicle.py`: All data fields validate input before modifying internal state. |
-| **2. Inheritance** | - `ServiceJob` in `backend/models/service_job.py` is an **Abstract Base Class** (`abc.ABC`).<br>- `RepairJob` and `MaintenanceJob` inherit common state (`job_id`, `vehicle`, `labor_cost`, `parts_used`, `status`) and methods from `ServiceJob`. |
-| **3. Polymorphism** | - Both subclasses override the abstract method `calculate_cost()` with unique business algorithms:<br>&nbsp;&nbsp;• **`RepairJob`**: `Total = labor_cost + parts_total + severity_fee`<br>&nbsp;&nbsp;• **`MaintenanceJob`**: `Total = (labor_cost + parts_total) - package_discount`<br>- In `backend/models/invoice.py`, `Invoice.generate_invoice()` calls `self.service_job.calculate_cost()` **polymorphically**, calculating the correct amount without needing `isinstance` checks! |
-| **4. Composition** | - A `ServiceJob` owns a list of `JobPartItem` instances (`self._parts_used`).<br>- Calling `job.add_part(part, qty)` automatically delegates to `part.deduct_stock(qty)` and encapsulates the part's unit price at the time of service order creation. |
-| **5. Association** | - A `Vehicle` has an associated `Customer` owner (`vehicle.owner = customer`). They are distinct entities that can exist independently. |
+| **1. การห่อหุ้มข้อมูล (Encapsulation)** | • ใน `backend/models/part.py`: ฟิลด์ `_stock_qty` และ `_price` เป็น private/protected attribute เข้าถึงผ่าน `@property` และ Setter<br>• เมธอด `deduct_stock(qty)` ตรวจสอบเงื่อนไขป้องกันสต็อกติดลบก่อนตัดยอดจริง<br>• ใน `Customer` และ `Vehicle`: ตรวจสอบความถูกต้องของข้อมูลก่อนเซ็ตค่า |
+| **2. การสืบทอดคุณสมบัติ (Inheritance)** | • `ServiceJob` ใน `backend/models/service_job.py` เป็น Abstract Base Class (`abc.ABC`) กำหนดโครงสร้างมาตรฐานของงานบริการ<br>• `RepairJob` และ `MaintenanceJob` สืบทอดแอตทริบิวต์ร่วม (`job_id`, `vehicle`, `labor_cost`, `parts_used`, `status`) และเมธอดจัดการอะไหล่จากคลาสแม่ |
+| **3. ความหลากหลายของรูปแบบ (Polymorphism)** | • ทั้ง `RepairJob` และ `MaintenanceJob` ทำการ Override เมธอดนามธรรม `calculate_cost()` ด้วยอัลกอริทึมเฉพาะของแต่ละประเภทงาน:<br>&nbsp;&nbsp;• **งานซ่อมทั่วไป (`RepairJob`)**: `Total = labor_cost + parts_total + severity_fee` (คิดค่าความรุนแรงตามระดับงานซ่อม Minor, Moderate, Major)<br>&nbsp;&nbsp;• **งานเช็กระยะ (`MaintenanceJob`)**: `Total = (labor_cost + parts_total) - package_discount` (มอบส่วนลดตามแพ็กเกจระยะทาง 10k, 20k, 50k, 100k)<br>• ใน `backend/models/invoice.py`: เมธอด `Invoice.generate_invoice()` เรียกใช้งาน `self.service_job.calculate_cost()` แบบ Polymorphic โดยไม่ต้องเขียน `if/else` หรือตรวจสอบ `isinstance` |
+| **4. ความสัมพันธ์แบบ Composition & Association** | • **Composition (`*--`)**: `ServiceJob` เป็นเจ้าของ `JobPartItem` เมื่อบันทึกการใช้อะไหล่ ข้อมูลราคา ณ ขณะเปิดใบงานจะถูกบันทึกไว้ในรายการ<br>• **Association (`<--`)**: `Vehicle` มีความสัมพันธ์กับ `Customer` ในฐานะเจ้าของรถ โดยทั้งสองสามารถดำรงอยู่อย่างอิสระได้ |
 
 ---
 
-## 📂 3. Project Directory Structure
+## ⚡ 4. ฟังก์ชันเด่นของระบบ (Key System Features)
+
+1. **Garage Operations Command Center (ศูนย์ควบคุมการปฏิบัติการหน้าแรก)**:
+   - แบนเนอร์ฮีโร่พร้อมตัวนับสถิติสด (Live Metrics) รถในระบบ, อะไหล่ในคลัง, ใบสั่งซ่อม และสถานะเซิร์ฟเวอร์
+   - ปุ่มทางลัดเปิดใบสั่งซ่อมบำรุง, จำลองประเมินราคา, เบิกจ่ายอะไหล่ และค้นหาประวัติรถ
+2. **ระบบประเมินราคาซ่อม & เปิดใบสั่งซ่อมบำรุง (Jobs & Repair Cost Estimator)**:
+   - จำลองเลือกสเปกอะไหล่และคำนวณค่าแรงแบบเรียลไทม์
+   - รองรับทั้งงานซ่อมด่วน (Repair) และงานเช็กระยะบำรุงรักษา (Maintenance)
+3. **คลังเบิก-จ่ายอะไหล่มาตรฐาน OEM (Parts Dispensary & Inventory)**:
+   - บรรจุข้อมูลอะไหล่รถยนต์จริงกว่า **27 รายการ** ครอบคลุม 10 ระบบงานซ่อม:
+     - ระบบของเหลว & น้ำมันเครื่อง, ระบบเบรก & ช่วงล่าง, เครื่องยนต์ & ระบบส่งกำลัง, ระบบระบายความร้อน, ระบบไฟ & แบตเตอรี่, ไส้กรอง, ตัวถัง, อะไหล่ศูนย์ OEM และเครื่องมือช่าง
+   - แบรนด์อะไหล่ชั้นนำ: Mobil 1, Castrol, Motul, Brembo, Bendix, NGK, Denso, Bosch, 3M, GS Battery
+   - ตรวจจับสต็อกขั้นต่ำ (Low Stock Alert) และมีปุ่มเติมสต็อก (Restock) ทันที
+4. **ศูนย์ค้นหาตามรุ่นรถและประวัติ (Vehicle Hub & Fleet Search)**:
+   - ค้นหาอะไหล่ที่ตรงรุ่นกับยี่ห้อรถยนต์ยอดนิยม (Toyota, Honda, Isuzu, Ford, Mazda, Nissan, Mitsubishi)
+5. **ระบบการเงินและใบแจ้งหนี้ (Billing & Invoices)**:
+   - ออกใบเสร็จรับเงิน แจกแจงรายการค่าแรง, ค่าอะไหล่, ส่วนลด, ภาษีมูลค่าเพิ่ม (VAT 7%)
+   - รองรับการกดบันทึกการชำระเงิน (Mark as Paid) แบบเรียลไทม์
+6. **แถบนำทางเพรียวบาง สบายตา (Sleek Compact Navigation)**:
+   - แถบเมนูสีแดงเพรียวบาง 38–40px ข้อความบรรทัดเดียวไม่ตกบรรทัด
+   - ปุ่ม Active แท็บทรงแคปซูลโค้งมนพรีเมียม (Gold Pill Accent) พร้อมตะกร้าเบิกอะไหล่
+
+---
+
+## 📂 5. โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)
 
 ```text
 car-garage/
 ├── backend/
 │   ├── models/
-│   │   ├── __init__.py           # Clean package exports
+│   │   ├── __init__.py           # Package exports
 │   │   ├── customer.py           # Customer model (Encapsulation)
 │   │   ├── vehicle.py            # Vehicle model (Association with Customer)
-│   │   ├── part.py               # Part model (Encapsulation & deduct_stock)
+│   │   ├── part.py               # Part model (Encapsulation & Stock Guard)
 │   │   ├── service_job.py        # ServiceJob (ABC), RepairJob & MaintenanceJob (Inheritance & Polymorphism)
-│   │   └── invoice.py            # Invoice model (Polymorphic invoice generation)
-│   ├── database.py               # In-memory storage handler & pre-seeded realistic data
-│   ├── schemas.py                # Pydantic request/response validation schemas
-│   └── main.py                   # FastAPI REST API endpoints
+│   │   └── invoice.py            # Invoice model (Polymorphic Billing Calculation)
+│   ├── database.py               # In-Memory DB & Realistic Seed Data (27 Parts, Vehicles, Customers)
+│   ├── schemas.py                # Pydantic Schemas for Request & Response Validation
+│   ├── main.py                   # FastAPI Application & REST Endpoints
+│   └── test_api.py               # Backend Unit & Integration Tests
 │
 ├── frontend/
 │   ├── app/
-│   │   ├── layout.tsx            # Global layout importing Bootstrap 5 CSS & Icons
-│   │   ├── page.tsx              # Main Garage Dashboard (Grid, Cards, Tables)
-│   │   └── globals.css           # Custom styling enhancements
+│   │   ├── layout.jsx            # Root HTML layout with Bootstrap & Icons
+│   │   ├── page.jsx              # Main Dashboard, Tabs Controller & Global State
+│   │   └── globals.css           # Custom Garage Themes, Compact Navbar & Card Styles
 │   ├── components/
 │   │   ├── BootstrapClient.js    # Client-side dynamic loader for Bootstrap 5 JS bundle
-│   │   ├── Navbar.js             # Sticky garage navbar with OOP badges & status
-│   │   ├── StatsCards.js         # Top KPI metrics (Revenue, Stock alerts, Fleet)
-│   │   ├── PartsInventory.js     # Real-time parts table with low-stock badges & restock action
-│   │   ├── CreateServiceJob.js   # Polymorphic job creation form & live preview
-│   │   ├── InvoiceList.js        # Past invoices history
-│   │   ├── InvoiceModal.js       # Itemized receipt popup with financial breakdown
-│   │   └── RegisterModal.js      # Modal to register new customers and vehicles
+│   │   ├── Navbar.js             # Sleek compact garage navigation bar with cart badge
+│   │   ├── PromoBannerCarousel.js# Garage Operations Command Center hero section
+│   │   ├── StatsCards.js         # Top KPI metrics (Revenue, Invoices, Low Stock, Fleet)
+│   │   ├── OrderCatalog.js       # 10-Subsystem Parts Catalog with category & brand filters
+│   │   ├── PartsInventory.js     # Real-time stock management table with restock modal
+│   │   ├── CreateServiceJob.js   # Polymorphic Job creation form & live preview
+│   │   ├── GarageBuilder.js      # Interactive Repair Cost Estimator
+│   │   ├── VehicleSearch.js      # Vehicle hub & fleet history search by brand/model
+│   │   ├── CartView.js           # Parts requisition cart & order checkout
+│   │   ├── InvoiceList.js        # Past service invoices list & status filter
+│   │   ├── InvoiceModal.js       # Itemized receipt popup with tax & financial breakdown
+│   │   ├── RegisterModal.js      # Vehicle & Customer registration modal
+│   │   ├── ContactSales.js       # Garage hotline (02-888-7999), branches & hours
+│   │   ├── Footer.js             # High-contrast garage footer (AAA 8.31:1 ratio)
+│   │   └── ProductImage.js       # Dynamic SVG & placeholder image handler for parts
 │   └── package.json
 └── README.md
 ```
 
 ---
 
-## 🚀 4. How to Run the System
+## 🚀 6. ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)
 
-### Prerequisites:
-- Python 3.9+ (FastAPI & Uvicorn installed)
-- Node.js 18+ & npm
+### ความต้องการของระบบ (Prerequisites)
+- **Python:** เวอร์ชัน 3.9 หรือใหม่กว่า
+- **Node.js:** เวอร์ชัน 18+ และ npm
 
 ---
 
-### Step 1: Start the Backend (FastAPI)
+### ขั้นตอนที่ 1: รันระบบฝั่ง Backend (FastAPI)
 
-In a terminal:
-
+เปิด Terminal ที่ 1:
 ```bash
+# เข้าโฟลเดอร์โปรเจกต์
 cd backend
-# From project root:
-uvicorn backend.main:app --reload --port 8000
-```
 
-- API Server runs at: `http://localhost:8000`
-- Interactive Swagger UI Documentation: `http://localhost:8000/docs`
-- ReDoc Documentation: `http://localhost:8000/redoc`
+# ติดตั้ง dependencies ที่จำเป็น (หากยังไม่ได้ติดตั้ง)
+pip install fastapi uvicorn pydantic
+
+# เริ่มการทำงานของเซิร์ฟเวอร์
+uvicorn main:app --reload --port 8000
+```
+- **Backend API:** `http://127.0.0.1:8000`
+- **Interactive Swagger UI Docs:** `http://127.0.0.1:8000/docs`
+- **ReDoc Docs:** `http://127.0.0.1:8000/redoc`
 
 ---
 
-### Step 2: Start the Frontend (Next.js & Bootstrap 5)
+### ขั้นตอนที่ 2: รันระบบฝั่ง Frontend (Next.js)
 
-In a second terminal:
-
+เปิด Terminal ที่ 2:
 ```bash
+# เข้าโฟลเดอร์ frontend
 cd frontend
+
+# ติดตั้งแพ็กเกจ (ครั้งแรก)
 npm install
+
+# รันเซิร์ฟเวอร์สำหรับนักพัฒนา
 npm run dev
 ```
-
-- Open your browser to: `http://localhost:3000`
-
----
-
-## 🎨 5. Bootstrap 5 Integration Details in Next.js
-
-1. **Bootstrap 5 CSS & Icons**:
-   - `bootstrap/dist/css/bootstrap.min.css` is imported directly into `frontend/app/layout.tsx`.
-   - Bootstrap Icons CDN stylesheet is loaded via the `<head>` tag in `layout.tsx` for icons like `bi-wrench`, `bi-box-seam`, `bi-receipt`, etc.
-
-2. **Bootstrap 5 JavaScript Bundle (Handling SSR)**:
-   - Next.js App Router renders on the server by default. Directly importing Bootstrap's JS on the server causes `window is not defined` / `document is not defined`.
-   - Solution: `frontend/components/BootstrapClient.js` is marked with `"use client"` and uses `useEffect(() => { import("bootstrap/dist/js/bootstrap.bundle.min.js"); }, [])` to safely load the Bootstrap JavaScript bundle once mounted in the browser.
+- **เปิดเบราว์เซอร์เข้าใช้งาน:** `http://localhost:3000`
+- **คำสั่ง Build Production:** `npm run build`
 
 ---
 
-## 🧪 6. Testing OOP Principles via API
+## 🧪 7. การทดสอบ API ด้วย cURL / Swagger
 
-### 1. View Parts Inventory & Stock Levels
+### 1. ดูรายการอะไหล่ทั้งหมดในคลัง (Parts Catalog)
 ```bash
-curl -X GET http://localhost:8000/api/parts
+curl -X GET http://127.0.0.1:8000/api/parts
 ```
 
-### 2. Create a Repair Job (Inheritance & Polymorphism: Surcharge)
+### 2. สร้างใบสั่งซ่อมทั่วไป (Repair Job — คิดค่าความรุนแรงของงานซ่อม)
 ```bash
-curl -X POST http://localhost:8000/api/jobs/repair \
+curl -X POST http://127.0.0.1:8000/api/jobs/repair \
   -H "Content-Type: application/json" \
   -d '{
-    "license_plate": "ABC-1234",
-    "labor_cost": 150.0,
-    "description": "Brake caliper fix",
-    "severity": "MAJOR",
-    "parts": [{"part_id": "PART-001", "quantity": 1}],
+    "license_plate": "1กก-9999",
+    "labor_cost": 500.0,
+    "description": "เปลี่ยนผ้าเบรกหน้าและเจียรจานเบรก",
+    "severity": "MODERATE",
+    "parts": [{"part_id": "PART-004", "quantity": 1}],
     "auto_generate_invoice": true
   }'
 ```
 
-### 3. Create a Maintenance Job (Inheritance & Polymorphism: Discount)
+### 3. สร้างงานเช็กระยะตามรอบ (Maintenance Job — มอบส่วนลดตามแพ็กเกจ)
 ```bash
-curl -X POST http://localhost:8000/api/jobs/maintenance \
+curl -X POST http://127.0.0.1:8000/api/jobs/maintenance \
   -H "Content-Type: application/json" \
   -d '{
-    "license_plate": "XYZ-7890",
-    "labor_cost": 100.0,
-    "description": "10,000 km Scheduled Service",
-    "package_name": "PERIODIC_10K",
-    "parts": [{"part_id": "PART-002", "quantity": 1}],
+    "license_plate": "2ขข-8888",
+    "labor_cost": 400.0,
+    "description": "เช็กระยะ 20,000 กม. เปลี่ยนถ่ายน้ำมันเครื่องสังเคราะห์แท้",
+    "package_name": "PERIODIC_20K",
+    "parts": [{"part_id": "PART-001", "quantity": 1}, {"part_id": "PART-007", "quantity": 1}],
     "auto_generate_invoice": true
   }'
 ```
 
-### 4. Fetch Generated Invoice
+### 4. ดึงรายการใบเสร็จและบันทึกการชำระเงิน
 ```bash
-curl -X GET http://localhost:8000/api/invoices
+# ดูใบแจ้งหนี้ทั้งหมด
+curl -X GET http://127.0.0.1:8000/api/invoices
+
+# บันทึกการชำระเงิน (Mark as Paid)
+curl -X POST http://127.0.0.1:8000/api/invoices/INV-001/pay
 ```
+
+---
+
+## 🎨 8. การออกแบบ UI/UX & ระบบธีม (Design & Themes)
+
+- **โทนสีหลัก (Primary Palette):** Racing Red (`#dc2626`) ผสานความหรูหราด้วยสีทอง Radiant Gold (`#f59e0b` / `#fbbf24`) และพื้นหลังขาวสบายตา
+- **สัดส่วนที่กะทัดรัด (Streamlined Navigation):** แถบเมนูด้านบนเพรียวบาง ไม่ซ้อนทับหลายชั้น ไม่บดบังพื้นที่ทำงาน
+- **Accessibility & Contrast:** ข้อความสีขาวบนพื้นแดงและพื้นหลังฟุตเตอร์ผ่านเกณฑ์มาตรฐานคอนทราสต์ระดับ **AAA (8.31:1 Ratio)**
+- **รองรับธีมหลากหลาย (Multi-Theme Support):**
+  - `red-white` (ธีมหลัก: อู่แข่งรถสปอร์ต เรซซิ่งเรด-โกลด์)
+  - `cyber` (ไซเบอร์ โคบอลต์บลู)
+  - `racing` (มิดไนท์ คาร์บอนดาร์ก)
+  - `mode-bw` (โหมดขาว-ดำ Monochrome สำหรับการเข้าถึงและพิมพ์เอกสาร)
+
+---
+
+## 👥 ผู้จัดทำ (Project Members)
+- โครงงานวิชา Object-Oriented Programming (OOP) & Object-Oriented Analysis and Design (OOAD)
+- พัฒนาด้วยความมุ่งมั่นเพื่อสร้างระบบอู่ซ่อมรถยนต์ที่มีประสิทธิภาพ สวยงาม และถูกต้องตามหลักการเชิงวัตถุอย่างแท้จริง
