@@ -226,6 +226,8 @@ export default function Dashboard() {
         searchQuery={headerSearchQuery}
         setSearchQuery={setHeaderSearchQuery}
         onPerformSearch={handlePerformSearch}
+        activeCategory={selectedCatalogCategory}
+        setActiveCategory={setSelectedCatalogCategory}
         currentTheme={currentTheme}
         onSelectTheme={handleSelectTheme}
         isBWMode={isBWMode}
@@ -607,7 +609,10 @@ export default function Dashboard() {
       </main>
 
       {/* 3. Footer สไตล์ ServiceGarage (ServiceGarage System) */}
-      <Footer setActiveTab={setActiveTab} />
+      <Footer
+        setActiveTab={setActiveTab}
+        onSelectCategory={(catId) => handlePerformSearch("", catId)}
+      />
 
       {/* Modal แสดงใบแจ้งหนี้/ใบเสร็จรับเงินที่คำนวณราคาเรียบร้อย */}
       <InvoiceModal

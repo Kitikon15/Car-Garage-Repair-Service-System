@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoryNav from "./CategoryNav";
 
 export default function Navbar({
@@ -13,12 +13,20 @@ export default function Navbar({
   searchQuery = "",
   setSearchQuery,
   onPerformSearch,
+  activeCategory = "all",
+  setActiveCategory,
   currentTheme = "red-white",
   onSelectTheme,
   isBWMode = false,
   toggleBWMode,
 }) {
-  const [searchCategory, setSearchCategory] = useState("all");
+  const [searchCategory, setSearchCategory] = useState(activeCategory || "all");
+
+  useEffect(() => {
+    if (activeCategory) {
+      setSearchCategory(activeCategory);
+    }
+  }, [activeCategory]);
 
   const navItems = [
     { id: "dashboard", label: "หน้าแรก", icon: "bi-house-door-fill" },
@@ -102,7 +110,18 @@ export default function Navbar({
               <select
                 className="sp-search-select d-none d-sm-block"
                 value={searchCategory}
-                onChange={(e) => setSearchCategory(e.target.value)}
+                onChange={(e) => {
+                  const newCat = e.target.value;
+                  setSearchCategory(newCat);
+                  if (setActiveCategory) {
+                    setActiveCategory(newCat);
+                  }
+                  if (onPerformSearch) {
+                    onPerformSearch(searchQuery, newCat);
+                  } else if (setActiveTab) {
+                    setActiveTab("order");
+                  }
+                }}
                 style={{
                   minWidth: "165px",
                   fontSize: "0.86rem",
@@ -119,6 +138,7 @@ export default function Navbar({
                 <option value="filters">ไส้กรอง &amp; งานเช็กระยะ</option>
                 <option value="body">ชิ้นส่วนตัวถัง &amp; โคมไฟ</option>
                 <option value="genuine">อะไหล่แท้ศูนย์ OEM</option>
+                <option value="tools">เครื่องมือช่าง &amp; เคมีภัณฑ์</option>
               </select>
 
               <input

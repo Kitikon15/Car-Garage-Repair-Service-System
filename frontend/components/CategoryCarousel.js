@@ -7,7 +7,7 @@ export default function CategoryCarousel({ onSelectCategory }) {
 
   const categories = [
     {
-      id: "engine",
+      id: "fluids",
       title: "น้ำมันเครื่องและของเหลว",
       image: "/images/categories/cat_fluids.png",
     },
@@ -22,9 +22,19 @@ export default function CategoryCarousel({ onSelectCategory }) {
       image: "/images/categories/cat_cooling.png",
     },
     {
-      id: "engine-drivetrain",
+      id: "engine",
       title: "ระบบเครื่องยนต์และส่งกำลัง",
       image: "/images/categories/cat_engine.png",
+    },
+    {
+      id: "filters",
+      title: "ไส้กรองและงานเช็กระยะ",
+      image: "/images/categories/cat_care.png",
+    },
+    {
+      id: "electrical",
+      title: "ระบบไฟและแบตเตอรี่",
+      image: "/images/categories/cat_tools.png",
     },
     {
       id: "body",
@@ -32,18 +42,8 @@ export default function CategoryCarousel({ onSelectCategory }) {
       image: "/images/categories/cat_body.png",
     },
     {
-      id: "filter",
-      title: "การดูแลรถยนต์และอุปกรณ์",
-      image: "/images/categories/cat_care.png",
-    },
-    {
-      id: "paint",
-      title: "ผลิตภัณฑ์ซ่อมสีและตัวถัง",
-      image: "/images/categories/cat_paint.png",
-    },
-    {
       id: "tools",
-      title: "เครื่องมือช่างและอุปกรณ์",
+      title: "เครื่องมือช่างและเคมีภัณฑ์",
       image: "/images/categories/cat_tools.png",
     },
   ];

@@ -1,6 +1,15 @@
 "use client";
 
-export default function Footer({ setActiveTab }) {
+export default function Footer({ setActiveTab, onSelectCategory }) {
+  const handleCategoryClick = (catId) => (e) => {
+    e.preventDefault();
+    if (onSelectCategory) {
+      onSelectCategory(catId);
+    } else if (setActiveTab) {
+      setActiveTab("order");
+    }
+  };
+
   return (
     <footer className="sp-footer pt-5 pb-4 mt-5">
       <div className="container-fluid px-4 px-lg-5">
@@ -39,32 +48,32 @@ export default function Footer({ setActiveTab }) {
             <h6 className="sp-footer-title">หมวดหมู่อะไหล่</h6>
             <ul className="list-unstyled small d-flex flex-column gap-2 mb-0">
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("order"); }}>
-                  <i className="bi bi-chevron-right text-danger me-2 small" style={{ fontSize: "0.72rem" }}></i>
+                <a href="#" onClick={handleCategoryClick("fluids")}>
+                  <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
                   <span>น้ำมันเครื่อง &amp; ของเหลว</span>
                 </a>
               </li>
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("order"); }}>
-                  <i className="bi bi-chevron-right text-danger me-2 small" style={{ fontSize: "0.72rem" }}></i>
+                <a href="#" onClick={handleCategoryClick("brake")}>
+                  <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
                   <span>ระบบเบรก &amp; จานเบรก</span>
                 </a>
               </li>
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("order"); }}>
-                  <i className="bi bi-chevron-right text-danger me-2 small" style={{ fontSize: "0.72rem" }}></i>
+                <a href="#" onClick={handleCategoryClick("filters")}>
+                  <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
                   <span>ไส้กรองน้ำมัน &amp; กรองแอร์</span>
                 </a>
               </li>
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("order"); }}>
-                  <i className="bi bi-chevron-right text-danger me-2 small" style={{ fontSize: "0.72rem" }}></i>
+                <a href="#" onClick={handleCategoryClick("electrical")}>
+                  <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
                   <span>แบตเตอรี่ &amp; ระบบไฟ</span>
                 </a>
               </li>
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("order"); }}>
-                  <i className="bi bi-chevron-right text-danger me-2 small" style={{ fontSize: "0.72rem" }}></i>
+                <a href="#" onClick={handleCategoryClick("suspension")}>
+                  <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
                   <span>ช่วงล่าง &amp; โช้คอัพ</span>
                 </a>
               </li>
@@ -78,7 +87,7 @@ export default function Footer({ setActiveTab }) {
               <li>
                 <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("jobs"); }}>
                   <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
-                  <span>ฟังชั่นประเมินราคาซ่อม</span>
+                  <span>ฟังก์ชันประเมินราคาซ่อม</span>
                 </a>
               </li>
               <li>

@@ -8,29 +8,39 @@ export default function OrderCatalog({
   onAddToCart,
   onGoToCart,
   initialSearch = "",
+  searchQuery,
   initialCategory = "all",
+  activeCategory,
 }) {
-  const [search, setSearch] = useState(initialSearch);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory || "all");
+  const currentInitialSearch = searchQuery !== undefined ? searchQuery : initialSearch;
+  const currentInitialCat = activeCategory || initialCategory || "all";
+
+  const [search, setSearch] = useState(currentInitialSearch);
+  const [selectedCategory, setSelectedCategory] = useState(currentInitialCat);
   const [selectedBrand, setSelectedBrand] = useState("all");
   const [selectedMaker, setSelectedMaker] = useState("all");
   const [selectedModel, setSelectedModel] = useState("all");
   const [selectedYear, setSelectedYear] = useState("all");
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(24);
   const [layoutMode, setLayoutMode] = useState("grid-4"); // 'list' | 'grid-3' | 'grid-4'
   const [sortBy, setSortBy] = useState("popular");
   const [quantities, setQuantities] = useState({});
   const [addedNotice, setAddedNotice] = useState("");
 
   useEffect(() => {
-    if (initialCategory) {
-      setSelectedCategory(initialCategory);
-    }
-  }, [initialCategory]);
+    const targetCat = activeCategory || initialCategory || "all";
+    setSelectedCategory(targetCat);
+    // รีเซ็ตตัวกรองย่อย เพื่อให้เห็นรายการสินค้าในหมวดหมู่อย่างครบถ้วน
+    setSelectedBrand("all");
+    setSelectedMaker("all");
+    setSelectedModel("all");
+    setSelectedYear("all");
+  }, [initialCategory, activeCategory]);
 
   useEffect(() => {
-    setSearch(initialSearch);
-  }, [initialSearch]);
+    const targetSearch = searchQuery !== undefined ? searchQuery : (initialSearch || "");
+    setSearch(targetSearch);
+  }, [initialSearch, searchQuery]);
 
   const bannerLinks = [
     { id: "all", label: "อะไหล่ทั้งหมดในคลัง", icon: "bi-grid-fill" },
@@ -137,12 +147,20 @@ export default function OrderCatalog({
 
   const filteredParts = (parts || []).filter((p) => {
     const term = search.toLowerCase().trim();
-    const matchesSearch =
-      !term ||
-      p.part_name.toLowerCase().includes(term) ||
-      p.part_id.toLowerCase().includes(term);
-
-    if (!matchesSearch) return false;
+    if (term) {
+      const pName = p.part_name.toLowerCase();
+      const pId = p.part_id.toLowerCase();
+      // 1. Direct match on full term or ID
+      let matchesSearch = pName.includes(term) || pId.includes(term);
+      if (!matchesSearch) {
+        // 2. Tokenized match (e.g. "น้ำมันเกียร์ อัตโนมัติ" matches "น้ำมันเกียร์อัตโนมัติ", "Brembo DOT" matches "Brembo Premium Brake Fluid DOT 4")
+        const tokens = term.split(/\s+/).filter(Boolean);
+        if (tokens.length > 1) {
+          matchesSearch = tokens.every((t) => pName.includes(t)) || tokens.some((t) => pName.includes(t));
+        }
+      }
+      if (!matchesSearch) return false;
+    }
 
     // กรองแบรนด์สินค้า
     if (selectedBrand !== "all") {
@@ -172,28 +190,35 @@ export default function OrderCatalog({
       }
     }
 
-    // กรองหมวดหมู่ระบบอะไหล่
-    if (selectedCategory === "all") return true;
-    if (selectedCategory === "fluids" || selectedCategory === "engine-fluids") {
+    // กรองหมวดหมู่ระบบอะไหล่ (รองรับทุก alias และทุกคีย์จาก Navbar, Carousel, และ MegaMenu)
+    if (!selectedCategory || selectedCategory === "all") return true;
+
+    const cat = selectedCategory.toLowerCase();
+
+    if (["fluids", "engine-fluids", "oil", "fluid"].includes(cat)) {
       return (
         p.part_name.includes("น้ำมัน") ||
         p.part_name.includes("หล่อเย็น") ||
         p.part_name.includes("เกียร์") ||
         p.part_name.includes("จารบี") ||
-        p.part_name.includes("Cleaner")
+        p.part_name.includes("Cleaner") ||
+        p.part_name.includes("หล่อลื่น")
       );
     }
-    if (selectedCategory === "suspension") {
+
+    if (["suspension", "brake", "brakes", "shock", "shocks"].includes(cat)) {
       return (
         p.part_name.includes("โช้ค") ||
         p.part_name.includes("เบรก") ||
         p.part_name.includes("จานเบรก") ||
         p.part_name.includes("ลูกหมาก") ||
         p.part_name.includes("ลูกปืน") ||
-        p.part_name.includes("เพลา")
+        p.part_name.includes("เพลา") ||
+        p.part_name.includes("ปีกนก")
       );
     }
-    if (selectedCategory === "cooling") {
+
+    if (["cooling", "radiator"].includes(cat)) {
       return (
         p.part_name.includes("หล่อเย็น") ||
         p.part_name.includes("หม้อน้ำ") ||
@@ -202,60 +227,114 @@ export default function OrderCatalog({
         p.part_name.includes("วาล์วน้ำ")
       );
     }
-    if (selectedCategory === "engine") {
+
+    if (["engine", "engine-drivetrain", "motor"].includes(cat)) {
       return (
         p.part_name.includes("หัวเทียน") ||
         p.part_name.includes("สายพาน") ||
         p.part_name.includes("เครื่อง") ||
         p.part_name.includes("แท่นเครื่อง") ||
-        p.part_name.includes("ไทม์มิ่ง")
+        p.part_name.includes("ไทม์มิ่ง") ||
+        p.part_name.includes("วาล์ว") ||
+        p.part_name.includes("ปั๊มน้ำ")
       );
     }
-    if (selectedCategory === "electrical") {
+
+    if (["electrical", "battery", "electric"].includes(cat)) {
       return (
         p.part_name.includes("แบตเตอรี่") ||
         p.part_name.includes("หัวเทียน") ||
         p.part_name.includes("คอยล์") ||
         p.part_name.includes("ไดชาร์จ") ||
         p.part_name.includes("ไฟ") ||
-        p.part_name.includes("LED")
+        p.part_name.includes("LED") ||
+        p.part_name.includes("หลอด")
       );
     }
-    if (selectedCategory === "filters") {
+
+    if (["filters", "filter"].includes(cat)) {
       return p.part_name.includes("กรอง");
     }
-    if (selectedCategory === "body") {
+
+    if (["body", "accessories"].includes(cat)) {
       return (
         p.part_name.includes("ไฟ") ||
         p.part_name.includes("กระจก") ||
         p.part_name.includes("ตัวถัง") ||
-        p.part_name.includes("ใบปัดน้ำฝน")
+        p.part_name.includes("ใบปัดน้ำฝน") ||
+        p.part_name.includes("โคม")
       );
     }
-    if (selectedCategory === "genuine") {
-      return (
-        p.part_name.toUpperCase().includes("TOYOTA") ||
-        p.part_name.toUpperCase().includes("HONDA") ||
-        p.part_name.toUpperCase().includes("DENSO") ||
-        p.part_name.toUpperCase().includes("AISIN") ||
-        p.part_name.toUpperCase().includes("BREMBO") ||
-        p.part_name.toUpperCase().includes("BOSCH")
+
+    if (["genuine", "oem"].includes(cat)) {
+      return ["TOYOTA", "HONDA", "DENSO", "AISIN", "BREMBO", "BOSCH", "NGK", "GS", "MONROE", "KOYORAD", "GATES", "555"].some((b) =>
+        p.part_name.toUpperCase().includes(b)
       );
     }
-    if (selectedCategory === "tools") {
+
+    if (["tools", "care", "paint"].includes(cat)) {
       return (
         p.part_name.includes("จารบี") ||
         p.part_name.includes("เครื่องมือ") ||
         p.part_name.includes("อุปกรณ์") ||
         p.part_name.includes("น้ำยา") ||
-        p.part_name.includes("Cleaner")
+        p.part_name.includes("Cleaner") ||
+        p.part_name.includes("หล่อลื่น")
       );
     }
+
     return true;
   });
 
+  // รายการสินค้าที่จะแสดง (หากตัวกรองย่อยไม่พบสินค้า ให้ดึงสินค้าในหมวดหมู่นั้นมาแสดงแทน ป้องกันหน้าจอว่าง)
+  let activeList = filteredParts;
+  let isFallback = false;
+
+  if (activeList.length === 0 && (parts || []).length > 0) {
+    const categoryOnly = (parts || []).filter((p) => {
+      if (!selectedCategory || selectedCategory === "all") return true;
+      const cat = selectedCategory.toLowerCase();
+      if (["fluids", "engine-fluids", "oil", "fluid"].includes(cat)) {
+        return p.part_name.includes("น้ำมัน") || p.part_name.includes("หล่อเย็น") || p.part_name.includes("เกียร์") || p.part_name.includes("จารบี") || p.part_name.includes("Cleaner") || p.part_name.includes("หล่อลื่น");
+      }
+      if (["suspension", "brake", "brakes", "shock", "shocks"].includes(cat)) {
+        return p.part_name.includes("โช้ค") || p.part_name.includes("เบรก") || p.part_name.includes("จานเบรก") || p.part_name.includes("ลูกหมาก") || p.part_name.includes("ลูกปืน") || p.part_name.includes("เพลา") || p.part_name.includes("ปีกนก");
+      }
+      if (["cooling", "radiator"].includes(cat)) {
+        return p.part_name.includes("หล่อเย็น") || p.part_name.includes("หม้อน้ำ") || p.part_name.includes("พัดลม") || p.part_name.includes("ปั๊มน้ำ") || p.part_name.includes("วาล์วน้ำ");
+      }
+      if (["engine", "engine-drivetrain", "motor"].includes(cat)) {
+        return p.part_name.includes("หัวเทียน") || p.part_name.includes("สายพาน") || p.part_name.includes("เครื่อง") || p.part_name.includes("แท่นเครื่อง") || p.part_name.includes("ไทม์มิ่ง") || p.part_name.includes("วาล์ว") || p.part_name.includes("ปั๊มน้ำ");
+      }
+      if (["electrical", "battery", "electric"].includes(cat)) {
+        return p.part_name.includes("แบตเตอรี่") || p.part_name.includes("หัวเทียน") || p.part_name.includes("คอยล์") || p.part_name.includes("ไดชาร์จ") || p.part_name.includes("ไฟ") || p.part_name.includes("LED") || p.part_name.includes("หลอด");
+      }
+      if (["filters", "filter"].includes(cat)) {
+        return p.part_name.includes("กรอง");
+      }
+      if (["body", "accessories"].includes(cat)) {
+        return p.part_name.includes("ไฟ") || p.part_name.includes("กระจก") || p.part_name.includes("ตัวถัง") || p.part_name.includes("ใบปัดน้ำฝน") || p.part_name.includes("โคม");
+      }
+      if (["genuine", "oem"].includes(cat)) {
+        return ["TOYOTA", "HONDA", "DENSO", "AISIN", "BREMBO", "BOSCH", "NGK", "GS", "MONROE", "KOYORAD", "GATES", "555"].some((b) => p.part_name.toUpperCase().includes(b));
+      }
+      if (["tools", "care", "paint"].includes(cat)) {
+        return p.part_name.includes("จารบี") || p.part_name.includes("เครื่องมือ") || p.part_name.includes("อุปกรณ์") || p.part_name.includes("น้ำยา") || p.part_name.includes("Cleaner") || p.part_name.includes("หล่อลื่น");
+      }
+      return true;
+    });
+
+    if (categoryOnly.length > 0) {
+      activeList = categoryOnly;
+      isFallback = true;
+    } else {
+      activeList = parts || [];
+      isFallback = true;
+    }
+  }
+
   // จัดเรียง
-  const sortedParts = [...filteredParts].sort((a, b) => {
+  const sortedParts = [...activeList].sort((a, b) => {
     if (sortBy === "price-low") return a.price - b.price;
     if (sortBy === "price-high") return b.price - a.price;
     if (sortBy === "stock") return b.stock_qty - a.stock_qty;
@@ -316,7 +395,14 @@ export default function OrderCatalog({
                   key={link.id}
                   type="button"
                   className={`shop-banner-link ${isActive ? "active" : ""}`}
-                  onClick={() => setSelectedCategory(link.id)}
+                  onClick={() => {
+                    setSelectedCategory(link.id);
+                    setSearch("");
+                    setSelectedBrand("all");
+                    setSelectedMaker("all");
+                    setSelectedModel("all");
+                    setSelectedYear("all");
+                  }}
                 >
                   <i className={`bi ${link.icon}`}></i>
                   <span>{link.label}</span>
@@ -507,7 +593,14 @@ export default function OrderCatalog({
                       className={`shop-sidebar-item ${cat.isFlash ? "flash-sale-side" : ""} ${
                         isActive ? "active" : ""
                       }`}
-                      onClick={() => setSelectedCategory(cat.id)}
+                      onClick={() => {
+                        setSelectedCategory(cat.id);
+                        setSearch("");
+                        setSelectedBrand("all");
+                        setSelectedMaker("all");
+                        setSelectedModel("all");
+                        setSelectedYear("all");
+                      }}
                     >
                       <div className="d-flex align-items-center gap-2">
                         {cat.isFlash && <i className="bi bi-lightning-charge-fill text-danger"></i>}
@@ -546,6 +639,31 @@ export default function OrderCatalog({
 
           {/* รายการสินค้าขวามือ (Product Grid) */}
           <div className="col-12 col-lg-9">
+            {isFallback && (
+              <div
+                className="alert alert-warning border-0 shadow-sm d-flex flex-wrap align-items-center justify-content-between mb-3 py-2 px-3 rounded-3"
+                style={{ fontSize: "0.88rem" }}
+              >
+                <div className="d-flex align-items-center gap-2">
+                  <i className="bi bi-info-circle-fill text-warning fs-5"></i>
+                  <span>
+                    แสดงสินค้าแนะนำที่พร้อมใช้งานในหมวดนี้ <strong>({displayParts.length} รายการ)</strong>
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger btn-sm py-1 px-3 mt-1 mt-sm-0"
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setSelectedBrand("all");
+                    setSearch("");
+                  }}
+                >
+                  <i className="bi bi-arrow-counterclockwise me-1"></i> ดูสินค้าทั้งหมด ({parts?.length || 0})
+                </button>
+              </div>
+            )}
+
             {displayParts.length === 0 ? (
               <div className="card bg-white border-0 shadow-sm p-5 text-center">
                 <i className="bi bi-search text-muted fs-1 mb-3"></i>
