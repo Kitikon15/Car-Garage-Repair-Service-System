@@ -94,7 +94,7 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
         <div
           className="p-4 text-white"
           style={{
-            background: "linear-gradient(135deg, #034ea2 0%, #002752 100%)",
+            background: "var(--theme-red-gradient, linear-gradient(135deg, #dc2626 0%, #991b1b 100%))",
           }}
         >
           <div className="d-flex align-items-center gap-2 mb-2">
@@ -300,7 +300,7 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
                           </button>
                         </div>
                         <button
-                          className="btn btn-sp-primary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 py-2"
+                          className="btn btn-garage-unique btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 py-2"
                           onClick={() => handleAdd(part)}
                         >
                           <i className="bi bi-cart-plus"></i>

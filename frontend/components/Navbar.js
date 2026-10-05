@@ -13,7 +13,7 @@ export default function Navbar({
   searchQuery = "",
   setSearchQuery,
   onPerformSearch,
-  currentTheme = "cyber",
+  currentTheme = "red-white",
   onSelectTheme,
   isBWMode = false,
   toggleBWMode,
@@ -150,29 +150,33 @@ export default function Navbar({
                 title="เลือกธีมสีของระบบ"
               >
                 <span
-                  className="rounded-circle d-inline-block"
+                  className="rounded-circle d-inline-block border"
                   style={{
                     width: "14px",
                     height: "14px",
                     backgroundColor:
-                      currentTheme === "racing"
+                      currentTheme === "red-white"
                         ? "#dc2626"
-                        : currentTheme === "emerald"
-                        ? "#059669"
+                        : currentTheme === "racing"
+                        ? "#991b1b"
+                        : currentTheme === "cyber"
+                        ? "#2563eb"
                         : currentTheme === "monochrome"
                         ? "#18181b"
-                        : "#2563eb",
+                        : "#dc2626",
                     boxShadow: "0 0 6px rgba(0,0,0,0.25)",
                   }}
                 />
                 <span className="d-none d-md-inline small">
-                  {currentTheme === "racing"
+                  {currentTheme === "red-white"
+                    ? "Red & White (แดงขาว)"
+                    : currentTheme === "racing"
                     ? "Midnight Racing"
-                    : currentTheme === "emerald"
-                    ? "British Emerald"
+                    : currentTheme === "cyber"
+                    ? "Cyber Cobalt"
                     : currentTheme === "monochrome"
                     ? "Monochrome"
-                    : "Cyber Cobalt"}
+                    : "Red & White (แดงขาว)"}
                 </span>
                 <i className="bi bi-palette-fill text-muted small"></i>
               </button>
@@ -187,11 +191,25 @@ export default function Navbar({
                   />
                   <div
                     className="position-absolute end-0 mt-2 bg-white rounded-3 shadow-lg border p-2"
-                    style={{ zIndex: 1060, width: "210px" }}
+                    style={{ zIndex: 1060, width: "230px" }}
                   >
                     <div className="small fw-bold text-muted px-2 py-1 mb-1 border-bottom">
                       เลือกธีมสีระบบ (Auto Theme)
                     </div>
+
+                    <button
+                      type="button"
+                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
+                        currentTheme === "red-white" ? "bg-danger-subtle text-danger fw-bold" : "btn-light"
+                      }`}
+                      onClick={() => {
+                        onSelectTheme && onSelectTheme("red-white");
+                        setShowThemeMenu(false);
+                      }}
+                    >
+                      <span className="rounded-circle p-1 bg-danger d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>Red &amp; White (แดงขาว - ค่าเริ่มต้น)</span>
+                    </button>
 
                     <button
                       type="button"
@@ -204,35 +222,21 @@ export default function Navbar({
                       }}
                     >
                       <span className="rounded-circle p-1 bg-primary d-inline-block" style={{ width: "12px", height: "12px" }}></span>
-                      <span>Cyber Cobalt (ค่าเริ่มต้น)</span>
+                      <span>Cyber Cobalt (น้ำเงินไซเบอร์)</span>
                     </button>
 
                     <button
                       type="button"
                       className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
-                        currentTheme === "racing" ? "bg-danger-subtle text-danger fw-bold" : "btn-light"
+                        currentTheme === "racing" ? "bg-secondary-subtle text-dark fw-bold" : "btn-light"
                       }`}
                       onClick={() => {
                         onSelectTheme && onSelectTheme("racing");
                         setShowThemeMenu(false);
                       }}
                     >
-                      <span className="rounded-circle p-1 bg-danger d-inline-block" style={{ width: "12px", height: "12px" }}></span>
-                      <span>Midnight Racing (สปอร์ต)</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`btn btn-sm w-100 text-start d-flex align-items-center gap-2 py-2 px-2 rounded-2 mb-1 ${
-                        currentTheme === "emerald" ? "bg-success-subtle text-success fw-bold" : "btn-light"
-                      }`}
-                      onClick={() => {
-                        onSelectTheme && onSelectTheme("emerald");
-                        setShowThemeMenu(false);
-                      }}
-                    >
-                      <span className="rounded-circle p-1 bg-success d-inline-block" style={{ width: "12px", height: "12px" }}></span>
-                      <span>British Emerald (พรีเมียม)</span>
+                      <span className="rounded-circle p-1 bg-dark d-inline-block" style={{ width: "12px", height: "12px" }}></span>
+                      <span>Midnight Racing (ดาร์กสปอร์ต)</span>
                     </button>
 
                     <button
@@ -246,7 +250,7 @@ export default function Navbar({
                       }}
                     >
                       <span className="rounded-circle p-1 bg-dark border border-white d-inline-block" style={{ width: "12px", height: "12px" }}></span>
-                      <span>Monochrome (ขาวดำ)</span>
+                      <span>Monochrome (โหมดขาวดำ)</span>
                     </button>
                   </div>
                 </>
@@ -282,10 +286,10 @@ export default function Navbar({
             <button
               className={`btn d-flex align-items-center gap-2 py-2 px-3 rounded-pill ${
                 activeTab === "cart"
-                  ? "btn-garage-fire text-white shadow-lg"
+                  ? "btn-garage-fire shadow-lg"
                   : cartCount > 0
-                  ? "btn-garage-unique text-white shadow"
-                  : "btn-outline-primary border-sp-blue text-sp-blue"
+                  ? "btn-garage-unique shadow"
+                  : "btn-outline-danger border-sp-blue text-sp-blue bg-white"
               }`}
               onClick={() => {
                 if (setActiveTab) setActiveTab("cart");

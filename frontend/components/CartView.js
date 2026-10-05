@@ -427,7 +427,7 @@ export default function CartView({
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                     />
-                    <button className="btn btn-garage-dark btn-sm px-3" type="submit">
+                    <button className="btn btn-garage-unique btn-sm px-3" type="submit">
                       ใช้งาน
                     </button>
                   </div>

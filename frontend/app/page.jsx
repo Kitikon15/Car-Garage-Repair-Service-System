@@ -32,7 +32,7 @@ export default function Dashboard() {
   const [selectedSearchBrand, setSelectedSearchBrand] = useState("Toyota");
 
   // ระบบเลือกธีมสีและโหมดขาวดำ (Multi-Theme System & B&W Mode)
-  const [currentTheme, setCurrentTheme] = useState("cyber"); // 'cyber' | 'racing' | 'emerald' | 'monochrome'
+  const [currentTheme, setCurrentTheme] = useState("red-white"); // 'red-white' | 'cyber' | 'racing' | 'monochrome'
   const [isBWMode, setIsBWMode] = useState(false);
 
   useEffect(() => {
@@ -46,11 +46,15 @@ export default function Dashboard() {
           setIsBWMode(true);
           document.body.classList.add("mode-bw");
         }
-      } else if (savedBW === "true") {
-        setIsBWMode(true);
-        setCurrentTheme("monochrome");
-        document.body.setAttribute("data-garage-theme", "monochrome");
-        document.body.classList.add("mode-bw");
+      } else {
+        // ค่าเริ่มต้น Red & White
+        document.body.setAttribute("data-garage-theme", "red-white");
+        if (savedBW === "true") {
+          setIsBWMode(true);
+          setCurrentTheme("monochrome");
+          document.body.setAttribute("data-garage-theme", "monochrome");
+          document.body.classList.add("mode-bw");
+        }
       }
     } catch (e) {
       console.warn("localStorage error:", e);
@@ -77,8 +81,8 @@ export default function Dashboard() {
 
   const toggleBWMode = () => {
     if (isBWMode) {
-      // สลับกลับเป็นโหมดสี (ถ้าเดิมเคยเป็น cyber, racing, emerald ให้กลับไป หรือ default เป็น cyber)
-      const prevColorTheme = currentTheme === "monochrome" ? "cyber" : currentTheme;
+      // สลับกลับเป็นโหมดสี (ถ้าเดิมเคยเป็น red-white, cyber, racing ให้กลับไป หรือ default เป็น red-white)
+      const prevColorTheme = currentTheme === "monochrome" ? "red-white" : currentTheme;
       handleSelectTheme(prevColorTheme);
     } else {
       // สลับเป็นโหมดขาวดำ
@@ -398,7 +402,7 @@ export default function Dashboard() {
                           </div>
 
                           <button
-                            className="btn btn-sp-primary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-1"
+                            className="btn btn-garage-unique btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-1"
                             onClick={() => handleAddToCart(part, 1)}
                           >
                             <i className="bi bi-cart-plus"></i>

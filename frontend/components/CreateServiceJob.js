@@ -312,7 +312,7 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
               />
               <button
                 type="button"
-                className="btn btn-outline-primary"
+                className="btn btn-garage-unique btn-sm px-3"
                 onClick={handleAddPartToDraft}
                 disabled={!partToAdd}
               >
@@ -376,7 +376,7 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
 
           <button
             type="submit"
-            className="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-garage-unique w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 shadow"
             disabled={loading}
           >
             {loading ? (
