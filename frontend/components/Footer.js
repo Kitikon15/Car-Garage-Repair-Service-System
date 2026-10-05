@@ -24,7 +24,7 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
                 <i className="bi bi-gear-wide-connected fs-4 text-sp-blue"></i>
               </div>
               <span className="fs-4 fw-black text-white">
-                Service<span className="text-warning">Garage</span>
+                Car<span className="text-warning">Garage</span> <span className="badge bg-danger ms-1 small" style={{ fontSize: "0.68rem" }}>PRO</span>
               </span>
             </div>
             <p className="text-white small pe-lg-4" style={{ lineHeight: "1.8", maxWidth: "540px", opacity: 0.95 }}>
@@ -111,7 +111,7 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
               <li>
                 <a href="#" onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab("contact"); }}>
                   <i className="bi bi-chevron-right text-warning me-2 small" style={{ fontSize: "0.72rem" }}></i>
-                  <span>ติดต่อฝ่ายขายและบริการ</span>
+                  <span>ติดต่อฝ่ายช่างและศูนย์บริการ</span>
                 </a>
               </li>
             </ul>

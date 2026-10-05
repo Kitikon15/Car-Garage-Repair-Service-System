@@ -42,9 +42,9 @@ export default function ContactSales() {
                 <i className="bi bi-telephone-fill"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1">สายด่วนฝ่ายขาย &amp; สอบถามอะไหล่</h6>
-                <p className="text-sp-blue fw-semibold mb-0 fs-5">02-007-2992</p>
-                <small className="text-muted">บริการให้คำปรึกษาและเช็กเบอร์อะไหล่ตรงรุ่น</small>
+                <h6 className="fw-bold mb-1">สายด่วนศูนย์บริการ &amp; ฝ่ายช่าง</h6>
+                <p className="text-sp-blue fw-semibold mb-0 fs-5">02-888-7999</p>
+                <small className="text-muted">บริการให้คำปรึกษางานซ่อม นัดหมาย และเช็กเบอร์อะไหล่ตรงรุ่น</small>
               </div>
             </div>
 

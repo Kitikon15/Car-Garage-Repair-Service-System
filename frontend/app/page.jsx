@@ -15,8 +15,6 @@ import CartView from "../components/CartView";
 import ContactSales from "../components/ContactSales";
 import GarageBuilder from "../components/GarageBuilder";
 import PromoBannerCarousel from "../components/PromoBannerCarousel";
-import CategoryCarousel from "../components/CategoryCarousel";
-import BrandCarousel from "../components/BrandCarousel";
 import ProductImage from "../components/ProductImage";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -252,27 +250,38 @@ export default function Dashboard() {
         {/* ========================================================== */}
         {/* TAB 1: หน้าแรก (ServiceGarage Homepage & Dashboard) */}
         {/* ========================================================== */}
+        {/* ========================================================== */}
+        {/* TAB 1: หน้าแรก (CarGarage PRO Dashboard & Operations) */}
+        {/* ========================================================== */}
         {activeTab === "dashboard" && (
           <div>
-            {/* 1. HERO BANNER CAROUSEL สไตล์ ServiceGarage (เลื่อนซ้าย-ขวาได้) */}
+            {/* 1. HERO COMMAND CENTER ศูนย์บริการและอู่ซ่อมรถยนต์ */}
             <PromoBannerCarousel
+              vehiclesCount={vehicles?.length || 0}
+              partsCount={parts?.length || 0}
+              invoicesCount={invoices?.length || 0}
               onShopNow={() => setActiveTab("order")}
               onEstimate={() => {
                 setActiveTab("jobs");
                 setJobsSubTab("estimator");
               }}
+              onOpenJob={() => {
+                setActiveTab("jobs");
+                setJobsSubTab("form");
+              }}
+              onViewVehicles={() => setActiveTab("vehicleSearch")}
             />
 
-            {/* 2. สิทธิประโยชน์และการบริการ (Trust Badges) */}
+            {/* 2. มาตรฐานการบริการของศูนย์ซ่อม (Garage Service Standards) */}
             <div className="row g-3 mb-4">
               <div className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 p-3 bg-white border-0 shadow-sm d-flex flex-row align-items-center gap-3">
                   <div className="stat-icon bg-sp-blue-light text-sp-blue fs-3">
-                    <i className="bi bi-patch-check-fill"></i>
+                    <i className="bi bi-shield-check"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">อะไหล่แท้ 100%</h6>
-                    <small className="text-muted">คัดสรรจากศูนย์และ OEM แท้</small>
+                    <h6 className="fw-bold mb-0 text-dark">อะไหล่แท้มาตรฐาน OEM</h6>
+                    <small className="text-muted">คัดสรรตรงรุ่น พร้อมใบรับประกัน</small>
                   </div>
                 </div>
               </div>
@@ -280,11 +289,11 @@ export default function Dashboard() {
               <div className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 p-3 bg-white border-0 shadow-sm d-flex flex-row align-items-center gap-3">
                   <div className="stat-icon bg-success-subtle text-success fs-3">
-                    <i className="bi bi-truck"></i>
+                    <i className="bi bi-speedometer2"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">จัดส่งด่วนทั่วไทย</h6>
-                    <small className="text-muted">ใน กทม. ส่งไวภายใน 3 ชม.</small>
+                    <h6 className="fw-bold mb-0 text-dark">บริการด่วน ทันใจ</h6>
+                    <small className="text-muted">ตรวจเช็กแม่นยำ ส่งมอบตรงเวลา</small>
                   </div>
                 </div>
               </div>
@@ -292,11 +301,11 @@ export default function Dashboard() {
               <div className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 p-3 bg-white border-0 shadow-sm d-flex flex-row align-items-center gap-3">
                   <div className="stat-icon bg-warning-subtle text-warning fs-3">
-                    <i className="bi bi-tag-fill"></i>
+                    <i className="bi bi-receipt-cutoff"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">ราคาส่งสำหรับอู่</h6>
-                    <small className="text-muted">ราคามาตรฐาน ออกใบกำกับภาษี</small>
+                    <h6 className="fw-bold mb-0 text-dark">ราคาโปร่งใส มาตรฐาน</h6>
+                    <small className="text-muted">คำนวณค่าแรงและอะไหล่แม่นยำ</small>
                   </div>
                 </div>
               </div>
@@ -304,111 +313,269 @@ export default function Dashboard() {
               <div className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 p-3 bg-white border-0 shadow-sm d-flex flex-row align-items-center gap-3">
                   <div className="stat-icon bg-info-subtle text-info fs-3">
-                    <i className="bi bi-shield-check"></i>
+                    <i className="bi bi-person-gear"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">ราคามาตรฐานโปร่งใส</h6>
-                    <small className="text-muted">คำนวณค่าแรงและอะไหล่แม่นยำ</small>
+                    <h6 className="fw-bold mb-0 text-dark">ช่างผู้เชี่ยวชาญดูแล</h6>
+                    <small className="text-muted">พร้อมเครื่องมือวิเคราะห์ครบครัน</small>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 3. หมวดหมู่สินค้า เลื่อนซ้าย-ขวาได้ (Category Carousel) */}
-            <CategoryCarousel
-              onSelectCategory={(catId) => {
-                setSelectedCatalogCategory(catId);
-                setActiveTab("order");
-              }}
-            />
+            {/* 3. โมดูล 6 บริการหลักของศูนย์บริการและอู่ซ่อมรถ (Core Garage Services) */}
+            <div className="card border-0 shadow-sm bg-white p-4 mb-4">
+              <div className="d-flex flex-wrap align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div>
+                  <h5 className="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                    <i className="bi bi-wrench-adjustable-circle-fill text-danger"></i>
+                    <span>ระบบบริการหลักของอู่ซ่อมรถ (Core Garage Services)</span>
+                  </h5>
+                  <small className="text-muted">เลือกบริการที่ต้องการเพื่อเปิดใบงาน ประเมินราคา หรือเบิกอะไหล่เข้าระบบ</small>
+                </div>
+                <span className="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill small fw-bold">
+                  6 โมดูลงานบริการ
+                </span>
+              </div>
 
-            {/* 4. ช้อปตามยี่ห้อรถ เลื่อนซ้าย-ขวาได้ (Brand Carousel) */}
-            <BrandCarousel
-              onSelectBrand={(brandId) => {
-                setSelectedSearchBrand(brandId);
-                setActiveTab("vehicleSearch");
-              }}
-            />
+              <div className="row g-3">
+                {/* 1. งานซ่อมบำรุงทั่วไป */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => {
+                      setActiveTab("jobs");
+                      setJobsSubTab("form");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-danger bg-opacity-10 text-danger fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-tools"></i>
+                        </div>
+                        <span className="badge bg-danger text-white">Repair</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">งานซ่อมบำรุงทั่วไป (Repair Job)</h6>
+                      <p className="text-muted small mb-3">
+                        ซ่อมเครื่องยนต์ เกียร์ ช่วงล่าง ระบบส่งกำลัง และงานซ่อมแก้ไขความเสียหาย
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-outline-danger btn-sm w-100 fw-bold rounded-pill">
+                      เปิดใบสั่งซ่อมบำรุง <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
 
-            {/* 5. การ์ดสถิติ 4 ตัวหลัก */}
+                {/* 2. เช็กระยะตามรอบ */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => {
+                      setActiveTab("jobs");
+                      setJobsSubTab("form");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-success bg-opacity-10 text-success fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-shield-check"></i>
+                        </div>
+                        <span className="badge bg-success text-white">Maintenance</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">เช็กระยะตามรอบ (Periodic Service)</h6>
+                      <p className="text-muted small mb-3">
+                        เปลี่ยนถ่ายน้ำมันเครื่อง ไส้กรอง ตรวจเช็กระบบความปลอดภัย 30 รายการ
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-outline-success btn-sm w-100 fw-bold rounded-pill">
+                      เลือกแพ็กเกจเช็กระยะ <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. ประเมินราคาซ่อม & ค่าแรง */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => {
+                      setActiveTab("jobs");
+                      setJobsSubTab("estimator");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-warning bg-opacity-15 text-dark fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-calculator-fill text-warning"></i>
+                        </div>
+                        <span className="badge bg-warning text-dark fw-bold">Estimator</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">ฟังก์ชันประเมินราคาซ่อม (Estimator)</h6>
+                      <p className="text-muted small mb-3">
+                        จำลองสเปกอะไหล่และคำนวณราคาประเมินค่าแรงช่างแบบเรียลไทม์
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-warning text-dark btn-sm w-100 fw-bold rounded-pill">
+                      เริ่มประเมินราคา <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4. คลังเบิกจ่ายอะไหล่ */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => setActiveTab("order")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-primary bg-opacity-10 text-primary fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-box-seam-fill"></i>
+                        </div>
+                        <span className="badge bg-primary text-white">Dispensary</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">คลังเบิก-จ่ายอะไหล่ (Parts Catalog)</h6>
+                      <p className="text-muted small mb-3">
+                        ค้นหาและเบิกจ่ายอะไหล่แท้ตรงรุ่น ตัดสต็อกคลังอัตโนมัติเมื่อสร้างใบงาน
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill">
+                      เข้าสู่คลังอะไหล่ <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 5. ทะเบียนรถ & ประวัติ */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => setActiveTab("vehicleSearch")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-info bg-opacity-10 text-info fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-car-front-fill"></i>
+                        </div>
+                        <span className="badge bg-info text-white">Vehicles</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">ทะเบียนรถ &amp; ประวัติซ่อม (Vehicle Hub)</h6>
+                      <p className="text-muted small mb-3">
+                        บันทึกข้อมูลรถยนต์ ทะเบียน ยี่ห้อ รุ่น และประวัติเจ้าของรถเพื่อเข้าบริการ
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-outline-info btn-sm w-100 fw-bold rounded-pill">
+                      ดูข้อมูลทะเบียนรถ <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 6. ใบแจ้งหนี้และบันทึกการชำระ */}
+                <div className="col-12 col-md-6 col-lg-4">
+                  <div
+                    className="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between bg-light bg-opacity-50"
+                    onClick={() => {
+                      setActiveTab("jobs");
+                      setJobsSubTab("invoices");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="stat-icon bg-secondary bg-opacity-10 text-dark fs-4 rounded-3 p-2 d-inline-flex">
+                          <i className="bi bi-receipt"></i>
+                        </div>
+                        <span className="badge bg-dark text-white">Billing</span>
+                      </div>
+                      <h6 className="fw-bold text-dark mb-1">ใบแจ้งหนี้ &amp; การเงิน (Invoices)</h6>
+                      <p className="text-muted small mb-3">
+                        ออกใบเสร็จรับเงิน สรุปแจกแจงค่าบริการ ตรวจสอบภาษีและบันทึกการชำระ
+                      </p>
+                    </div>
+                    <button type="button" className="btn btn-outline-dark btn-sm w-100 fw-bold rounded-pill">
+                      ดูรายการใบแจ้งหนี้ <i className="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. การ์ดสถิติ 4 ตัวหลัก (Garage KPI Metrics) */}
             <StatsCards stats={stats} />
 
-            {/* สินค้าแนะนำและขายดีสไตล์ ServiceGarage (Top 4 Featured Products) */}
+            {/* 5. อะไหล่แนะนำสำหรับงานบริการ (Essential Parts for Garage Service) */}
             <div className="mb-4">
               <div className="d-flex align-items-center justify-content-between mb-3">
                 <div>
                   <h5 className="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
-                    <i className="bi bi-fire text-danger"></i>
-                    <span>สินค้าแนะนำและขายดีประจำสัปดาห์</span>
+                    <i className="bi bi-box-seam text-danger"></i>
+                    <span>อะไหล่พร้อมใช้งานสำหรับงานบริการ (Service Replacement Parts)</span>
                   </h5>
-                  <small className="text-muted">อะไหล่แท้มาตรฐาน พร้อมจัดส่งด่วน</small>
+                  <small className="text-muted">อะไหล่แท้มาตรฐาน OEM พร้อมเบิกจ่ายเข้าใบสั่งซ่อมบำรุงทันที</small>
                 </div>
                 <button
-                  className="btn btn-outline-sp-primary btn-sm"
+                  className="btn btn-outline-sp-primary btn-sm rounded-pill fw-semibold"
                   onClick={() => setActiveTab("order")}
                 >
-                  ดูสินค้าทั้งหมด ({parts?.length} รายการ) <i className="bi bi-arrow-right ms-1"></i>
+                  ดูคลังอะไหล่ทั้งหมด ({parts?.length} รายการ) <i className="bi bi-arrow-right ms-1"></i>
                 </button>
               </div>
 
               <div className="row g-3">
                 {parts.slice(0, 4).map((part) => {
-                  const originalPrice = Math.round(part.price * 1.18);
-                  const discountPercent = Math.round(((originalPrice - part.price) / originalPrice) * 100);
-
                   return (
                     <div className="col-12 col-sm-6 col-lg-3" key={part.part_id}>
-                      <div className="sp-product-card">
-                        <div className="d-flex align-items-center justify-content-between mb-2">
-                          <span className="badge bg-sp-blue-light text-sp-blue font-monospace">
-                            {part.part_id}
-                          </span>
-                          <span className="badge bg-danger">
-                            -{discountPercent}%
-                          </span>
-                        </div>
-
-                        <ProductImage
-                          partId={part.part_id}
-                          partName={part.part_name}
-                          size="card"
-                          className="mb-3"
-                        />
-
-                        <h6
-                          className="fw-bold text-dark mb-2"
-                          style={{
-                            minHeight: "2.6rem",
-                            fontSize: "0.9rem",
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                          title={part.part_name}
-                        >
-                          {part.part_name}
-                        </h6>
-
-                        <div className="mt-auto">
-                          <div className="text-muted small text-decoration-line-through">
-                            ฿{originalPrice.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
-                          </div>
-                          <div className="d-flex align-items-baseline justify-content-between mb-3">
-                            <div className="fs-5 fw-bold text-sp-blue">
-                              ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
-                            </div>
-                            <span className="badge bg-success-subtle text-success small">
-                              คงเหลือ {part.stock_qty}
+                      <div className="sp-product-card h-100 d-flex flex-column justify-content-between p-3 bg-white rounded-3 border">
+                        <div>
+                          <div className="d-flex align-items-center justify-content-between mb-2">
+                            <span className="badge bg-light text-dark border font-monospace small">
+                              {part.part_id}
+                            </span>
+                            <span className={`badge ${part.stock_qty > 5 ? "bg-success bg-opacity-25 text-success border border-success border-opacity-50" : "bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50"} small`}>
+                              สต็อก {part.stock_qty} ชิ้น
                             </span>
                           </div>
 
+                          <ProductImage
+                            partId={part.part_id}
+                            partName={part.part_name}
+                            size="card"
+                            className="mb-3"
+                          />
+
+                          <h6
+                            className="fw-bold text-dark mb-2"
+                            style={{
+                              minHeight: "2.6rem",
+                              fontSize: "0.9rem",
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                            title={part.part_name}
+                          >
+                            {part.part_name}
+                          </h6>
+                        </div>
+
+                        <div className="mt-auto pt-2 border-top">
+                          <div className="d-flex align-items-baseline justify-content-between mb-3">
+                            <div className="fs-5 fw-bold text-danger">
+                              ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
+                            </div>
+                            <span className="text-muted small">ราคาต่อหน่วย</span>
+                          </div>
+
                           <button
-                            className="btn btn-garage-unique btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-1"
+                            className="btn btn-garage-unique btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-1 rounded-pill"
                             onClick={() => handleAddToCart(part, 1)}
                           >
                             <i className="bi bi-cart-plus"></i>
-                            <span>ใส่ตะกร้า</span>
+                            <span>เบิกอะไหล่รายการนี้</span>
                           </button>
                         </div>
                       </div>

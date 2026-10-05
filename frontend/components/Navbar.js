@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import CategoryNav from "./CategoryNav";
 
 export default function Navbar({
   activeTab = "dashboard",
@@ -29,12 +28,12 @@ export default function Navbar({
   }, [activeCategory]);
 
   const navItems = [
-    { id: "dashboard", label: "หน้าแรก", icon: "bi-house-door-fill" },
-    { id: "vehicleSearch", label: "ค้นหาตามรุ่นรถ", icon: "bi-car-front-fill" },
-    { id: "order", label: "คลังเบิก-จ่ายอะไหล่", icon: "bi-bag-check-fill" },
+    { id: "dashboard", label: "ภาพรวมศูนย์บริการ", icon: "bi-speedometer2" },
+    { id: "jobs", label: "ใบสั่งซ่อม & ประเมินราคา", icon: "bi-tools" },
+    { id: "order", label: "คลังเบิก-จ่ายอะไหล่", icon: "bi-box-seam-fill" },
     { id: "parts", label: "จัดการสต็อกอะไหล่", icon: "bi-boxes" },
-    { id: "jobs", label: "ใบสั่งซ่อมและใบเสร็จ", icon: "bi-file-earmark-text-fill" },
-    { id: "contact", label: "ติดต่อศูนย์บริการ", icon: "bi-geo-alt-fill" },
+    { id: "vehicleSearch", label: "ทะเบียนรถ & ประวัติ", icon: "bi-car-front-fill" },
+    { id: "contact", label: "ติดต่อศูนย์บริการ", icon: "bi-headset" },
   ];
 
   const handleSearchSubmit = (e) => {
@@ -46,37 +45,47 @@ export default function Navbar({
     }
   };
 
+  const handleCategoryNavClick = (catId) => (e) => {
+    e.preventDefault();
+    if (setActiveCategory) setActiveCategory(catId);
+    if (onPerformSearch) {
+      onPerformSearch("", catId);
+    } else if (setActiveTab) {
+      setActiveTab("order");
+    }
+  };
+
   return (
     <header className="sticky-top shadow-sm" style={{ zIndex: 1050 }}>
-      {/* 1. แถบประกาศข้อมูลระบบงานอู่และคลังอะไหล่ (Garage Management System Top Bar) */}
+      {/* 1. แถบประกาศข้อมูลระบบงานอู่ (Garage Operations Top Bar) */}
       <div className="sp-top-bar py-1 px-3 px-lg-4 d-none d-md-block">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3">
             <span className="text-white fw-semibold d-flex align-items-center gap-1">
-              <i className="bi bi-wrench-adjustable-circle-fill text-warning"></i> ระบบบริหารงานอู่ซ่อมรถและบริการอะไหล่ (Car Garage System)
+              <i className="bi bi-wrench-adjustable-circle-fill text-warning"></i> ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ (Car Garage Management)
             </span>
             <span className="opacity-50">|</span>
-            <span className="d-flex align-items-center gap-1 text-light">
-              <i className="bi bi-calculator-fill text-warning"></i> ระบบประเมินราคาซ่อม &amp; คลังอะไหล่อัตโนมัติ
+            <span className="d-flex align-items-center gap-1 text-light small">
+              <i className="bi bi-calculator-fill text-warning"></i> ประเมินราคาซ่อม &amp; ตัดสต็อกอะไหล่อัตโนมัติ
             </span>
             <span className="opacity-50">|</span>
-            <span className="d-flex align-items-center gap-1 text-light">
-              <i className="bi bi-clipboard2-check-fill text-success"></i> บันทึกงานซ่อม &amp; สต็อกอะไหล่ Real-time
+            <span className="d-flex align-items-center gap-1 text-light small">
+              <i className="bi bi-shield-check text-success"></i> ช่างผู้เชี่ยวชาญดูแล อะไหล่แท้ 100%
             </span>
           </div>
 
           <div className="d-flex align-items-center gap-3 text-light small">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-clock-history text-warning"></i> เปิดทุกวัน 08:30 - 18:00 น.
+              <i className="bi bi-clock-history text-warning"></i> เปิดบริการทุกวัน 08:30 - 18:00 น.
             </span>
           </div>
         </div>
       </div>
 
-      {/* 2. ส่วนหัวหลัก ServiceGarage (Main Header with Search & Branding) */}
+      {/* 2. ส่วนหัวหลัก (Main Header with Search & Garage Branding) */}
       <div className="sp-main-header py-3 px-3 px-lg-4">
         <div className="container-fluid d-flex flex-wrap align-items-center justify-content-between gap-3">
-          {/* ServiceGarage Logo */}
+          {/* Garage Branding Logo */}
           <a
             href="#"
             className="d-flex align-items-center gap-2 text-decoration-none"
@@ -87,24 +96,24 @@ export default function Navbar({
           >
             <div
               className="bg-sp-blue text-white rounded-3 p-2 d-flex align-items-center justify-content-center shadow-sm"
-              style={{ width: "44px", height: "44px" }}
+              style={{ width: "46px", height: "46px" }}
             >
-              <i className="bi bi-gear-wide-connected fs-4 text-warning"></i>
+              <i className="bi bi-wrench-adjustable fs-3 text-warning"></i>
             </div>
             <div>
               <div className="d-flex align-items-center gap-1">
                 <span className="fs-3 fw-black text-sp-blue tracking-tight" style={{ letterSpacing: "-0.5px" }}>
                   Car<span className="text-warning">Garage</span>
                 </span>
-                <span className="badge bg-danger ms-1 small">SYSTEM</span>
+                <span className="badge bg-danger ms-1 small fw-bold">PRO</span>
               </div>
               <div className="text-muted" style={{ fontSize: "0.72rem", marginTop: "-3px" }}>
-                ระบบบริหารจัดการอู่ซ่อมรถและบริการอะไหล่ (Garage Management)
+                ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร
               </div>
             </div>
           </a>
 
-          {/* ServiceGarage Search Bar */}
+          {/* Garage Search Bar */}
           <div className="flex-grow-1 mx-lg-4" style={{ maxWidth: "680px" }}>
             <form onSubmit={handleSearchSubmit} className="sp-search-container">
               <select
@@ -123,28 +132,28 @@ export default function Navbar({
                   }
                 }}
                 style={{
-                  minWidth: "165px",
+                  minWidth: "175px",
                   fontSize: "0.86rem",
                   fontWeight: "600",
                   cursor: "pointer",
                 }}
               >
-                <option value="all">ทุกหมวดหมู่สินค้า</option>
-                <option value="fluids">น้ำมันเครื่อง &amp; ของเหลว</option>
-                <option value="suspension">ช่วงล่าง &amp; ระบบเบรก</option>
-                <option value="engine">เครื่องยนต์ &amp; ส่งกำลัง</option>
+                <option value="all">ทุกระบบงานซ่อม &amp; อะไหล่</option>
+                <option value="fluids">ระบบของเหลว &amp; น้ำมันเครื่อง</option>
+                <option value="suspension">ระบบเบรก &amp; ช่วงล่าง</option>
+                <option value="engine">ระบบเครื่องยนต์ &amp; ส่งกำลัง</option>
                 <option value="cooling">ระบบระบายความร้อน &amp; หม้อน้ำ</option>
-                <option value="electrical">แบตเตอรี่ &amp; ระบบไฟ</option>
+                <option value="electrical">ระบบไฟ &amp; แบตเตอรี่</option>
                 <option value="filters">ไส้กรอง &amp; งานเช็กระยะ</option>
                 <option value="body">ชิ้นส่วนตัวถัง &amp; โคมไฟ</option>
                 <option value="genuine">อะไหล่แท้ศูนย์ OEM</option>
-                <option value="tools">เครื่องมือช่าง &amp; เคมีภัณฑ์</option>
+                <option value="tools">เครื่องมือช่าง &amp; อุปกรณ์อู่</option>
               </select>
 
               <input
                 type="text"
                 className="sp-search-input"
-                placeholder="ค้นหา ประเภทอะไหล่, ชื่อสินค้า, ยี่ห้อ (เช่น Shell, Brembo, Civic, Camry...)"
+                placeholder="ค้นหา รหัสอะไหล่, ชื่อสินค้า, แบรนด์ หรือรุ่นรถ..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
               />
@@ -156,8 +165,19 @@ export default function Navbar({
             </form>
           </div>
 
-          {/* Right Section: Register Vehicle & Cart */}
+          {/* Right Section: Register Vehicle & Parts Cart */}
           <div className="d-flex align-items-center gap-2 gap-sm-3">
+            {/* ปุ่มเปิดใบสั่งซ่อมด่วน */}
+            <button
+              className="btn btn-warning text-dark btn-sm d-flex align-items-center gap-1 py-2 px-3 rounded-pill fw-bold shadow-sm"
+              onClick={() => {
+                if (setActiveTab) setActiveTab("jobs");
+              }}
+              title="เปิดใบสั่งซ่อม / ประเมินราคา"
+            >
+              <i className="bi bi-tools"></i>
+              <span className="d-none d-xl-inline">ใบสั่งซ่อม</span>
+            </button>
 
             {/* ปุ่มลงทะเบียนรถ/ลูกค้า */}
             <button
@@ -169,7 +189,7 @@ export default function Navbar({
               <span className="d-none d-lg-inline">ลงทะเบียนรถ/ลูกค้า</span>
             </button>
 
-            {/* ปุ่มรถเข็น / ตะกร้าสินค้าสไตล์ Unique Gradient */}
+            {/* ปุ่มรายการเบิกอะไหล่ (Cart) */}
             <button
               className={`btn d-flex align-items-center gap-2 py-2 px-3 rounded-pill ${
                 activeTab === "cart"
@@ -181,7 +201,7 @@ export default function Navbar({
               onClick={() => {
                 if (setActiveTab) setActiveTab("cart");
               }}
-              title="ดูตะกร้าสินค้า"
+              title="ดูรายการเบิกอะไหล่"
             >
               <div className="position-relative">
                 <i className="bi bi-cart3 fs-5"></i>
@@ -192,7 +212,7 @@ export default function Navbar({
                 )}
               </div>
               <div className="text-start d-none d-sm-block">
-                <div className="small fw-semibold" style={{ fontSize: "0.72rem", lineHeight: "1" }}>ตะกร้าสินค้า</div>
+                <div className="small fw-semibold" style={{ fontSize: "0.72rem", lineHeight: "1" }}>รายการเบิก</div>
                 <div className="fw-bold" style={{ fontSize: "0.85rem", lineHeight: "1.2" }}>
                   ฿{cartTotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
                 </div>
@@ -210,7 +230,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* 3. แถบเมนูนำทางหลักสีน้ำเงิน ServiceGarage (Royal Blue Navbar) */}
+      {/* 3. แถบเมนูนำทางหลักของศูนย์บริการ (Main Garage Navigation Bar) */}
       <nav className="sp-navbar navbar navbar-expand-lg navbar-dark py-0">
         <div className="container-fluid px-3 px-lg-4">
           <button
@@ -246,38 +266,77 @@ export default function Navbar({
             </ul>
 
             <div className="d-none d-lg-flex align-items-center text-white small gap-2 py-2">
-              <i className="bi bi-clock-history text-warning"></i>
-              <span>เปิดบริการทุกวัน 08:30 - 18:00 น.</span>
+              <span className="badge bg-success bg-opacity-75 text-white me-1">
+                <i className="bi bi-circle-fill me-1 small" style={{ fontSize: "0.55rem" }}></i>
+                อู่เปิดให้บริการ
+              </span>
+              <span className="text-light opacity-90">ช่างเทคนิคประจำการพร้อมตรวจเช็ก</span>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* 4. แถบหมวดหมู่ระบบอะไหล่และงานบริการอู่ซ่อม (Garage Subsystem Navigation) */}
-      <CategoryNav
-        onSelectCategoryItem={(searchTerm, catId) => {
-          if (setSearchQuery) setSearchQuery(searchTerm);
-          if (onPerformSearch) {
-            onPerformSearch(searchTerm, catId);
-          } else if (setActiveTab) {
-            setActiveTab("order");
-          }
-        }}
-        onSelectBrand={(brandName) => {
-          if (setSearchQuery) setSearchQuery(brandName);
-          if (onPerformSearch) {
-            onPerformSearch(brandName, "all");
-          } else if (setActiveTab) {
-            setActiveTab("order");
-          }
-        }}
-        onGoToJobs={() => {
-          if (setActiveTab) setActiveTab("jobs");
-        }}
-        onGoToVehicleSearch={() => {
-          if (setActiveTab) setActiveTab("vehicleSearch");
-        }}
-      />
+      {/* 4. แถบระบบอะไหล่และงานซ่อมด่วน (Quick Garage Subsystem Access Strip) */}
+      <div className="bg-white border-bottom shadow-2xs py-2 px-3 px-lg-4">
+        <div className="container-fluid d-flex align-items-center justify-content-between overflow-x-auto scrollbar-none gap-2">
+          <div className="d-flex align-items-center gap-1 flex-nowrap">
+            <span className="text-muted small fw-bold me-2 d-none d-md-inline" style={{ fontSize: "0.78rem" }}>
+              <i className="bi bi-layers-fill text-danger me-1"></i>ระบบอะไหล่:
+            </span>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("fluids")}
+            >
+              <i className="bi bi-droplet-half text-danger me-1"></i>ของเหลว &amp; น้ำมันเครื่อง
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("suspension")}
+            >
+              <i className="bi bi-bezier2 text-primary me-1"></i>ระบบเบรก &amp; ช่วงล่าง
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("engine")}
+            >
+              <i className="bi bi-gear-wide-connected text-warning me-1"></i>เครื่องยนต์ &amp; ส่งกำลัง
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("cooling")}
+            >
+              <i className="bi bi-fan text-info me-1"></i>ระบบระบายความร้อน
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("electrical")}
+            >
+              <i className="bi bi-lightning-charge-fill text-warning me-1"></i>แบตเตอรี่ &amp; ระบบไฟ
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-light border-0 rounded-pill px-3 py-1 text-nowrap fw-semibold small text-dark"
+              onClick={handleCategoryNavClick("filters")}
+            >
+              <i className="bi bi-funnel-fill text-success me-1"></i>ไส้กรอง &amp; เช็กระยะ
+            </button>
+          </div>
+
+          <div className="d-none d-xl-flex align-items-center gap-2 flex-nowrap small text-muted">
+            <span className="badge bg-light text-dark border">
+              <i className="bi bi-shield-check text-success me-1"></i>มาตรฐาน OEM
+            </span>
+            <span className="badge bg-light text-dark border">
+              <i className="bi bi-receipt text-danger me-1"></i>คำนวณราคาอัตโนมัติ
+            </span>
+          </div>
+        </div>
+      </div>
     </header>
   );
 }
