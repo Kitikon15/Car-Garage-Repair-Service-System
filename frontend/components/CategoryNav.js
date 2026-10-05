@@ -33,13 +33,7 @@ export default function CategoryNav({
   };
 
   return (
-    <div
-      className="position-relative sp-category-bar border-top border-bottom"
-      style={{
-        backgroundColor: "#f1f5f9",
-        borderColor: "#cbd5e1",
-      }}
-    >
+    <div className="position-relative sp-category-bar border-top border-bottom">
       <div className="container-fluid px-3 px-lg-4">
         <div className="d-flex align-items-center justify-content-start justify-content-lg-center gap-1 gap-md-2 overflow-x-auto scrollbar-none py-1">
           {categories.map((cat) => {
@@ -57,10 +51,7 @@ export default function CategoryNav({
                   }`}
                   style={{
                     fontSize: "0.88rem",
-                    color: isOpen ? "#ea580c" : "#034ea2",
                     letterSpacing: "-0.2px",
-                    borderRadius: "6px",
-                    transition: "color 0.15s ease, background-color 0.15s ease",
                   }}
                   onClick={() => handleClick(cat.key)}
                   aria-expanded={isOpen}

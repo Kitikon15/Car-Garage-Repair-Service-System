@@ -333,6 +333,26 @@ export const megaMenuData = {
   },
 };
 
+const categoryIcons = {
+  fluids: "bi-droplet-half",
+  body: "bi-car-front",
+  suspension: "bi-shield-shaded",
+  cooling: "bi-snow",
+  engine: "bi-gear-wide-connected",
+  paint: "bi-paint-bucket",
+  care: "bi-stars",
+};
+
+const categoryDescriptions = {
+  fluids: "น้ำมันเครื่องสังเคราะห์แท้ น้ำมันเกียร์ น้ำยาหล่อเย็น และเคมีภัณฑ์มาตรฐานสากล",
+  body: "ไฟหน้า-ท้าย กันชน กระจกมองข้าง และชิ้นส่วนตัวถังมาตรฐาน OEM เข้ารูป 100%",
+  suspension: "ระบบเบรก Brembo/TRW โช้คอัพ สปริง ลูกหมาก และชุดควบคุมช่วงล่าง",
+  cooling: "หม้อน้ำ พัดลมไฟฟ้า วาล์วน้ำ และระบบระบายความร้อนเครื่องยนต์",
+  engine: "หัวเทียน สายพาน ไส้กรอง ปะเก็น และชิ้นส่วนระบบเครื่องยนต์ส่งกำลัง",
+  paint: "สีสเปรย์ สีโป๊ว น้ำยาขัดเงา และอุปกรณ์ซ่อมแซมสีตัวถังรถยนต์",
+  care: "แชมพูล้างรถ เคลือบแก้ว น้ำยาทำความสะอาดภายใน และอุปกรณ์คาร์แคร์",
+};
+
 export default function MegaMenu({
   activeCategoryKey,
   onClose,
@@ -357,180 +377,314 @@ export default function MegaMenu({
 
   return (
     <>
-      {/* 1. Backdrop Overlay (ฉากหลังมืดแบบโปร่งแสง สร้างมิติและความชัดเจนตามแบบ Superpart) */}
+      {/* 1. Backdrop Overlay (ฉากหลังมืดแบบโปร่งแสง) */}
       <div
         className="position-fixed top-0 start-0 w-100 h-100"
         style={{
           backgroundColor: "rgba(15, 23, 42, 0.55)",
-          backdropFilter: "blur(2px)",
+          backdropFilter: "blur(3px)",
           zIndex: 1040,
           transition: "opacity 0.2s ease-in-out",
         }}
         onClick={onClose}
       />
 
-      {/* 2. Mega Menu Container (การ์ดสีขาวขอบมน เงาลอย พรีเมียม ตรงตาม media_1791176439057.png) */}
+      {/* 2. Mega Menu Container (การ์ดดีไซน์ระดับพรีเมียม สไตล์ Red & White) */}
       <div
         ref={modalRef}
-        className="position-absolute start-50 translate-middle-x bg-white shadow-lg border-0"
+        className="position-absolute start-50 translate-middle-x mega-menu-card"
         style={{
           top: "100%",
-          width: "95%",
-          maxWidth: "1040px",
-          borderRadius: "18px",
+          width: "96%",
+          maxWidth: "1120px",
           zIndex: 1050,
-          marginTop: "0px",
-          padding: "2rem 2.5rem",
-          animation: "megaMenuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)",
+          marginTop: "4px",
         }}
         onMouseLeave={onClose}
       >
-        {/* Mobile close button */}
-        <button
-          type="button"
-          className="btn btn-sm btn-light rounded-circle position-absolute top-0 end-0 m-3 d-md-none"
-          onClick={onClose}
-          aria-label="Close menu"
+        {/* ส่วนหัว Mega Menu พรีเมียม (Header Bar) */}
+        <div
+          className="d-flex flex-wrap align-items-center justify-content-between p-3 px-md-4 border-bottom"
+          style={{
+            background: "linear-gradient(90deg, #fef2f2 0%, #ffffff 100%)",
+            borderColor: "#fee2e2",
+          }}
         >
-          <i className="bi bi-x-lg"></i>
-        </button>
-        <div className="row g-4">
-          {/* คอลัมน์ที่ 1: หมวดหมู่ย่อยกลุ่มที่ 1 */}
-          <div className="col-12 col-md-4">
-            {category.columns[0]?.groups?.map((group, gIdx) => (
-              <div key={gIdx} className={gIdx > 0 ? "mt-3 pt-1" : ""}>
-                {group.isDirect ? (
-                  <button
-                    type="button"
-                    className="btn btn-link text-start text-dark p-0 fw-black text-decoration-none d-block w-100 mega-item-link"
-                    style={{ fontSize: "1.05rem", letterSpacing: "-0.2px" }}
-                    onClick={() => {
-                      onSelectItem && onSelectItem(group.query, category.id);
-                      onClose();
-                    }}
-                  >
-                    {group.title}
-                  </button>
-                ) : (
-                  <>
-                    <h6
-                      className="fw-black text-dark mb-2"
-                      style={{ fontSize: "1.05rem", letterSpacing: "-0.2px" }}
-                    >
-                      {group.title}
-                    </h6>
-                    <ul className="list-unstyled mb-0 ps-1">
-                      {group.items?.map((item, iIdx) => (
-                        <li key={iIdx} className="py-1">
-                          <button
-                            type="button"
-                            className="btn btn-link text-start p-0 text-decoration-none mega-sub-link"
-                            style={{
-                              fontSize: "0.92rem",
-                              color: "#334155",
-                              lineHeight: "1.4",
-                            }}
-                            onClick={() => {
-                              onSelectItem && onSelectItem(item.query, category.id);
-                              onClose();
-                            }}
-                          >
-                            {item.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+          <div className="d-flex align-items-center gap-3">
+            <div
+              className="rounded-3 d-flex align-items-center justify-content-center text-white shadow-sm"
+              style={{
+                width: "44px",
+                height: "44px",
+                background: "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
+              }}
+            >
+              <i className={`bi ${categoryIcons[category.id] || "bi-grid-fill"} fs-4 text-warning`}></i>
+            </div>
+            <div>
+              <div className="d-flex align-items-center gap-2">
+                <h5 className="fw-black text-dark mb-0" style={{ letterSpacing: "-0.3px" }}>
+                  {category.name}
+                </h5>
+                <span className="badge bg-danger text-white small" style={{ fontSize: "0.68rem" }}>
+                  อะไหล่แท้ 100%
+                </span>
               </div>
-            ))}
+              <p className="text-muted mb-0 small" style={{ fontSize: "0.82rem" }}>
+                {categoryDescriptions[category.id] || "ศูนย์รวมอะไหล่รถยนต์คุณภาพสูง คัดสรรเฉพาะแบรนด์มาตรฐาน"}
+              </p>
+            </div>
           </div>
 
-          {/* คอลัมน์ที่ 2: หมวดหมู่ย่อยกลุ่มที่ 2 */}
-          <div className="col-12 col-md-4 border-start-md ps-md-4">
-            {category.columns[1]?.groups?.map((group, gIdx) => (
-              <div key={gIdx} className={gIdx > 0 ? "mt-3 pt-1" : ""}>
-                {group.isDirect ? (
-                  <button
-                    type="button"
-                    className="btn btn-link text-start text-dark p-0 fw-black text-decoration-none d-block w-100 mega-item-link"
-                    style={{ fontSize: "1.05rem", letterSpacing: "-0.2px" }}
-                    onClick={() => {
-                      onSelectItem && onSelectItem(group.query, category.id);
-                      onClose();
-                    }}
-                  >
-                    {group.title}
-                  </button>
-                ) : (
-                  <>
-                    <h6
-                      className="fw-black text-dark mb-2"
-                      style={{ fontSize: "1.05rem", letterSpacing: "-0.2px" }}
-                    >
-                      {group.title}
-                    </h6>
-                    <ul className="list-unstyled mb-0 ps-1">
-                      {group.items?.map((item, iIdx) => (
-                        <li key={iIdx} className="py-1">
-                          <button
-                            type="button"
-                            className="btn btn-link text-start p-0 text-decoration-none mega-sub-link"
-                            style={{
-                              fontSize: "0.92rem",
-                              color: "#334155",
-                              lineHeight: "1.4",
-                            }}
-                            onClick={() => {
-                              onSelectItem && onSelectItem(item.query, category.id);
-                              onClose();
-                            }}
-                          >
-                            {item.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
+          {/* Quick Actions & Close */}
+          <div className="d-flex align-items-center gap-2 mt-2 mt-md-0">
+            <button
+              type="button"
+              className="btn btn-garage-unique btn-sm px-3 py-2 shadow-sm d-flex align-items-center gap-1"
+              onClick={() => {
+                onSelectItem && onSelectItem("", category.id);
+                onClose();
+              }}
+              title="ดูสินค้าทั้งหมดในหมวดนี้"
+            >
+              <i className="bi bi-box-seam-fill"></i>
+              <span>ดูสินค้าทั้งหมดในหมวดนี้</span>
+              <i className="bi bi-arrow-right ms-1"></i>
+            </button>
 
-          {/* คอลัมน์ที่ 3: ตารางแบรนด์สินค้าชั้นนำ (12 โลโก้แบรนด์ ตรงตาม media_1791176439057.png) */}
-          <div className="col-12 col-md-4 border-start-md ps-md-4 d-flex align-items-center justify-content-center">
-            <div className="row g-3 w-100 justify-content-center align-items-center">
-              {category.brands?.map((brand, bIdx) => (
-                <div className="col-4 text-center d-flex align-items-center justify-content-center" key={bIdx}>
-                  <div
-                    className="p-2 rounded-2 mega-brand-card d-flex align-items-center justify-content-center w-100"
-                    style={{
-                      height: "72px",
-                      backgroundColor: "#ffffff",
-                      cursor: "pointer",
-                      transition: "transform 0.2s, box-shadow 0.2s",
-                    }}
-                    onClick={() => {
-                      onSelectBrand && onSelectBrand(brand.name);
-                      onClose();
-                    }}
-                    title={`ดูสินค้าแบรนด์ ${brand.name}`}
-                  >
-                    <img
-                      src={brand.logo}
-                      alt={brand.name}
-                      className="img-fluid"
-                      style={{
-                        maxHeight: "56px",
-                        maxWidth: "92px",
-                        objectFit: "contain",
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+              style={{ width: "34px", height: "34px" }}
+              onClick={onClose}
+              title="ปิดหน้าต่างเมนู"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        {/* เนื้อหาภายในแบ่งเป็น 3 คอลัมน์ที่ชัดเจน มีสัดส่วน */}
+        <div className="p-3 p-md-4">
+          <div className="row g-4">
+            {/* คอลัมน์ที่ 1: หมวดหมู่ย่อยกลุ่มที่ 1 */}
+            <div className="col-12 col-md-4 border-end-md">
+              {category.columns[0]?.groups?.map((group, gIdx) => (
+                <div key={gIdx} className={gIdx > 0 ? "mt-3 pt-1" : ""}>
+                  {group.isDirect ? (
+                    <button
+                      type="button"
+                      className="btn btn-link w-100 text-start text-decoration-none mega-direct-link"
+                      onClick={() => {
+                        onSelectItem && onSelectItem(group.query, category.id);
+                        onClose();
                       }}
-                    />
-                  </div>
+                    >
+                      <span className="d-flex align-items-center gap-2">
+                        <i className="bi bi-record-circle text-danger small"></i>
+                        <span>{group.title}</span>
+                      </span>
+                      <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
+                    </button>
+                  ) : (
+                    <>
+                      <div className="d-flex align-items-center gap-2 mb-2 pb-1 border-bottom border-light">
+                        <span
+                          className="d-inline-block rounded-pill"
+                          style={{ width: "3.5px", height: "14px", backgroundColor: "#dc2626" }}
+                        />
+                        <h6
+                          className="fw-bold text-dark mb-0"
+                          style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
+                        >
+                          {group.title}
+                        </h6>
+                      </div>
+                      <div className="d-flex flex-column gap-1 ps-1">
+                        {group.items?.map((item, iIdx) => (
+                          <button
+                            key={iIdx}
+                            type="button"
+                            className="btn btn-link text-start text-decoration-none mega-sub-link"
+                            onClick={() => {
+                              onSelectItem && onSelectItem(item.query, category.id);
+                              onClose();
+                            }}
+                          >
+                            <span className="d-flex align-items-center gap-2">
+                              <i className="bi bi-chevron-right text-danger opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
+                              <span>{item.label}</span>
+                            </span>
+                            <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
+
+            {/* คอลัมน์ที่ 2: หมวดหมู่ย่อยกลุ่มที่ 2 */}
+            <div className="col-12 col-md-4 border-end-md ps-md-4">
+              {/* หัวข้อสำหรับกลุ่ม direct links ในคอลัมน์ที่ 2 */}
+              {category.columns[1]?.groups?.[0]?.isDirect && (
+                <div className="d-flex align-items-center gap-2 mb-2 pb-1 border-bottom border-light">
+                  <span
+                    className="d-inline-block rounded-pill"
+                    style={{ width: "3.5px", height: "14px", backgroundColor: "#f59e0b" }}
+                  />
+                  <h6
+                    className="fw-bold text-dark mb-0"
+                    style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
+                  >
+                    ผลิตภัณฑ์เฉพาะระบบและการดูแล
+                  </h6>
+                </div>
+              )}
+
+              {category.columns[1]?.groups?.map((group, gIdx) => (
+                <div key={gIdx} className={gIdx > 0 && !group.isDirect ? "mt-3 pt-1" : ""}>
+                  {group.isDirect ? (
+                    <button
+                      type="button"
+                      className="btn btn-link w-100 text-start text-decoration-none mega-direct-link mb-1"
+                      onClick={() => {
+                        onSelectItem && onSelectItem(group.query, category.id);
+                        onClose();
+                      }}
+                    >
+                      <span className="d-flex align-items-center gap-2">
+                        <i className="bi bi-record-circle text-danger small"></i>
+                        <span>{group.title}</span>
+                      </span>
+                      <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
+                    </button>
+                  ) : (
+                    <>
+                      <div className="d-flex align-items-center gap-2 mb-2 pb-1 border-bottom border-light">
+                        <span
+                          className="d-inline-block rounded-pill"
+                          style={{ width: "3.5px", height: "14px", backgroundColor: "#dc2626" }}
+                        />
+                        <h6
+                          className="fw-bold text-dark mb-0"
+                          style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
+                        >
+                          {group.title}
+                        </h6>
+                      </div>
+                      <div className="d-flex flex-column gap-1 ps-1">
+                        {group.items?.map((item, iIdx) => (
+                          <button
+                            key={iIdx}
+                            type="button"
+                            className="btn btn-link text-start text-decoration-none mega-sub-link"
+                            onClick={() => {
+                              onSelectItem && onSelectItem(item.query, category.id);
+                              onClose();
+                            }}
+                          >
+                            <span className="d-flex align-items-center gap-2">
+                              <i className="bi bi-chevron-right text-danger opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
+                              <span>{item.label}</span>
+                            </span>
+                            <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* คอลัมน์ที่ 3: ตารางแบรนด์สินค้าชั้นนำ */}
+            <div className="col-12 col-md-4 ps-md-4">
+              <div
+                className="p-3 rounded-4"
+                style={{
+                  backgroundColor: "#fdfdfd",
+                  border: "1px solid #f1f5f9",
+                }}
+              >
+                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                  <div className="d-flex align-items-center gap-2">
+                    <i className="bi bi-patch-check-fill text-warning fs-5"></i>
+                    <span className="fw-bold text-dark" style={{ fontSize: "0.95rem" }}>
+                      แบรนด์ผู้ผลิตชั้นนำ
+                    </span>
+                  </div>
+                  <span className="badge bg-light text-muted border small" style={{ fontSize: "0.68rem" }}>
+                    {category.brands?.length || 0} แบรนด์
+                  </span>
+                </div>
+
+                <div className="row g-2 justify-content-center align-items-center">
+                  {category.brands?.map((brand, bIdx) => (
+                    <div className="col-4 text-center" key={bIdx}>
+                      <div
+                        className="mega-brand-card d-flex align-items-center justify-content-center p-2"
+                        style={{
+                          height: "64px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          onSelectBrand && onSelectBrand(brand.name);
+                          onClose();
+                        }}
+                        title={`เลือกดูสินค้าแบรนด์ ${brand.name}`}
+                      >
+                        <img
+                          src={brand.logo}
+                          alt={brand.name}
+                          className="img-fluid"
+                          style={{
+                            maxHeight: "44px",
+                            maxWidth: "76px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center mt-3 pt-2 border-top">
+                  <small className="text-muted fw-semibold" style={{ fontSize: "0.74rem" }}>
+                    <i className="bi bi-shield-lock-fill text-success me-1"></i>
+                    อะไหล่แท้เบิกศูนย์และ OEM 100%
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* แถบล่าง Mega Menu (Footer Trust Badges) */}
+        <div
+          className="d-flex flex-wrap align-items-center justify-content-between p-3 px-md-4 border-top"
+          style={{
+            backgroundColor: "#f8fafc",
+            fontSize: "0.82rem",
+          }}
+        >
+          <div className="d-flex flex-wrap align-items-center gap-3 text-muted">
+            <span className="d-flex align-items-center gap-1">
+              <i className="bi bi-patch-check-fill text-success"></i> สินค้าแท้เบิกศูนย์และ OEM 100%
+            </span>
+            <span className="opacity-50 d-none d-sm-inline">•</span>
+            <span className="d-flex align-items-center gap-1">
+              <i className="bi bi-truck text-danger"></i> จัดส่งด่วน กทม. ภายใน 3 ชม.
+            </span>
+            <span className="opacity-50 d-none d-md-inline">•</span>
+            <span className="d-flex align-items-center gap-1 d-none d-md-inline-flex">
+              <i className="bi bi-receipt text-primary"></i> ออกใบเสร็จ / ใบกำกับภาษีเต็มรูป
+            </span>
+          </div>
+
+          <div className="small text-muted fw-semibold mt-1 mt-sm-0">
+            <i className="bi bi-info-circle text-warning me-1"></i> คลิกเลือกหมวดหรือแบรนด์เพื่อดูสินค้า
           </div>
         </div>
       </div>
