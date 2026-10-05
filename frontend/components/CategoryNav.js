@@ -46,6 +46,7 @@ export default function CategoryNav({
     <div
       ref={navContainerRef}
       className="position-relative sp-category-bar border-top border-bottom"
+      style={{ zIndex: activeMegaCategory ? 1060 : 10 }}
     >
       <div className="container-fluid px-3 px-lg-4">
         <div className="d-flex align-items-center justify-content-start justify-content-lg-center gap-1 gap-md-2 overflow-x-auto scrollbar-none py-1">

@@ -383,9 +383,9 @@ export default function MegaMenu({
       <div
         className="position-fixed top-0 start-0 w-100 h-100"
         style={{
-          backgroundColor: "rgba(15, 23, 42, 0.55)",
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
           backdropFilter: "blur(3px)",
-          zIndex: 1040,
+          zIndex: 1060,
           transition: "opacity 0.2s ease-in-out",
         }}
         onClick={onClose}
@@ -398,8 +398,8 @@ export default function MegaMenu({
         style={{
           top: "100%",
           width: "96%",
-          maxWidth: "1120px",
-          zIndex: 1050,
+          maxWidth: "1140px",
+          zIndex: 1065,
           marginTop: "4px",
         }}
       >
@@ -629,26 +629,26 @@ export default function MegaMenu({
                 </div>
 
                 <p className="text-muted small mb-3" style={{ fontSize: "0.82rem", lineHeight: "1.5" }}>
-                  มีบริการตรวจเช็กสภาพและเปลี่ยนอะไหล่โดยช่างผู้เชี่ยวชาญ พร้อมระบบคำนวณราคาอัตโนมัติตามหลัก OOP
+                  มีบริการตรวจเช็กสภาพและเปลี่ยนอะไหล่โดยช่างผู้เชี่ยวชาญ พร้อมระบบประเมินราคาซ่อมและค่าแรงมาตรฐาน
                 </p>
 
                 <div className="d-flex flex-column gap-2 mb-3">
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>ออกใบสั่งซ่อมทันที:</strong> แยกงานซ่อม (Repair) และเช็กระยะ (Maintenance)
+                      <strong>ออกใบสั่งซ่อมทันที:</strong> แยกงานซ่อมบำรุงและรายการเช็กระยะชัดเจน
                     </span>
                   </div>
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>ตัดสต็อกอัตโนมัติ:</strong> เชื่อมต่อคลังอะไหล่ (Encapsulated Inventory)
+                      <strong>ตัดสต็อกอัตโนมัติ:</strong> อัปเดตยอดคงเหลือคลังอะไหล่แบบ Real-time
                     </span>
                   </div>
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>คำนวณภาษี &amp; ส่วนลด:</strong> Polymorphic Cost Calculation
+                      <strong>คำนวณภาษี &amp; ส่วนลด:</strong> ราคาสุทธิมาตรฐาน ออกใบเสร็จรับเงินถูกต้อง
                     </span>
                   </div>
                 </div>
@@ -697,7 +697,7 @@ export default function MegaMenu({
             </span>
             <span className="opacity-50 d-none d-sm-inline">•</span>
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-cpu text-primary"></i> สถาปัตยกรรมเชิงวัตถุ OOP Python FastAPI
+              <i className="bi bi-shield-check text-primary"></i> รับประกันคุณภาพอะไหล่แท้ทุกชิ้นงาน
             </span>
             <span className="opacity-50 d-none d-md-inline">•</span>
             <span className="d-flex align-items-center gap-1 d-none d-md-inline-flex">

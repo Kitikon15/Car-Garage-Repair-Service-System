@@ -302,11 +302,11 @@ export default function Dashboard() {
               <div className="col-12 col-sm-6 col-lg-3">
                 <div className="card h-100 p-3 bg-white border-0 shadow-sm d-flex flex-row align-items-center gap-3">
                   <div className="stat-icon bg-info-subtle text-info fs-3">
-                    <i className="bi bi-code-slash"></i>
+                    <i className="bi bi-shield-check"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">คำนวณตามหลัก OOP</h6>
-                    <small className="text-muted">Polymorphic Billing Engine</small>
+                    <h6 className="fw-bold mb-0 text-dark">ราคามาตรฐานโปร่งใส</h6>
+                    <small className="text-muted">คำนวณค่าแรงและอะไหล่แม่นยำ</small>
                   </div>
                 </div>
               </div>
@@ -432,31 +432,6 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-
-            {/* แถบระบุหลักการ OOP สำหรับการนำเสนอโปรเจกต์ */}
-            <div className="card bg-white border-0 shadow-sm p-4">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <i className="bi bi-mortarboard-fill text-sp-blue fs-4"></i>
-                <h6 className="fw-bold mb-0 text-dark">สถาปัตยกรรมเชิงวัตถุตามโจทย์ OOAD &amp; Python FastAPI</h6>
-              </div>
-              <div className="d-flex flex-wrap gap-2">
-                <span className="badge bg-secondary-subtle text-secondary-emphasis border p-2">
-                  <strong>Encapsulation:</strong> <code>Part.deduct_stock()</code> ควบคุมความปลอดภัยของสต็อก
-                </span>
-                <span className="badge bg-info-subtle text-info-emphasis border p-2">
-                  <strong>Association:</strong> <code>Vehicle.owner</code> เชื่อมโยงกับ <code>Customer</code>
-                </span>
-                <span className="badge bg-warning-subtle text-warning-emphasis border p-2">
-                  <strong>Composition:</strong> <code>ServiceJob.parts_used</code> เป็นเจ้าของรายการ <code>JobPartItem</code>
-                </span>
-                <span className="badge bg-danger-subtle text-danger-emphasis border p-2">
-                  <strong>Inheritance:</strong> <code>RepairJob</code> และ <code>MaintenanceJob</code> สืบทอดจาก <code>ServiceJob</code>
-                </span>
-                <span className="badge bg-success-subtle text-success-emphasis border p-2">
-                  <strong>Polymorphism:</strong> โอเวอร์ไรด์ <code>calculate_cost()</code> (คิดค่าเสี่ยงซ่อม vs ส่วนลดแพ็กเกจ)
-                </span>
-              </div>
-            </div>
           </div>
         )}
 
@@ -515,7 +490,7 @@ export default function Dashboard() {
                     <span>บริการงานซ่อมและใบเสร็จ (Service Jobs &amp; Invoices)</span>
                   </h4>
                   <p className="text-muted small mb-0">
-                    ระบบประเมินราคาค่าซ่อมและอะไหล่ตามหลักการออกแบบเชิงวัตถุ (Polymorphism &amp; Composition)
+                    ระบบประเมินราคาค่าซ่อมและอะไหล่มาตรฐาน พร้อมออกใบสั่งซ่อมและใบเสร็จรับเงิน
                   </p>
                 </div>
 

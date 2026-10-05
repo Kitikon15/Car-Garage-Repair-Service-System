@@ -95,7 +95,7 @@ export default function InvoiceModal({ invoice, onClose, onMarkPaid, apiUrl }) {
               </div>
 
               {/* ตารางอะไหล่ที่เปลี่ยน */}
-              <h6 className="text-uppercase text-muted small fw-bold mb-2">รายการอะไหล่และอุปกรณ์ที่ใช้ (Composition)</h6>
+              <h6 className="text-uppercase text-muted small fw-bold mb-2">รายการอะไหล่และอุปกรณ์ที่ใช้</h6>
               <div className="table-responsive mb-4">
                 <table className="table table-bordered table-sm align-middle bg-white mb-0">
                   <thead className="table-light">

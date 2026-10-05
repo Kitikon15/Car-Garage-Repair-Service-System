@@ -10,7 +10,7 @@ export default function InvoiceList({ invoices, onSelectInvoice }) {
             <span>ประวัติใบแจ้งหนี้ / ใบเสร็จรับเงิน (Invoices)</span>
           </h5>
           <small className="text-muted">
-            การคำนวณแบบ Polymorphic: เมธอด <code>Invoice.generate_invoice()</code> เรียก <code>calculate_cost()</code>
+            รายการใบแจ้งหนี้และใบเสร็จรับเงินสำหรับงานซ่อมบำรุงและเช็กระยะทั้งหมด
           </small>
         </div>
         <span className="badge bg-primary rounded-pill">

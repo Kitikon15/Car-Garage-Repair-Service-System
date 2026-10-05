@@ -179,13 +179,13 @@ export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCa
                 <span className="badge bg-warning text-sp-blue fw-bold px-2 py-1 small">
                   <i className="bi bi-calculator-fill me-1"></i> ฟังชั่นประเมินราคา
                 </span>
-                <span className="badge bg-sp-blue px-2 py-1 small">คำนวณราคาตามหลัก OOP</span>
+                <span className="badge bg-sp-blue px-2 py-1 small">ระบบคำนวณราคาอัตโนมัติ</span>
               </div>
               <h3 className="fw-bold mb-1 text-dark">
                 ระบบประเมินราคาค่าซ่อมและอะไหล่ (Repair Cost Estimator)
               </h3>
               <p className="text-muted small mb-0">
-                เลือกจัดชุดอะไหล่แท้และแพ็กเกจบริการตามรุ่นรถ พร้อมคำนวณราคาสุทธิ ส่วนลด และค่าแรงตามหลัก Polymorphism แบบเรียลไทม์
+                เลือกจัดชุดอะไหล่แท้และแพ็กเกจบริการตามรุ่นรถ พร้อมคำนวณราคาสุทธิ ส่วนลด และค่าแรงมาตรฐานแบบเรียลไทม์
               </p>
             </div>
 
@@ -464,11 +464,11 @@ export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCa
               </div>
             </div>
 
-            {/* SLOT 7: รูปแบบบริการและค่าแรงช่าง (Polymorphic Options) */}
+            {/* SLOT 7: รูปแบบบริการและค่าแรงช่าง */}
             <div className="card p-4 builder-slot active-selected bg-light">
               <div className="d-flex align-items-center gap-2 mb-3">
                 <i className="bi bi-wrench-adjustable-circle text-sp-blue fs-4"></i>
-                <h6 className="fw-bold mb-0 text-dark">7. รูปแบบบริการและค่าแรงช่าง (OOP Polymorphism)</h6>
+                <h6 className="fw-bold mb-0 text-dark">7. รูปแบบบริการและค่าแรงช่างมาตรฐาน</h6>
               </div>
 
               <div className="row g-3">

@@ -78,7 +78,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl }) {
             <span>คลังอะไหล่และอุปกรณ์ (Parts Inventory)</span>
           </h5>
           <small className="text-muted">
-            หลักการ Encapsulation: ควบคุมการตัดสต็อกผ่านเมธอด <code>deduct_stock()</code>
+            รายการอะไหล่แท้และอุปกรณ์ซ่อมบำรุงพร้อมใช้งานในระบบ ({parts?.length || 0} รายการ)
           </small>
         </div>
         <button

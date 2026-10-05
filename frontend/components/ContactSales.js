@@ -59,31 +59,6 @@ export default function ContactSales() {
               </div>
             </div>
 
-            <div className="d-flex align-items-start gap-3 mb-4">
-              <div className="stat-icon bg-info-subtle text-info fs-4 flex-shrink-0">
-                <i className="bi bi-geo-alt-fill"></i>
-              </div>
-              <div>
-                <h6 className="fw-bold mb-1">สำนักงานใหญ่และคลังสินค้าหลัก</h6>
-                <p className="text-muted small mb-0">
-                  บริษัท ServiceGarage จำกัด เลขที่ 98 ถนนสุวินทวงศ์ แขวงมีนบุรี เขตมีนบุรี กรุงเทพมหานคร 10510
-                </p>
-              </div>
-            </div>
-
-            <div className="d-flex align-items-start gap-3">
-              <div className="stat-icon bg-warning-subtle text-warning fs-4 flex-shrink-0">
-                <i className="bi bi-clock-fill"></i>
-              </div>
-              <div>
-                <h6 className="fw-bold mb-1">เวลาทำการศูนย์จำหน่าย</h6>
-                <p className="text-muted small mb-0">
-                  วันจันทร์ - อาทิตย์: 09:00 - 17:00 น.
-                  <br />
-                  <span className="text-success fw-semibold">เปิดบริการทุกวัน มีทีมงานสแตนด์บายตอบแชต</span>
-                </p>
-              </div>
-            </div>
           </div>
         </div>
 

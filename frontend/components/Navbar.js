@@ -39,7 +39,7 @@ export default function Navbar({
   };
 
   return (
-    <header className="sticky-top shadow-sm">
+    <header className="sticky-top shadow-sm" style={{ zIndex: 1050 }}>
       {/* 1. แถบประกาศข้อมูลระบบงานอู่และคลังอะไหล่ (Garage Management System Top Bar) */}
       <div className="sp-top-bar py-1 px-3 px-lg-4 d-none d-md-block">
         <div className="container-fluid d-flex justify-content-between align-items-center">
@@ -49,7 +49,7 @@ export default function Navbar({
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light">
-              <i className="bi bi-cpu-fill text-warning"></i> ระบบคำนวณราคาซ่อม Polymorphic Engine
+              <i className="bi bi-calculator-fill text-warning"></i> ระบบประเมินราคาซ่อม &amp; คลังอะไหล่อัตโนมัติ
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light">
@@ -103,13 +103,22 @@ export default function Navbar({
                 className="sp-search-select d-none d-sm-block"
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
+                style={{
+                  minWidth: "165px",
+                  fontSize: "0.86rem",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
               >
-                <option value="all">ทุกหมวดหมู่</option>
-                <option value="engine">น้ำมันเครื่อง &amp; ของเหลว</option>
-                <option value="brake">ระบบเบรก</option>
-                <option value="filter">ไส้กรอง</option>
-                <option value="battery">แบตเตอรี่ &amp; ระบบไฟ</option>
-                <option value="suspension">ช่วงล่าง &amp; โช้คอัพ</option>
+                <option value="all">ทุกหมวดหมู่สินค้า</option>
+                <option value="fluids">น้ำมันเครื่อง &amp; ของเหลว</option>
+                <option value="suspension">ช่วงล่าง &amp; ระบบเบรก</option>
+                <option value="engine">เครื่องยนต์ &amp; ส่งกำลัง</option>
+                <option value="cooling">ระบบระบายความร้อน &amp; หม้อน้ำ</option>
+                <option value="electrical">แบตเตอรี่ &amp; ระบบไฟ</option>
+                <option value="filters">ไส้กรอง &amp; งานเช็กระยะ</option>
+                <option value="body">ชิ้นส่วนตัวถัง &amp; โคมไฟ</option>
+                <option value="genuine">อะไหล่แท้ศูนย์ OEM</option>
               </select>
 
               <input

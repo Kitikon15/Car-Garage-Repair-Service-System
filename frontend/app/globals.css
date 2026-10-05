@@ -407,17 +407,19 @@ body {
 
 /* Footer Styling */
 .sp-footer {
-  background-color: var(--sp-blue-dark);
-  color: #cbd5e1;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  border-top: 3px solid var(--sp-blue, #dc2626);
 }
 
 .sp-footer-title {
   color: #ffffff;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   margin-bottom: 1.25rem;
   position: relative;
   padding-bottom: 0.5rem;
+  letter-spacing: -0.2px;
 }
 
 .sp-footer-title::after {
@@ -425,20 +427,24 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 40px;
+  width: 28px;
   height: 3px;
-  background-color: var(--sp-yellow);
-  border-radius: 2px;
+  background-color: var(--sp-yellow, #f59e0b);
+  border-radius: 4px;
 }
 
 .sp-footer a {
-  color: #94a3b8;
+  color: #cbd5e1;
   text-decoration: none;
-  transition: color 0.2s;
+  font-size: 0.88rem;
+  transition: all 0.18s ease-in-out;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sp-footer a:hover {
-  color: var(--sp-yellow);
+  color: #fbbf24 !important;
+  transform: translateX(4px);
 }
 
 /* Backward compatibility for text/btn/bg-ihave */
