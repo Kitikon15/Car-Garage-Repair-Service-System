@@ -400,7 +400,6 @@ export default function MegaMenu({
           zIndex: 1050,
           marginTop: "4px",
         }}
-        onMouseLeave={onClose}
       >
         {/* ส่วนหัว Mega Menu พรีเมียม (Header Bar) */}
         <div

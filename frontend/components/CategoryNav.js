@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import MegaMenu, { megaMenuData } from "./MegaMenu";
 
 export default function CategoryNav({
@@ -8,6 +8,7 @@ export default function CategoryNav({
   onSelectBrand,
 }) {
   const [activeMegaCategory, setActiveMegaCategory] = useState(null);
+  const navContainerRef = useRef(null);
 
   const categories = [
     { key: "fluids", label: "น้ำมันเครื่องและของเหลว" },
@@ -19,21 +20,31 @@ export default function CategoryNav({
     { key: "care", label: "สินค้าดูแลรถยนต์" },
   ];
 
-  const handleMouseEnter = (key) => {
-    setActiveMegaCategory(key);
-  };
-
-  const handleMouseLeave = () => {
-    // Delay slightly to avoid jitter if needed, or close
-    setActiveMegaCategory(null);
-  };
-
-  const handleClick = (key) => {
+  // สลับเปิด/ปิด เมนูเมื่อคลิกเท่านั้น (Click to open/toggle)
+  const handleCategoryClick = (key) => {
     setActiveMegaCategory((prev) => (prev === key ? null : key));
   };
 
+  // ปิดเมนูเมื่อคลิกนอกพื้นที่ (Click outside to close)
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (navContainerRef.current && !navContainerRef.current.contains(e.target)) {
+        setActiveMegaCategory(null);
+      }
+    };
+    if (activeMegaCategory) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [activeMegaCategory]);
+
   return (
-    <div className="position-relative sp-category-bar border-top border-bottom">
+    <div
+      ref={navContainerRef}
+      className="position-relative sp-category-bar border-top border-bottom"
+    >
       <div className="container-fluid px-3 px-lg-4">
         <div className="d-flex align-items-center justify-content-start justify-content-lg-center gap-1 gap-md-2 overflow-x-auto scrollbar-none py-1">
           {categories.map((cat) => {
@@ -42,7 +53,6 @@ export default function CategoryNav({
               <div
                 key={cat.key}
                 className="position-relative flex-shrink-0"
-                onMouseEnter={() => handleMouseEnter(cat.key)}
               >
                 <button
                   type="button"
@@ -53,7 +63,7 @@ export default function CategoryNav({
                     fontSize: "0.88rem",
                     letterSpacing: "-0.2px",
                   }}
-                  onClick={() => handleClick(cat.key)}
+                  onClick={() => handleCategoryClick(cat.key)}
                   aria-expanded={isOpen}
                 >
                   <span>{cat.label}</span>
