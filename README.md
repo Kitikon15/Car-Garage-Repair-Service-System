@@ -15,8 +15,9 @@
 6. [ฟังก์ชันเด่นของระบบ (Key System Features)](#-6-ฟังก์ชันเด่นของระบบ-key-system-features)
 7. [โครงสร้างโฟลเดอร์โปรเจกต์ (Project Structure)](#-7-โครงสร้างโฟลเดอร์โปรเจกต์-project-structure)
 8. [ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)](#-8-ขั้นตอนการติดตั้งและเริ่มใช้งาน-getting-started)
-9. [การทดสอบ API ด้วย cURL / Swagger](#-9-การทดสอบ-api-ด้วย-curl--swagger)
+9. [คู่มือรวมคำสั่งทั้งหมดของโปรเจกต์ (Complete Command Reference Guide)](#-9-คู่มือรวมคำสั่งทั้งหมดของโปรเจกต์-complete-command-reference-guide)
 10. [การออกแบบ UI/UX & ระบบธีม (Design & Themes)](#-10-การออกแบบ-uiux--ระบบธีม-design--themes)
+11. [ผู้จัดทำ (Project Members)](#-11-ผู้จัดทำ-project-members)
 
 ---
 
@@ -388,90 +389,312 @@ car-garage/
 ## 🚀 8. ขั้นตอนการติดตั้งและเริ่มใช้งาน (Getting Started)
 
 ### ความต้องการของระบบ (Prerequisites)
-- **Python:** เวอร์ชัน 3.9 หรือใหม่กว่า
+- **Python:** เวอร์ชัน 3.9 หรือใหม่กว่า (แนะนำ Python 3.10 / 3.11 / 3.12)
 - **Node.js:** เวอร์ชัน 18+ และ npm
+- **Git:** สำหรับโคลนและจัดการซอร์สโค้ด
 
 ---
 
-### ขั้นตอนที่ 1: รันระบบฝั่ง Backend (FastAPI)
+### ขั้นตอนด่วนในการเริ่มใช้งาน (Quick Start Guide)
 
-เปิด Terminal ที่ 1:
-```bash
-# เข้าโฟลเดอร์โปรเจกต์
-cd backend
+1. **โคลนโปรเจกต์จาก GitHub:**
+   ```bash
+   git clone https://github.com/Kitikon15/Car-Garage-Repair-Service-System.git
+   cd Car-Garage-Repair-Service-System
+   ```
 
-# ติดตั้ง dependencies ที่จำเป็น (หากยังไม่ได้ติดตั้ง)
-pip install fastapi uvicorn pydantic
+2. **เปิด Terminal ที่ 1: เริ่มต้นฝั่ง Backend (FastAPI)**
+   ```bash
+   # สร้าง Virtual Environment และติดตั้ง dependencies
+   python -m venv venv
+   # บน Windows:
+   .\venv\Scripts\activate
+   # บน macOS/Linux:
+   # source venv/bin/activate
 
-# เริ่มการทำงานของเซิร์ฟเวอร์
-uvicorn main:app --reload --port 8000
-```
-- **Backend API:** `http://127.0.0.1:8000`
-- **Interactive Swagger UI Docs:** `http://127.0.0.1:8000/docs`
-- **ReDoc Docs:** `http://127.0.0.1:8000/redoc`
+   pip install -r requirements.txt
+   uvicorn backend.main:app --reload --port 8000
+   ```
+   - **Backend API:** `http://127.0.0.1:8000`
+   - **Swagger UI Interactive Docs:** `http://127.0.0.1:8000/docs`
+
+3. **เปิด Terminal ที่ 2: เริ่มต้นฝั่ง Frontend (Next.js)**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   - **เปิดเว็บเบราว์เซอร์:** `http://localhost:3000`
 
 ---
 
-### ขั้นตอนที่ 2: รันระบบฝั่ง Frontend (Next.js)
+## 💻 9. คู่มือรวมคำสั่งทั้งหมดของโปรเจกต์ (Complete Command Reference Guide)
 
-เปิด Terminal ที่ 2:
+รวมทุกคำสั่งสำคัญในการพัฒนา ทดสอบ ตรวจสอบ และบริหารจัดการระบบ CarGarage PRO อย่างครบถ้วน:
+
+### 📦 9.1 คำสั่งการติดตั้ง Dependencies (Installation Commands)
+
 ```bash
-# เข้าโฟลเดอร์ frontend
+# ----------------------------------------------------
+# A. ติดตั้ง Backend Dependencies (Python)
+# ----------------------------------------------------
+# 1. สร้าง Virtual Environment
+python -m venv venv
+
+# 2. เปิดใช้งาน Virtual Environment
+# [Windows PowerShell]
+.\venv\Scripts\Activate.ps1
+# [Windows CMD]
+.\venv\Scripts\activate.bat
+# [macOS / Linux / Git Bash]
+source venv/bin/activate
+
+# 3. ติดตั้งแพ็กเกจทั้งหมดจาก requirements.txt
+pip install -r requirements.txt
+
+# หรือติดตั้งรายตัวด้วยคำสั่งเดียว:
+pip install fastapi uvicorn[standard] pydantic pytest requests
+
+# ตรวจสอบรายการแพ็กเกจที่ติดตั้งสำเร็จ
+pip list
+
+# ----------------------------------------------------
+# B. ติดตั้ง Frontend Dependencies (Next.js & Node)
+# ----------------------------------------------------
 cd frontend
-
-# ติดตั้งแพ็กเกจ (ครั้งแรก)
 npm install
 
-# รันเซิร์ฟเวอร์สำหรับนักพัฒนา
-npm run dev
+# ตรวจสอบรายการ dependencies หลัก
+npm list --depth=0
+cd ..
 ```
-- **เปิดเบราว์เซอร์เข้าใช้งาน:** `http://localhost:3000`
-- **คำสั่ง Build Production:** `npm run build`
 
 ---
 
-## 🧪 9. การทดสอบ API ด้วย cURL / Swagger
+### ⚡ 9.2 คำสั่งการรันระบบ (Server Execution Commands)
 
-### 1. ดูรายการอะไหล่ทั้งหมดในคลัง (Parts Catalog)
 ```bash
-curl -X GET http://127.0.0.1:8000/api/parts
+# ----------------------------------------------------
+# 1. รัน Backend API Server (FastAPI + Uvicorn)
+# ----------------------------------------------------
+# วิธีที่ 1: รันจาก Root Directory (แนะนำ)
+python -m uvicorn backend.main:app --reload --port 8000
+
+# วิธีที่ 2: รันจากโฟลเดอร์ backend
+cd backend
+uvicorn main:app --reload --port 8000
+
+# ----------------------------------------------------
+# 2. รัน Frontend Web Application (Next.js)
+# ----------------------------------------------------
+cd frontend
+
+# โหมด Development (Hot Reloading รันที่ port 3000)
+npm run dev
+
+# โหมด Production Build (คอมไพล์โค้ดและตรวจเช็ก Type)
+npm run build
+
+# โหมด Production Server (รันหลังจาก build เสร็จสิ้น)
+npm run start
+
+# ตรวจสอบ Linting
+npm run lint
 ```
 
-### 2. สร้างใบสั่งซ่อมทั่วไป (Repair Job — คิดค่าความรุนแรงของงานซ่อม)
+---
+
+### 🧪 9.3 คำสั่งรันชุดทดสอบอัตโนมัติ (Automated Testing with Pytest)
+
 ```bash
+# รันชุดทดสอบ API Integration Test & OOP Verification ด้วย Pytest:
+python -m pytest backend/test_api.py -v
+
+# รันชุดทดสอบโดยละเอียด พร้อมแสดง Output ทุกขั้นตอน (Print Statements)
+python -m pytest backend/test_api.py -v -s
+
+# รันไฟล์ทดสอบโดยตรงด้วย Python
+python backend/test_api.py
+```
+
+---
+
+### 🌐 9.4 คำสั่งทดสอบ REST API ครบทุก Endpoint (cURL & PowerShell)
+
+สามารถใช้คำสั่ง **cURL** (บน Linux, macOS, Git Bash) หรือ **PowerShell** (บน Windows) ทดสอบได้ทันที:
+
+#### 1. ตรวจสอบสุขภาพระบบและสถิติภาพรวม (Health Check & KPI Stats)
+```bash
+# cURL
+curl -X GET http://127.0.0.1:8000/api/health
+curl -X GET http://127.0.0.1:8000/api/stats
+
+# PowerShell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/health"
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/stats" | Format-List
+```
+
+#### 2. จัดการคลังอะไหล่ (Parts & Inventory)
+```bash
+# ดูรายการอะไหล่ทั้งหมด (27 รายการ พร้อมสต็อกและราคา)
+curl -X GET http://127.0.0.1:8000/api/parts
+
+# ดูข้อมูลอะไหล่รายชิ้น (เช่น PART-001)
+curl -X GET http://127.0.0.1:8000/api/parts/PART-001
+
+# เติมสต็อกอะไหล่ (Restock +10 ชิ้น)
+# cURL
+curl -X POST "http://127.0.0.1:8000/api/parts/PART-001/restock?quantity=10"
+# PowerShell
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/api/parts/PART-001/restock?quantity=10"
+
+# เพิ่มอะไหล่รายการใหม่เข้าคลัง (New Part)
+curl -X POST http://127.0.0.1:8000/api/parts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "part_id": "PART-028",
+    "part_name": "โช้คอัพแก๊สค้ำฝากระโปรง OEM",
+    "price": 950.0,
+    "stock_qty": 15
+  }'
+```
+
+#### 3. ข้อมูลรถยนต์และเจ้าของรถ (Vehicles & Customers)
+```bash
+# ดูข้อมูลรถยนต์ทั้งหมดในระบบ
+curl -X GET http://127.0.0.1:8000/api/vehicles
+
+# ค้นหารถยนต์ตามป้ายทะเบียนหรือรุ่นรถ
+curl -X GET "http://127.0.0.1:8000/api/vehicles?search=1กก-9999"
+
+# ลงทะเบียนรถยนต์และลูกค้าใหม่
+curl -X POST http://127.0.0.1:8000/api/vehicles \
+  -H "Content-Type: application/json" \
+  -d '{
+    "license_plate": "5กข-1234",
+    "brand": "Toyota",
+    "model": "Corolla Cross Hybrid",
+    "customer_name": "สมชาย สุขเกษม",
+    "customer_phone": "089-999-8888"
+  }'
+```
+
+#### 4. สร้างใบสั่งซ่อมบำรุง (Service Jobs — Polymorphic Execution)
+```bash
+# ดูรายการใบสั่งซ่อมทั้งหมด
+curl -X GET http://127.0.0.1:8000/api/jobs
+
+# [A] สร้างงานซ่อมทั่วไป (Repair Job — คำนวณค่าความรุนแรงของงานซ่อม)
+# Severity: MINOR (0฿), MODERATE (+500฿), MAJOR (+1,800฿), CRITICAL (+3,500฿)
 curl -X POST http://127.0.0.1:8000/api/jobs/repair \
   -H "Content-Type: application/json" \
   -d '{
     "license_plate": "1กก-9999",
-    "labor_cost": 500.0,
-    "description": "เปลี่ยนผ้าเบรกหน้าและเจียรจานเบรก",
-    "severity": "MODERATE",
-    "parts": [{"part_id": "PART-004", "quantity": 1}],
+    "labor_cost": 800.0,
+    "description": "เปลี่ยนผ้าเบรกหน้าและเจียรจานเบรกคู่หน้า",
+    "severity": "MAJOR",
+    "parts": [
+      {"part_id": "PART-004", "quantity": 1}
+    ],
     "auto_generate_invoice": true
   }'
-```
 
-### 3. สร้างงานเช็กระยะตามรอบ (Maintenance Job — มอบส่วนลดตามแพ็กเกจ)
-```bash
+# [B] สร้างงานเช็กระยะตามรอบ (Maintenance Job — มอบส่วนลดแพ็กเกจระยะทาง)
+# Packages: PERIODIC_10K (-10%), PERIODIC_20K (-12%), PERIODIC_50K (-15%), PERIODIC_100K (-20%)
 curl -X POST http://127.0.0.1:8000/api/jobs/maintenance \
   -H "Content-Type: application/json" \
   -d '{
     "license_plate": "2ขข-8888",
-    "labor_cost": 400.0,
-    "description": "เช็กระยะ 20,000 กม. เปลี่ยนถ่ายน้ำมันเครื่องสังเคราะห์แท้",
+    "labor_cost": 650.0,
+    "description": "งานเช็กระยะ 20,000 กม. เปลี่ยนถ่ายน้ำมันเครื่องและไส้กรอง",
     "package_name": "PERIODIC_20K",
-    "parts": [{"part_id": "PART-001", "quantity": 1}, {"part_id": "PART-007", "quantity": 1}],
+    "parts": [
+      {"part_id": "PART-001", "quantity": 1},
+      {"part_id": "PART-007", "quantity": 1}
+    ],
     "auto_generate_invoice": true
   }'
 ```
 
-### 4. ดึงรายการใบเสร็จและบันทึกการชำระเงิน
+#### 5. จัดการใบแจ้งหนี้และการชำระเงิน (Invoices & Billing)
 ```bash
-# ดูใบแจ้งหนี้ทั้งหมด
+# ดึงรายการใบแจ้งหนี้ทั้งหมด
 curl -X GET http://127.0.0.1:8000/api/invoices
 
+# ดูรายละเอียดใบแจ้งหนี้รายใบ (เช่น INV-001)
+curl -X GET http://127.0.0.1:8000/api/invoices/INV-001
+
 # บันทึกการชำระเงิน (Mark as Paid)
+# cURL
 curl -X POST http://127.0.0.1:8000/api/invoices/INV-001/pay
+# PowerShell
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8000/api/invoices/INV-001/pay"
+```
+
+---
+
+### 🌿 9.5 คำสั่ง Git Workflow และการส่งงาน (Git Version Control)
+
+```bash
+# ตรวจสอบสถานะไฟล์ในโปรเจกต์
+git status
+
+# ดูความแตกต่างของโค้ดที่แก้ไข (Diff)
+git diff
+
+# เพิ่มการเปลี่ยนแปลงทั้งหมดเข้า Staging Area
+git add .
+
+# บันทึก Commit พร้อมข้อความอธิบายงาน
+git commit -m "คำอธิบายการพัฒนาฟังก์ชันหรือแก้ไขบั๊ก"
+
+# ส่งโค้ดขึ้น GitHub ไปยัง main branch
+git push origin main
+
+# ดึงอัปเดตล่าสุดจาก GitHub
+git pull origin main
+
+# ดูประวัติ Commit 5 รายการล่าสุด
+git log --oneline -n 5
+```
+
+---
+
+### 🛠️ 9.6 คำสั่งจัดการและแก้ไขปัญหาทั่วไป (Troubleshooting & Utilities)
+
+```bash
+# ----------------------------------------------------
+# 1. การจัดการเมื่อ Port 8000 (Backend) หรือ Port 3000 (Frontend) ชน / ค้าง
+# ----------------------------------------------------
+# [Windows PowerShell] ปิด Process ที่ใช้พอร์ตทันที
+Get-Process -Id (Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue).OwningProcess | Stop-Process -Force
+Get-Process -Id (Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue).OwningProcess | Stop-Process -Force
+
+# [Windows Command Prompt (CMD)]
+netstat -ano | findstr :8000
+taskkill /PID <PID_NUMBER> /F
+
+# [macOS / Linux]
+lsof -ti:8000 | xargs kill -9
+lsof -ti:3000 | xargs kill -9
+
+# ----------------------------------------------------
+# 2. ล้าง Cache ของ Next.js เมื่อหน้าเว็บไม่อัปเดต
+# ----------------------------------------------------
+cd frontend
+# [Windows PowerShell]
+Remove-Item -Recurse -Force .next
+# [Linux / macOS / Git Bash]
+rm -rf .next
+cd ..
+
+# ----------------------------------------------------
+# 3. ล้าง Python Bytecode Cache (__pycache__)
+# ----------------------------------------------------
+# [Windows PowerShell]
+Get-ChildItem -Path . -Include __pycache__ -Recurse -Force | Remove-Item -Recurse -Force
+# [macOS / Linux]
+find . -type d -name "__pycache__" -exec rm -rf {} +
 ```
 
 ---
