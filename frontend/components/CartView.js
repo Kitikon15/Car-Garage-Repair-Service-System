@@ -416,7 +416,7 @@ export default function CartView({
 
             {/* สรุปยอดและฟอร์มข้อมูลจัดส่ง (ขวามือ) */}
             <div className="col-12 col-lg-4">
-              <div className="card border-0 shadow-sm bg-white rounded-4 p-4 mb-4 sticky-top" style={{ top: "140px" }}>
+              <div className="card border-0 shadow-sm bg-white rounded-4 p-4 mb-4">
                 <h5 className="fw-black text-dark mb-3 pb-2 border-bottom">
                   สรุปการสั่งซื้อ (Order Summary)
                 </h5>

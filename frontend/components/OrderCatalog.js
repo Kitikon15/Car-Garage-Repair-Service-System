@@ -489,7 +489,7 @@ export default function OrderCatalog({
         <div className="row g-4">
           {/* แถบข้างซ้าย: หมวดหมู่สินค้า (Sidebar Accordion ตรงตามภาพตัวอย่าง) */}
           <div className="col-12 col-lg-3">
-            <div className="shop-sidebar-card mb-4 sticky-top" style={{ top: "140px" }}>
+            <div className="shop-sidebar-card mb-4">
               <div className="shop-sidebar-title d-flex align-items-center justify-content-between">
                 <span>หมวดหมู่สินค้า</span>
                 <span className="badge bg-sp-blue-light text-sp-blue rounded-pill small">
