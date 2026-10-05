@@ -229,7 +229,7 @@ export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCa
                     <i className="bi bi-car-front-fill"></i>
                   </div>
                   <div>
-                    <div className="text-muted small fw-bold text-uppercase">1. ยานพาหนะเข้ารับบริการ (Association)</div>
+                    <div className="text-muted small fw-bold text-uppercase">1. ยานพาหนะเข้ารับบริการ</div>
                     {selectedVehicle ? (
                       <div>
                         <span className="fw-bold fs-6 text-dark me-2">

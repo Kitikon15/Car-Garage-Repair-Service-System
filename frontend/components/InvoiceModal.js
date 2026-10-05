@@ -130,7 +130,7 @@ export default function InvoiceModal({ invoice, onClose, onMarkPaid, apiUrl }) {
                 </table>
               </div>
 
-              {/* สรุปแจกแจงยอดเงิน (Polymorphism Breakdown) */}
+              {/* สรุปแจกแจงยอดเงินและค่าบริการ */}
               <div className="row justify-content-end">
                 <div className="col-md-7 col-lg-6">
                   <div className="bg-white p-3 rounded border">

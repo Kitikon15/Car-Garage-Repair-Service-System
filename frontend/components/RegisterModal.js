@@ -83,7 +83,7 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
         const err = await res.json();
         throw new Error(err.detail || "ลงทะเบียนรถยนต์ไม่สำเร็จ");
       }
-      setMsg("ลงทะเบียนรถยนต์และผูกความสัมพันธ์ Association กับเจ้าของสำเร็จ!");
+      setMsg("ลงทะเบียนรถยนต์และบันทึกข้อมูลเจ้าของรถสำเร็จเรียบร้อย!");
       setVehForm({ license_plate: "", brand: "", model: "", customer_id: "" });
       onRefresh();
       setTimeout(() => {
@@ -168,7 +168,7 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
             ) : (
               <form onSubmit={handleCreateVehicle}>
                 <div className="mb-2">
-                  <label className="form-label small fw-semibold">เจ้าของรถยนต์ (Association)</label>
+                  <label className="form-label small fw-semibold">เจ้าของรถยนต์ (เลือกลูกค้า)</label>
                   <select
                     className="form-select form-select-sm"
                     required

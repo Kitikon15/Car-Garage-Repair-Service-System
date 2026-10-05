@@ -4,7 +4,7 @@ import BootstrapClient from "../components/BootstrapClient";
 
 export const metadata = {
   title: "ServiceGarage | ระบบจัดการอู่ซ่อมรถและบริการบำรุงรักษา",
-  description: "ระบบจัดการอู่ซ่อมรถตามหลักการ Object-Oriented Analysis & Design (OOAD)",
+  description: "ระบบบริหารจัดการอู่ซ่อมรถ คลังอะไหล่ยานยนต์ และบริการบำรุงรักษาครบวงจร",
 };
 
 export default function RootLayout({ children }) {

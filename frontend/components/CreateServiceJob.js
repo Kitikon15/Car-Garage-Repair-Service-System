@@ -152,7 +152,7 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
           <span>สร้างใบสั่งซ่อม / ใบงานบริการใหม่</span>
         </h5>
         <small className="text-muted">
-          หลักการ Polymorphism: คำนวณราคาตามประเภทงานในคลาสลูก (Subclass)
+          ระบบคำนวณราคาประเมิน ค่าบริการ และค่าแรงอัตโนมัติตามประเภทงาน
         </small>
       </div>
 
@@ -165,10 +165,10 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* ตัวเลือกประเภทงาน (Polymorphism Switch) */}
+          {/* ตัวเลือกประเภทงาน */}
           <div className="mb-3">
             <label className="form-label small fw-semibold text-uppercase text-muted">
-              เลือกประเภทงาน (สืบทอดจาก <code>ServiceJob</code>)
+              เลือกประเภทงานบริการ
             </label>
             <div className="row g-2">
               <div className="col-6">
@@ -182,8 +182,8 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
                   onChange={() => setJobType("REPAIR")}
                 />
                 <label className="btn btn-outline-danger w-100 py-2 d-flex flex-column align-items-center" htmlFor="radioRepair">
-                  <span className="fw-bold"><i className="bi bi-wrench me-1"></i> งานซ่อม (RepairJob)</span>
-                  <small className="text-muted" style={{ fontSize: "0.75rem" }}>คิดค่าเสี่ยง/ความรุนแรงเพิ่ม</small>
+                  <span className="fw-bold"><i className="bi bi-wrench me-1"></i> งานซ่อมบำรุงทั่วไป (Repair Job)</span>
+                  <small className="text-muted" style={{ fontSize: "0.75rem" }}>คิดตามระดับความเสียหาย</small>
                 </label>
               </div>
 
@@ -198,16 +198,16 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
                   onChange={() => setJobType("MAINTENANCE")}
                 />
                 <label className="btn btn-outline-success w-100 py-2 d-flex flex-column align-items-center" htmlFor="radioMaintenance">
-                  <span className="fw-bold"><i className="bi bi-shield-check me-1"></i> เช็กระยะ (MaintenanceJob)</span>
-                  <small className="text-muted" style={{ fontSize: "0.75rem" }}>มอบส่วนลดตามแพ็กเกจ</small>
+                  <span className="fw-bold"><i className="bi bi-shield-check me-1"></i> เช็กระยะตามรอบ (Maintenance Job)</span>
+                  <small className="text-muted" style={{ fontSize: "0.75rem" }}>แพ็กเกจส่วนลดตามระยะทาง</small>
                 </label>
               </div>
             </div>
           </div>
 
-          {/* เลือกรถยนต์ (Association กับเจ้าของ) */}
+          {/* เลือกรถยนต์ */}
           <div className="mb-3">
-            <label className="form-label small fw-semibold">รถยนต์เป้าหมาย (ความสัมพันธ์ Association กับเจ้าของ)</label>
+            <label className="form-label small fw-semibold">เลือกรถยนต์เข้ารับบริการ (ข้อมูลเจ้าของรถ)</label>
             <select
               className="form-select"
               required
@@ -223,7 +223,7 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
             </select>
           </div>
 
-          {/* ฟิลด์เฉพาะตามประเภทย่อย (Subclass-Specific Fields) */}
+          {/* ฟิลด์เฉพาะตามประเภทงานบริการ */}
           {jobType === "REPAIR" ? (
             <div className="mb-3 p-3 bg-danger-subtle rounded border border-danger-subtle">
               <label className="form-label small fw-semibold text-danger">
@@ -283,10 +283,10 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
             </div>
           </div>
 
-          {/* Composition: การเลือกอะไหล่ใช้งาน */}
+          {/* การเลือกอะไหล่ใช้งาน */}
           <div className="mb-3">
             <label className="form-label small fw-semibold d-flex justify-content-between">
-              <span>รายการอะไหล่ที่ใช้ (<code>parts_used</code>)</span>
+              <span>รายการอะไหล่ที่ต้องใช้ในงานนี้</span>
               <span className="text-muted small">ระบบจะตัดสต็อกอัตโนมัติ</span>
             </label>
             <div className="input-group mb-2">
