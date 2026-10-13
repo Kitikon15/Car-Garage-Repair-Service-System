@@ -22,6 +22,9 @@ from backend.schemas import (
     VehicleCreate,
     PartCreate,
     PartRestock,
+    PartUpdate,
+    ChatMessageCreate,
+    AdminLoginRequest,
     RepairJobCreate,
     MaintenanceJobCreate,
 )
@@ -184,6 +187,68 @@ def restock_part(part_id: str, payload: PartRestock):
         }
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@app.put("/api/parts/{part_id}", tags=["Parts Inventory"])
+def update_part(part_id: str, payload: PartUpdate):
+    """Update part details (name, price, stock)."""
+    part = db.update_part(
+        part_id,
+        name=payload.part_name,
+        price=payload.price,
+        stock=payload.stock_qty,
+    )
+    if not part:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Part '{part_id}' not found.")
+    return {"message": "Part updated successfully", "part": part.to_dict()}
+
+
+@app.delete("/api/parts/{part_id}", tags=["Parts Inventory"])
+def delete_part(part_id: str):
+    """Delete a part from the inventory (Admin operation)."""
+    deleted = db.delete_part(part_id)
+    if not deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Part '{part_id}' not found.")
+    return {"message": f"Part '{part_id}' deleted successfully.", "part_id": part_id}
+
+
+# ==========================================
+# 3.5. Live Chat Endpoints (Customer & Admin)
+# ==========================================
+@app.get("/api/chat/messages", tags=["Live Chat"])
+def get_chat_messages(conversation_id: str = None):
+    """Get chat message history for all or a specific conversation."""
+    messages = db.list_chat_messages(conversation_id)
+    return {"messages": messages, "total": len(messages)}
+
+
+@app.post("/api/chat/messages", status_code=status.HTTP_201_CREATED, tags=["Live Chat"])
+def send_chat_message(payload: ChatMessageCreate):
+    """Send a new message from customer or garage admin."""
+    import datetime
+    now_time = datetime.datetime.now().strftime("%H:%M")
+    msg_id = f"MSG-{uuid.uuid4().hex[:6].upper()}"
+    msg = {
+        "id": msg_id,
+        "conversation_id": payload.conversation_id,
+        "customer_name": payload.customer_name or "ลูกค้า",
+        "sender": payload.sender,
+        "text": payload.text.strip(),
+        "timestamp": now_time,
+        "read": False if payload.sender == "customer" else True,
+    }
+    db.add_chat_message(msg)
+    if payload.sender == "admin":
+        db.mark_chat_read(payload.conversation_id)
+    return {"message": "Chat message sent", "data": msg}
+
+
+@app.put("/api/chat/conversations/{conversation_id}/read", tags=["Live Chat"])
+def mark_conversation_as_read(conversation_id: str):
+    """Mark all messages in a conversation as read by admin."""
+    updated = db.mark_chat_read(conversation_id)
+    return {"message": f"Marked {updated} messages as read", "conversation_id": conversation_id}
+
 
 
 # ==========================================
@@ -401,3 +466,29 @@ def get_dashboard_stats():
         "total_revenue": round(total_revenue, 2),
         "paid_revenue": round(paid_revenue, 2),
     }
+
+
+# ==========================================
+# 7. Admin Authentication & Security Gate
+# ==========================================
+@app.post("/api/admin/login", tags=["Admin"])
+def admin_login(payload: AdminLoginRequest):
+    """
+    Authenticates administrative staff for accessing the backoffice system.
+    Default credentials for University Demo:
+    - Username: admin
+    - Password: admin123 (or admin, garage2026)
+    """
+    valid_passwords = ["admin123", "admin", "garage2026", "pass1234"]
+    if payload.username.strip().lower() == "admin" and payload.password.strip() in valid_passwords:
+        return {
+            "status": "success",
+            "token": f"admin-session-{uuid.uuid4().hex[:12]}",
+            "role": "administrator",
+            "name": "ผู้ดูแลระบบอู่ (Garage Admin)",
+            "message": "เข้าสู่ระบบสำเร็จ ยินดีต้อนรับสู่ระบบจัดการหลังบ้าน"
+        }
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง (สำหรับทดสอบกรุณาใช้ admin / admin123)"
+    )

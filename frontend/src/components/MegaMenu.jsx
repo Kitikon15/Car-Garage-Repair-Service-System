@@ -417,7 +417,7 @@ export default function MegaMenu({
               style={{
                 width: "44px",
                 height: "44px",
-                background: "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
+                background: "linear-gradient(135deg, #1e204c 0%, #2f3388 50%, #5b5ffd 100%)",
               }}
             >
               <i className={`bi ${categoryIcons[category.id] || "bi-grid-fill"} fs-4 text-warning`}></i>
@@ -427,7 +427,7 @@ export default function MegaMenu({
                 <h5 className="fw-black text-dark mb-0" style={{ letterSpacing: "-0.3px" }}>
                   {category.name}
                 </h5>
-                <span className="badge bg-danger text-white small" style={{ fontSize: "0.68rem" }}>
+                <span className="badge ms-1 small fw-bold text-dark" style={{ fontSize: "0.68rem", background: "var(--theme-accent-gradient)" }}>
                   อะไหล่แท้ 100%
                 </span>
               </div>
@@ -482,7 +482,7 @@ export default function MegaMenu({
                       }}
                     >
                       <span className="d-flex align-items-center gap-2">
-                        <i className="bi bi-record-circle text-danger small"></i>
+                        <i className="bi bi-record-circle text-primary small"></i>
                         <span>{group.title}</span>
                       </span>
                       <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
@@ -492,7 +492,7 @@ export default function MegaMenu({
                       <div className="d-flex align-items-center gap-2 mb-2 pb-1 border-bottom border-light">
                         <span
                           className="d-inline-block rounded-pill"
-                          style={{ width: "3.5px", height: "14px", backgroundColor: "#dc2626" }}
+                          style={{ width: "3.5px", height: "14px", backgroundColor: "#5b5ffd" }}
                         />
                         <h6
                           className="fw-bold text-dark mb-0"
@@ -513,7 +513,7 @@ export default function MegaMenu({
                             }}
                           >
                             <span className="d-flex align-items-center gap-2">
-                              <i className="bi bi-chevron-right text-danger opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
+                              <i className="bi bi-chevron-right text-primary opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
                               <span>{item.label}</span>
                             </span>
                             <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
@@ -556,7 +556,7 @@ export default function MegaMenu({
                       }}
                     >
                       <span className="d-flex align-items-center gap-2">
-                        <i className="bi bi-record-circle text-danger small"></i>
+                        <i className="bi bi-record-circle text-primary small"></i>
                         <span>{group.title}</span>
                       </span>
                       <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
@@ -566,7 +566,7 @@ export default function MegaMenu({
                       <div className="d-flex align-items-center gap-2 mb-2 pb-1 border-bottom border-light">
                         <span
                           className="d-inline-block rounded-pill"
-                          style={{ width: "3.5px", height: "14px", backgroundColor: "#dc2626" }}
+                          style={{ width: "3.5px", height: "14px", backgroundColor: "#5b5ffd" }}
                         />
                         <h6
                           className="fw-bold text-dark mb-0"
@@ -587,7 +587,7 @@ export default function MegaMenu({
                             }}
                           >
                             <span className="d-flex align-items-center gap-2">
-                              <i className="bi bi-chevron-right text-danger opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
+                              <i className="bi bi-chevron-right text-primary opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
                               <span>{item.label}</span>
                             </span>
                             <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
@@ -668,7 +668,7 @@ export default function MegaMenu({
 
                   <button
                     type="button"
-                    className="btn btn-outline-danger w-100 py-2 btn-sm fw-semibold"
+                    className="btn btn-outline-primary w-100 py-2 btn-sm fw-semibold"
                     onClick={() => {
                       if (onGoToVehicleSearch) onGoToVehicleSearch();
                       onClose();
@@ -693,7 +693,7 @@ export default function MegaMenu({
         >
           <div className="d-flex flex-wrap align-items-center gap-3 text-muted">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-tools text-danger"></i> บริการซ่อมบำรุงและติดตั้ง ณ ศูนย์ ServiceGarage
+              <i className="bi bi-tools text-primary"></i> บริการซ่อมบำรุงและติดตั้ง ณ ศูนย์ ServiceGarage
             </span>
             <span className="opacity-50 d-none d-sm-inline">•</span>
             <span className="d-flex align-items-center gap-1">

@@ -1,7 +1,8 @@
 # 🚗 Car Garage & Repair Service Management System (CarGarage PRO)
-> **ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร**  
+> **ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร (Version 2.5 Update)**  
 > **Course Project:** Object-Oriented Programming (OOP) & Object-Oriented Analysis and Design (OOAD)  
-> **Architecture:** Decoupled RESTful Architecture — Python FastAPI (Backend) + Next.js App Router & Bootstrap 5 (Frontend)  
+> **Architecture:** Decoupled RESTful Architecture — Python FastAPI (Backend) + React & Bootstrap 5 (Frontend - Vite)  
+> **Key Features:** Vuexy Admin Backoffice, Live Workshop Bays, Bilingual System (TH/EN), Live Chat Desk, Master Mechanic Tools Card  
 > **Repository:** [Kitikon15/Car-Garage-Repair-Service-System](https://github.com/Kitikon15/Car-Garage-Repair-Service-System)
 
 ---
@@ -25,12 +26,13 @@
 
 ## 🎯 2. แผนภาพยูสเคสและบทบาทผู้ใช้งาน (Use Case Diagram & System Actors)
 
-ระบบแบ่งบทบาทของผู้ใช้งาน (Actors) ออกเป็น 5 กลุ่ม เพื่อรองรับขั้นตอนการทำงานในอู่ซ่อมรถยนต์ได้อย่างสมบูรณ์:
-1. **👤 ลูกค้า / เจ้าของรถ (Customer):** นำรถเข้าตรวจเช็ก, ดูประวัติการซ่อม, ประเมินราคา และชำระเงิน
+ระบบแบ่งบทบาทของผู้ใช้งาน (Actors) ออกเป็น 6 กลุ่ม เพื่อรองรับขั้นตอนการทำงานในอู่ซ่อมรถยนต์ได้อย่างสมบูรณ์:
+1. **👤 ลูกค้า / เจ้าของรถ (Customer):** นำรถเข้าตรวจเช็ก, ดูประวัติการซ่อม, ประเมินราคา, สอบถามช่างผ่านแชทสด และชำระเงิน
 2. **👨‍💼 พนักงานรับรถ / ที่ปรึกษางานบริการ (Service Advisor):** ลงทะเบียนรถ, เปิดใบสั่งซ่อม (Repair/Maintenance), ประเมินราคา และประสานงาน
 3. **👨‍🔧 ช่างเทคนิคประจำอู่ (Technician / Mechanic):** ดำเนินการซ่อมบำรุง, ตรวจสอบอะไหล่ และเบิกใช้อะไหล่ตรงรุ่น
 4. **📦 ผู้ดูแลคลังอะไหล่ (Parts Storekeeper):** ตรวจสอบจำนวนอะไหล่, เติมสต็อกสินค้า (Restock) และจัดการแคตตาล็อกอะไหล่
 5. **🧑‍💼 เจ้าหน้าที่การเงิน / แคชเชียร์ (Cashier):** ตรวจสอบใบแจ้งหนี้, แจกแจงภาษี VAT 7% และบันทึกการชำระเงิน
+6. **🛡️ ผู้ดูแลระบบและแอดมิน (Garage Administrator):** เพิ่มอะไหล่สินค้าใหม่, แก้ไขราคา/สต็อก, ลบรายการสินค้า และตอบแชทลูกค้าสัมพันธ์ (Live Chat Desk)
 
 ### 📊 แผนภาพ Use Case Diagram (UML)
 
@@ -42,6 +44,7 @@ flowchart LR
     Mechanic["👨‍🔧 ช่างเทคนิคประจำอู่\n(Mechanic / Technician)"]
     Storekeeper["📦 ผู้ดูแลคลังอะไหล่\n(Parts Storekeeper)"]
     Cashier["🧑‍💼 เจ้าหน้าที่การเงิน\n(Cashier)"]
+    Admin["🛡️ แอดมินศูนย์บริการ\n(Garage Administrator)"]
 
     %% System Boundary
     subgraph SystemBoundary ["🚘 ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ (CarGarage PRO)"]
@@ -51,17 +54,20 @@ flowchart LR
         UC3(["UC-03: เปิดใบสั่งซ่อมทั่วไป\n(Create Repair Job)"])
         UC4(["UC-04: เปิดใบสั่งงานเช็กระยะตามรอบ\n(Create Maintenance Job)"])
         UC5(["UC-05: ตรวจสอบและตัดสต็อกอะไหล่\n(Deduct Parts Stock)"])
-        UC6(["UC-06: จัดการและเติมสต็อกอะไหล่\n(Manage & Restock Parts)"])
+        UC6(["UC-06: ตรวจสอบและเติมสต็อกอะไหล่\n(Check & Restock Parts)"])
         UC7(["UC-07: ค้นหาประวัติรถและทะเบียน\n(Search Vehicle & History)"])
         UC8(["UC-08: สร้างใบแจ้งหนี้และคำนวณภาษี\n(Generate Invoice & Tax)"])
         UC9(["UC-09: บันทึกการชำระเงิน\n(Process Payment)"])
         UC10(["UC-10: คัดกรองและเบิกอะไหล่ในคลัง\n(Browse & Order Parts)"])
+        UC11(["UC-11: เพิ่มและจัดการอะไหล่สินค้า\n(Admin Add & Manage Parts SKU)"])
+        UC12(["UC-12: แชทสดบริการลูกค้าสัมพันธ์\n(Customer Live Chat Desk)"])
     end
 
     %% Actor Connections
     Customer --> UC1
     Customer --> UC2
     Customer --> UC7
+    Customer --> UC12
 
     Advisor --> UC1
     Advisor --> UC2
@@ -79,6 +85,9 @@ flowchart LR
 
     Cashier --> UC8
     Cashier --> UC9
+
+    Admin --> UC11
+    Admin --> UC12
 
     %% Use Case Relationships
     UC3 -.->|"<<include>>"| UC5
@@ -334,6 +343,19 @@ classDiagram
 6. **แถบนำทางเพรียวบาง สบายตา (Sleek Compact Navigation)**:
    - แถบเมนูสีแดงเพรียวบาง 38–40px ข้อความบรรทัดเดียวไม่ตกบรรทัด
    - ปุ่ม Active แท็บทรงแคปซูลโค้งมนพรีเมียม (Gold Pill Accent) พร้อมตะกร้าเบิกอะไหล่
+7. **ระบบสลับภาษา 2 ภาษาเต็มรูปแบบ (Bilingual Support: TH / EN)**:
+   - สลับภาษาระหว่าง **ภาษาไทย (TH)** และ **English (EN)** ได้แบบไดนามิกผ่าน `LanguageContext.jsx`
+   - ไอคอนสลับภาษามาตรฐานสากลสไตล์ Vuexy `[A 文] EN / TH` บน Topbar ทั้งหน้าลูกค้าและหน้าแอดมิน
+   - รองรับการแปลครอบคลุมทุกส่วน: เมนูนำทาง, การ์ดสถิติ, รายการอะไหล่, ข้อมูลรถ, ใบแจ้งหนี้, และโต๊ะแชทสด
+8. **Vuexy Admin Backoffice & Garage Analytics (`/admin`)**:
+   - แดชบอร์ดผู้ดูแลระบบสไตล์โมเดิร์น Vuexy / Materio Dashboard รองรับ Dark/Light Theme
+   - **Live Workshop Bays Monitor**: มอนิเตอร์สถานะช่องซ่อมรถยนต์ 4 ช่องสด (Bay 1: เช็กระยะ, Bay 2: ยกเครื่องยนต์, Bay 3: ของเหลว, Bay 4: ซ่อมเบรก) พร้อมแถบแสดงเปอร์เซ็นต์ความคืบหน้า
+   - **Master Technician Card**: การ์ดหัวหน้าช่างประจำอู่ "ช่างจันทร์ บรรลัยการช่าง" พร้อมกราฟิกเครื่องมือช่าง Automotive Mechanic Tools SVG (ประแจแหวนข้างปากตาย, ไขควง, น็อตหกเหลี่ยม, เฟืองเกียร์)
+   - **Garage Notification Center**: ศูนย์แจ้งเตือนอู่รถยนต์ 4 รายการ (อะไหล่ใกล้หมด, ลูกค้าเข้าเช็กระยะ, ใบงานเสร็จสิ้น, แชทใหม่) พร้อมเคาน์เตอร์ตัวเลขแจ้งเตือนไดนามิก และปุ่ม "ทำเครื่องหมายว่าอ่านแล้วทั้งหมด" (Mark all as read)
+   - **Customer Live Chat Desk**: ระบบโต๊ะตอบแชทลูกค้าสด พร้อมฟังก์ชัน Auto-Read อัตโนมัติเมื่อแอดมินคลิกเลือกบทสนทนาหรือตอบกลับ
+   - **Full Inventory & SKU Control**: สิทธิ์แอดมินในการเพิ่มสินค้าใหม่ (Add Part SKU), แก้ไขราคา/สต็อก และลบรายการสินค้า
+9. **ระบบสตาร์ทอัจฉริยะคลิกเดียว (1-Click Launch Script)**:
+   - ไฟล์สคริปต์ `start_all.bat` สำหรับ Windows สามารถเปิดทั้ง FastAPI Backend (Port 8000) และ React Vite Frontend (Port 3000) พร้อมกันในคลิกเดียว
 
 ---
 
@@ -349,34 +371,46 @@ car-garage/
 │   │   ├── part.py               # Part model (Encapsulation & Stock Guard)
 │   │   ├── service_job.py        # ServiceJob (ABC), RepairJob & MaintenanceJob (Inheritance & Polymorphism)
 │   │   └── invoice.py            # Invoice model (Polymorphic Billing Calculation)
-│   ├── database.py               # In-Memory DB & Realistic Seed Data (27 Parts, Vehicles, Customers)
+│   ├── database.py               # In-Memory DB, Live Chat Data & 27 Seed Parts
 │   ├── schemas.py                # Pydantic Schemas for Request & Response Validation
-│   ├── main.py                   # FastAPI Application & REST Endpoints
+│   ├── main.py                   # FastAPI Application & REST Endpoints (Jobs, Parts, Invoices, Chat)
 │   └── test_api.py               # Backend Unit & Integration Tests
 │
 ├── frontend/
-│   ├── app/
-│   │   ├── layout.jsx            # Root HTML layout with Bootstrap & Icons
-│   │   ├── page.jsx              # Main Dashboard, Tabs Controller & Global State
-│   │   └── globals.css           # Custom Garage Themes, Compact Navbar & Card Styles
-│   ├── components/
-│   │   ├── BootstrapClient.js    # Client-side dynamic loader for Bootstrap 5 JS bundle
-│   │   ├── Navbar.js             # Sleek compact garage navigation bar with cart badge
-│   │   ├── PromoBannerCarousel.js# Garage Operations Command Center hero section
-│   │   ├── StatsCards.js         # Top KPI metrics (Revenue, Invoices, Low Stock, Fleet)
-│   │   ├── OrderCatalog.js       # 10-Subsystem Parts Catalog with category & brand filters
-│   │   ├── PartsInventory.js     # Real-time stock management table with restock modal
-│   │   ├── CreateServiceJob.js   # Polymorphic Job creation form & live preview
-│   │   ├── GarageBuilder.js      # Interactive Repair Cost Estimator
-│   │   ├── VehicleSearch.js      # Vehicle hub & fleet history search by brand/model
-│   │   ├── CartView.js           # Parts requisition cart & order checkout
-│   │   ├── InvoiceList.js        # Past service invoices list & status filter
-│   │   ├── InvoiceModal.js       # Itemized receipt popup with tax & financial breakdown
-│   │   ├── RegisterModal.js      # Vehicle & Customer registration modal
-│   │   ├── ContactSales.js       # Garage hotline (02-888-7999), branches & hours
-│   │   ├── Footer.js             # High-contrast garage footer (AAA 8.31:1 ratio)
-│   │   └── ProductImage.js       # Dynamic SVG & placeholder image handler for parts
-│   └── package.json
+│   ├── index.html            # HTML Entrypoint พร้อม Bootstrap Icons CDN
+│   ├── vite.config.js        # การตั้งค่า Vite React Dev Server (Port 3000)
+│   ├── package.json          # รายการ Dependencies (React 19, Bootstrap 5, Vite)
+│   ├── public/               # รูปภาพอะไหล่ 27 รายการ, โลโก้แบรนด์ และไอคอนหมวดหมู่
+│   └── src/
+│       ├── main.jsx          # React DOM Application Entrypoint
+│       ├── App.jsx           # Main Dashboard, Tabs Controller & Global State
+│       ├── globals.css       # Custom Garage Themes, Compact Navbar & Card Styles
+│       ├── context/
+│       │   └── LanguageContext.jsx # Bilingual Context Provider (TH / EN)
+│       └── components/       # Pure React Components
+│           ├── Navbar.jsx            # Sleek compact garage navigation bar with cart badge
+│           ├── LanguageSwitcher.jsx  # Exact Vuexy-style [A 文] EN / TH language toggle
+│           ├── PromoBannerCarousel.jsx # Garage Operations Command Center hero section
+│           ├── StatsCards.jsx        # Top KPI metrics (Revenue, Invoices, Low Stock, Fleet)
+│           ├── OrderCatalog.jsx      # 10-Subsystem Parts Catalog with filters
+│           ├── PartsInventory.jsx    # Real-time stock management table with restock modal
+│           ├── CreateServiceJob.jsx  # Polymorphic Job creation form & live preview
+│           ├── GarageBuilder.jsx     # Interactive Repair Cost Estimator
+│           ├── VehicleSearch.jsx     # Vehicle hub & fleet history search by brand/model
+│           ├── CartView.jsx          # Parts requisition cart & order checkout
+│           ├── InvoiceList.jsx       # Past service invoices list & status filter
+│           ├── InvoiceModal.jsx      # Itemized receipt popup with tax breakdown
+│           ├── RegisterModal.jsx     # Vehicle & Customer registration modal
+│           ├── ContactSales.jsx      # Garage hotline (02-888-7999), branches & hours
+│           ├── AdminPage.jsx         # หน้าเว็บแอดมินแยกต่างหาก (/admin) พร้อมระบบตรวจสอบสิทธิ์
+│           ├── AdminLogin.jsx        # หน้าต่างเข้าสู่ระบบความปลอดภัยสำหรับแอดมิน (Security Login Gate)
+│           ├── AdminPortal.jsx       # ศูนย์ควบคุมแอดมิน: เพิ่ม/แก้ไข/ลบอะไหล่ & ตอบแชทลูกค้าสด
+│           ├── AdminVuexyDashboard.jsx # Modern Vuexy-style backoffice dashboard (Workshop bays, stats, quick actions)
+│           ├── CustomerChatWidget.jsx# วิดเจ็ตแชทสดมุมขวาล่างสำหรับลูกค้าปรึกษาช่างและสอบถามข้อมูล
+│           ├── Footer.jsx            # High-contrast garage footer
+│           └── ProductImage.jsx      # Dynamic SVG & placeholder image handler
+│
+├── start_all.bat             # สคริปต์ 1-Click Launch เปิดทั้ง Backend และ Frontend บน Windows
 └── README.md
 ```
 
@@ -391,7 +425,20 @@ car-garage/
 
 ---
 
-### ขั้นตอนด่วนในการเริ่มใช้งาน (Quick Start Guide)
+### วิธีที่ 1: เริ่มต้นใช้งานง่ายที่สุดผ่าน 1-Click Script (Windows)
+
+หากคุณติดตั้ง Python dependencies และ npm packages เรียบร้อยแล้ว สามารถเริ่มระบบทั้งหมดได้ทันทีด้วย:
+```bash
+# ดับเบิลคลิกไฟล์ start_all.bat หรือรันผ่าน Terminal
+.\start_all.bat
+```
+สคริปต์จะทำการเปิดหน้าต่าง Terminal 2 บานอัตโนมัติ:
+- บานที่ 1: รัน **FastAPI Backend** ที่พอร์ต `8000`
+- บานที่ 2: รัน **React Vite Frontend** ที่พอร์ต `3000`
+
+---
+
+### วิธีที่ 2: เริ่มต้นแบบ Manual (Command-Line)
 
 1. **โคลนโปรเจกต์จาก GitHub:**
    ```bash
@@ -414,12 +461,16 @@ car-garage/
    - **Backend API:** `http://127.0.0.1:8000`
    - **Swagger UI Interactive Docs:** `http://127.0.0.1:8000/docs`
 
-3. **เปิด Terminal ที่ 2: เริ่มต้นฝั่ง Frontend (Next.js)**
+3. **เปิด Terminal ที่ 2: เริ่มต้นฝั่ง Frontend (React + Vite)**
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
-   - **เปิดเว็บเบราว์เซอร์:** `http://localhost:3000`
+   - **หน้าเว็บหลักสำหรับลูกค้า (Public Customer Portal):** `http://localhost:3000/`
+   - **หน้าเว็บระบบแอดมินหลังบ้าน (Dedicated Admin Portal):** `http://localhost:3000/admin`
+     - **ระบบความปลอดภัย (Security Gate):** มีระบบตรวจสอบสิทธิ์ป้องกันผู้ไม่เกี่ยวข้องเข้าถึง
+     - **ชื่อผู้ใช้งาน (Username):** `admin`
+     - **รหัสผ่าน (Password):** `admin123`
 
 ---

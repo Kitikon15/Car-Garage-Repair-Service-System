@@ -3,7 +3,7 @@
 import { useState } from "react";
 import ProductImage from "./ProductImage";
 
-export default function PartsInventory({ parts, onRefresh, apiUrl }) {
+export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = false }) {
   const [restockingId, setRestockingId] = useState(null);
   const [restockQty, setRestockQty] = useState(5);
   const [showAddPartModal, setShowAddPartModal] = useState(false);
@@ -81,13 +81,15 @@ export default function PartsInventory({ parts, onRefresh, apiUrl }) {
             รายการอะไหล่แท้และอุปกรณ์ซ่อมบำรุงพร้อมใช้งานในระบบ ({parts?.length || 0} รายการ)
           </small>
         </div>
-        <button
-          className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
-          onClick={() => setShowAddPartModal(true)}
-        >
-          <i className="bi bi-plus-circle"></i>
-          <span>เพิ่มอะไหล่</span>
-        </button>
+        {isAdmin && (
+          <button
+            className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+            onClick={() => setShowAddPartModal(true)}
+          >
+            <i className="bi bi-plus-circle"></i>
+            <span>เพิ่มอะไหล่</span>
+          </button>
+        )}
       </div>
 
       <div className="table-responsive">
@@ -99,13 +101,13 @@ export default function PartsInventory({ parts, onRefresh, apiUrl }) {
               <th scope="col" className="text-end">ราคา/ชิ้น</th>
               <th scope="col" className="text-center">คงเหลือ</th>
               <th scope="col" className="text-center">สถานะ</th>
-              <th scope="col" className="text-end pe-3">จัดการสต็อก</th>
+              {isAdmin && <th scope="col" className="text-end pe-3">จัดการสต็อก</th>}
             </tr>
           </thead>
           <tbody>
             {parts?.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4 text-muted">
+                <td colSpan={isAdmin ? 6 : 5} className="text-center py-4 text-muted">
                   ยังไม่มีรายการอะไหล่ในคลัง
                 </td>
               </tr>
@@ -143,46 +145,48 @@ export default function PartsInventory({ parts, onRefresh, apiUrl }) {
                         </span>
                       )}
                     </td>
-                    <td className="text-end pe-3">
-                      {restockingId === p.part_id ? (
-                        <div className="d-flex align-items-center justify-content-end gap-1">
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            style={{ width: "70px" }}
-                            min="1"
-                            value={restockQty}
-                            onChange={(e) => setRestockQty(e.target.value)}
-                          />
-                          <button
-                            className="btn btn-sm btn-success"
-                            onClick={() => handleRestock(p.part_id)}
-                            disabled={loading}
-                            title="ยืนยันการเติมสต็อก"
-                          >
-                            <i className="bi bi-check-lg"></i>
-                          </button>
+                    {isAdmin && (
+                      <td className="text-end pe-3">
+                        {restockingId === p.part_id ? (
+                          <div className="d-flex align-items-center justify-content-end gap-1">
+                            <input
+                              type="number"
+                              className="form-control form-control-sm"
+                              style={{ width: "70px" }}
+                              min="1"
+                              value={restockQty}
+                              onChange={(e) => setRestockQty(e.target.value)}
+                            />
+                            <button
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleRestock(p.part_id)}
+                              disabled={loading}
+                              title="ยืนยันการเติมสต็อก"
+                            >
+                              <i className="bi bi-check-lg"></i>
+                            </button>
+                            <button
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={() => setRestockingId(null)}
+                              title="ยกเลิก"
+                            >
+                              <i className="bi bi-x-lg"></i>
+                            </button>
+                          </div>
+                        ) : (
                           <button
                             className="btn btn-sm btn-outline-secondary"
-                            onClick={() => setRestockingId(null)}
-                            title="ยกเลิก"
+                            title="เติมจำนวนสต็อกอะไหล่"
+                            onClick={() => {
+                              setRestockingId(p.part_id);
+                              setRestockQty(5);
+                            }}
                           >
-                            <i className="bi bi-x-lg"></i>
+                            <i className="bi bi-plus-square me-1"></i> เติมสต็อก
                           </button>
-                        </div>
-                      ) : (
-                        <button
-                          className="btn btn-sm btn-outline-secondary"
-                          title="เติมจำนวนสต็อกอะไหล่"
-                          onClick={() => {
-                            setRestockingId(p.part_id);
-                            setRestockQty(5);
-                          }}
-                        >
-                          <i className="bi bi-plus-square me-1"></i> เติมสต็อก
-                        </button>
-                      )}
-                    </td>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 );
               })

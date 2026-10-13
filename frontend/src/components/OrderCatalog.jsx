@@ -603,7 +603,7 @@ export default function OrderCatalog({
                       }}
                     >
                       <div className="d-flex align-items-center gap-2">
-                        {cat.isFlash && <i className="bi bi-lightning-charge-fill text-danger"></i>}
+                        {cat.isFlash && <i className="bi bi-lightning-charge-fill text-warning"></i>}
                         <span>{cat.label}</span>
                       </div>
                       <i className={`bi bi-chevron-right small text-muted ${isActive ? "text-sp-blue fw-bold" : ""}`}></i>
@@ -652,7 +652,7 @@ export default function OrderCatalog({
                 </div>
                 <button
                   type="button"
-                  className="btn btn-outline-danger btn-sm py-1 px-3 mt-1 mt-sm-0"
+                  className="btn btn-outline-primary btn-sm py-1 px-3 mt-1 mt-sm-0"
                   onClick={() => {
                     setSelectedCategory("all");
                     setSelectedBrand("all");
@@ -756,7 +756,7 @@ export default function OrderCatalog({
                         <div className="d-flex align-items-baseline justify-content-between mb-3">
                           <div>
                             <div className="text-muted small" style={{ fontSize: "0.72rem" }}>ราคาเบิก / หน่วย</div>
-                            <span className="fw-black text-danger fs-5" style={{ letterSpacing: "-0.5px" }}>
+                            <span className="fw-black text-sp-blue fs-5" style={{ letterSpacing: "-0.5px" }}>
                               ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
                             </span>
                           </div>

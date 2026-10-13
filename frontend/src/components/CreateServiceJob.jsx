@@ -181,7 +181,7 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
                   checked={jobType === "REPAIR"}
                   onChange={() => setJobType("REPAIR")}
                 />
-                <label className="btn btn-outline-danger w-100 py-2 d-flex flex-column align-items-center" htmlFor="radioRepair">
+                <label className="btn btn-outline-primary w-100 py-2 d-flex flex-column align-items-center" htmlFor="radioRepair">
                   <span className="fw-bold"><i className="bi bi-wrench me-1"></i> งานซ่อมบำรุงทั่วไป (Repair Job)</span>
                   <small className="text-muted" style={{ fontSize: "0.75rem" }}>คิดตามระดับความเสียหาย</small>
                 </label>
@@ -225,8 +225,8 @@ export default function CreateServiceJob({ vehicles, parts, onJobCreated, apiUrl
 
           {/* ฟิลด์เฉพาะตามประเภทงานบริการ */}
           {jobType === "REPAIR" ? (
-            <div className="mb-3 p-3 bg-danger-subtle rounded border border-danger-subtle">
-              <label className="form-label small fw-semibold text-danger">
+            <div className="mb-3 p-3 bg-primary-subtle rounded border border-primary-subtle">
+              <label className="form-label small fw-semibold text-sp-blue">
                 <i className="bi bi-shield-exclamation me-1"></i> ระดับความรุนแรงของงานซ่อม (Severity Fee)
               </label>
               <select

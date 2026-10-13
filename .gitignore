@@ -4,13 +4,15 @@ node_modules/
 .pnp
 .pnp.js
 
-# Next.js build
+# Next.js & Vite build
 .next/
 */.next/
 out/
 */out/
 build/
 */build/
+dist/
+*/dist/
 
 # Python
 __pycache__/

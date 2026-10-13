@@ -345,7 +345,7 @@ export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCa
                   {selectedBrake ? (
                     <ProductImage partId={selectedBrake.part_id} partName={selectedBrake.part_name} size="sm" />
                   ) : (
-                    <div className="stat-icon bg-danger-subtle text-danger">
+                    <div className="stat-icon bg-primary-subtle text-primary">
                       <i className="bi bi-disc-fill"></i>
                     </div>
                   )}

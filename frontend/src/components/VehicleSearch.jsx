@@ -94,7 +94,7 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
         <div
           className="p-4 text-white"
           style={{
-            background: "var(--theme-red-gradient, linear-gradient(135deg, #dc2626 0%, #991b1b 100%))",
+            background: "linear-gradient(135deg, #1e204c 0%, #2f3388 50%, #4f46e5 100%)",
           }}
         >
           <div className="d-flex align-items-center gap-2 mb-2">

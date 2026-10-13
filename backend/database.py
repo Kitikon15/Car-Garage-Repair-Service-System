@@ -27,6 +27,7 @@ class GarageDatabase:
         self.parts: Dict[str, Part] = {}
         self.service_jobs: Dict[str, ServiceJob] = {}
         self.invoices: Dict[str, Invoice] = {}
+        self.chat_messages: List[Dict] = []
         self._seed_initial_data()
 
     def _seed_initial_data(self) -> None:
@@ -109,6 +110,46 @@ class GarageDatabase:
         inv2 = Invoice("INV-2002", job2)
         self.invoices[inv2.invoice_id] = inv2
 
+        # 6. Seed Chat Messages for Customer Service Desk
+        self.chat_messages = [
+            {
+                "id": "MSG-001",
+                "conversation_id": "CUST-001",
+                "customer_name": "Alex Morgan",
+                "sender": "customer",
+                "text": "สวัสดีครับ สอบถามเรื่องผ้าเบรก Toyota Camry หน่อยครับ มีของพร้อมเปลี่ยนไหมครับ?",
+                "timestamp": "10:30",
+                "read": True,
+            },
+            {
+                "id": "MSG-002",
+                "conversation_id": "CUST-001",
+                "customer_name": "Alex Morgan",
+                "sender": "admin",
+                "text": "สวัสดีครับคุณ Alex มีผ้าเบรก BREMBO Premium Ceramic พร้อมให้บริการเลยครับ ราคา 1,850 บาท สามารถนำรถเข้ามาได้เลยครับ",
+                "timestamp": "10:32",
+                "read": True,
+            },
+            {
+                "id": "MSG-003",
+                "conversation_id": "CUST-002",
+                "customer_name": "Samantha Hayes",
+                "sender": "customer",
+                "text": "อยากสอบถามราคาแพ็กเกจเช็กระยะ 10,000 กม. ของ Honda Civic รวมเปลี่ยนน้ำมันเครื่องเท่าไรคะ?",
+                "timestamp": "11:15",
+                "read": False,
+            },
+            {
+                "id": "MSG-004",
+                "conversation_id": "CUST-GUEST",
+                "customer_name": "ลูกค้าทั่วไป",
+                "sender": "customer",
+                "text": "สอบถามอะไหล่แท้ตรงรุ่น 🚗",
+                "timestamp": "19:21",
+                "read": False,
+            },
+        ]
+
     # --- Customer Operations ---
     def get_customer(self, customer_id: str) -> Optional[Customer]:
         return self.customers.get(customer_id)
@@ -148,6 +189,42 @@ class GarageDatabase:
 
     def list_parts(self) -> List[Part]:
         return list(self.parts.values())
+
+    def delete_part(self, part_id: str) -> bool:
+        if part_id in self.parts:
+            del self.parts[part_id]
+            return True
+        return False
+
+    def update_part(self, part_id: str, name: Optional[str] = None, price: Optional[float] = None, stock: Optional[int] = None) -> Optional[Part]:
+        part = self.get_part(part_id)
+        if not part:
+            return None
+        if name is not None:
+            part.part_name = name
+        if price is not None:
+            part.price = price
+        if stock is not None:
+            part.stock_qty = stock
+        return part
+
+    # --- Chat Operations ---
+    def list_chat_messages(self, conversation_id: Optional[str] = None) -> List[Dict]:
+        if conversation_id:
+            return [m for m in self.chat_messages if m.get("conversation_id") == conversation_id]
+        return self.chat_messages
+
+    def add_chat_message(self, message: Dict) -> Dict:
+        self.chat_messages.append(message)
+        return message
+
+    def mark_chat_read(self, conversation_id: str) -> int:
+        count = 0
+        for m in self.chat_messages:
+            if m.get("conversation_id") == conversation_id and not m.get("read"):
+                m["read"] = True
+                count += 1
+        return count
 
     # --- Job Operations ---
     def get_job(self, job_id: str) -> Optional[ServiceJob]:

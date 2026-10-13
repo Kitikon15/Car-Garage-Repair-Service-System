@@ -1,29 +1,100 @@
-"use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import StatsCards from "../components/StatsCards";
-import PartsInventory from "../components/PartsInventory";
-import CreateServiceJob from "../components/CreateServiceJob";
-import InvoiceList from "../components/InvoiceList";
-import InvoiceModal from "../components/InvoiceModal";
-import RegisterModal from "../components/RegisterModal";
-import OrderCatalog from "../components/OrderCatalog";
-import VehicleSearch from "../components/VehicleSearch";
-import CartView from "../components/CartView";
-import ContactSales from "../components/ContactSales";
-import GarageBuilder from "../components/GarageBuilder";
-import PromoBannerCarousel from "../components/PromoBannerCarousel";
-import ProductImage from "../components/ProductImage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import StatsCards from "./components/StatsCards";
+import PartsInventory from "./components/PartsInventory";
+import CreateServiceJob from "./components/CreateServiceJob";
+import InvoiceList from "./components/InvoiceList";
+import InvoiceModal from "./components/InvoiceModal";
+import RegisterModal from "./components/RegisterModal";
+import OrderCatalog from "./components/OrderCatalog";
+import VehicleSearch from "./components/VehicleSearch";
+import CartView from "./components/CartView";
+import ContactSales from "./components/ContactSales";
+import GarageBuilder from "./components/GarageBuilder";
+import PromoBannerCarousel from "./components/PromoBannerCarousel";
+import ProductImage from "./components/ProductImage";
+import AdminPage from "./components/AdminPage";
+import CustomerChatWidget from "./components/CustomerChatWidget";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Dashboard() {
   // เมนูแท็บ: 'dashboard' | 'vehicleSearch' | 'order' | 'parts' | 'jobs' | 'contact' | 'cart'
   const [activeTab, setActiveTab] = useState("dashboard");
   // โหมดการทำงานในหน้างานซ่อม: 'estimator' (ฟังชั่นประเมินราคา) | 'form' | 'invoices'
   const [jobsSubTab, setJobsSubTab] = useState("estimator");
+
+  // ตรวจสอบเส้นทาง URL ว่าเป็นหน้าแอดมิน (/admin) หรือไม่
+  const checkIsAdminUrl = () => {
+    if (typeof window === "undefined") return false;
+    return (
+      window.location.pathname === "/admin" ||
+      window.location.pathname.startsWith("/admin/") ||
+      window.location.search.includes("page=admin") ||
+      window.location.hash === "#/admin" ||
+      window.location.hash.startsWith("#/admin")
+    );
+  };
+
+  const [isPageAdmin, setIsPageAdmin] = useState(checkIsAdminUrl);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsPageAdmin(checkIsAdminUrl());
+    };
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, []);
+
+  const [adminInitialTab, setAdminInitialTab] = useState(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("tab") || sessionStorage.getItem("garage_admin_tab") || "parts";
+    }
+    return "parts";
+  });
+
+  const [adminInitialConvId, setAdminInitialConvId] = useState(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("conv") || sessionStorage.getItem("garage_admin_conv") || "CUST-001";
+    }
+    return "CUST-001";
+  });
+
+  const [lastContactSubmission, setLastContactSubmission] = useState(null);
+
+  const navigateToAdmin = (tab = "parts", convId = "CUST-001") => {
+    const url = tab === "chat" ? `/admin?tab=chat&conv=${convId}` : "/admin";
+    window.history.pushState({}, "", url);
+    setAdminInitialTab(tab);
+    setAdminInitialConvId(convId);
+    setIsPageAdmin(true);
+    window.scrollTo(0, 0);
+  };
+
+  const handleGoToAdminChat = (convId = "CUST-GUEST", contactInfo = null) => {
+    window.history.pushState({}, "", `/admin?tab=chat&conv=${convId}`);
+    setAdminInitialTab("chat");
+    setAdminInitialConvId(convId);
+    if (contactInfo) {
+      setLastContactSubmission(contactInfo);
+    }
+    setIsPageAdmin(true);
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToCustomerSite = () => {
+    window.history.pushState({}, "", "/");
+    setIsPageAdmin(false);
+    window.scrollTo(0, 0);
+  };
 
   // ตัวกรองเมื่อเลือกจาก Carousel หน้าแรก
   const [selectedCatalogCategory, setSelectedCatalogCategory] = useState("all");
@@ -210,6 +281,24 @@ export default function Dashboard() {
   // สรุปยอดเงินในตะกร้า
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalCartAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // หาก URL อยู่ในเส้นทาง /admin ให้แสดงผลหน้า AdminPage ที่มีระบบล็อกอินแยกต่างหาก
+  if (isPageAdmin) {
+    return (
+      <AdminPage
+        apiUrl={API_BASE_URL}
+        parts={parts}
+        vehicles={vehicles}
+        customers={customers}
+        invoices={invoices}
+        onRefresh={fetchData}
+        onBackToCustomerSite={navigateToCustomerSite}
+        initialTab={adminInitialTab}
+        initialConvId={adminInitialConvId}
+        contactSubmission={lastContactSubmission}
+      />
+    );
+  }
 
   return (
     <div className="min-vh-100 d-flex flex-column bg-light">
@@ -461,6 +550,7 @@ export default function Dashboard() {
                 parts={parts}
                 onRefresh={fetchData}
                 apiUrl={API_BASE_URL}
+                isAdmin={false}
               />
             </div>
           </div>
@@ -576,7 +666,12 @@ export default function Dashboard() {
         {/* ========================================================== */}
         {/* TAB 7: ติดต่อเรา & สาขา (Contact ServiceGarage) */}
         {/* ========================================================== */}
-        {activeTab === "contact" && <ContactSales />}
+        {activeTab === "contact" && (
+          <ContactSales
+            apiUrl={API_BASE_URL}
+            onGoToAdminChat={handleGoToAdminChat}
+          />
+        )}
 
         {/* ========================================================== */}
         {/* TAB 8: ตะกร้าสินค้า (Cart View) */}
@@ -600,6 +695,7 @@ export default function Dashboard() {
       <Footer
         setActiveTab={setActiveTab}
         onSelectCategory={(catId) => handlePerformSearch("", catId)}
+        onGoToAdmin={navigateToAdmin}
       />
 
       {/* Modal แสดงใบแจ้งหนี้/ใบเสร็จรับเงินที่คำนวณราคาเรียบร้อย */}
@@ -618,6 +714,10 @@ export default function Dashboard() {
         onRefresh={fetchData}
         apiUrl={API_BASE_URL}
       />
+
+      {/* ระบบแชทสดสัมพันธ์ลูกค้า (Customer Live Chat Widget) สำหรับผู้ใช้งาน */}
+      <CustomerChatWidget apiUrl={API_BASE_URL} />
     </div>
   );
 }
+

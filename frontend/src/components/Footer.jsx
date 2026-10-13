@@ -1,6 +1,6 @@
 "use client";
 
-export default function Footer({ setActiveTab, onSelectCategory }) {
+export default function Footer({ setActiveTab, onSelectCategory, onGoToAdmin }) {
   const handleCategoryClick = (catId) => (e) => {
     e.preventDefault();
     if (onSelectCategory) {
@@ -24,7 +24,7 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
                 <i className="bi bi-gear-wide-connected fs-4 text-sp-blue"></i>
               </div>
               <span className="fs-4 fw-black text-white">
-                Car<span className="text-warning">Garage</span> <span className="badge bg-danger ms-1 small" style={{ fontSize: "0.68rem" }}>PRO</span>
+                Car<span className="text-warning">Garage</span> <span className="badge ms-1 small fw-bold text-dark" style={{ fontSize: "0.68rem", background: "var(--theme-accent-gradient)" }}>PRO</span>
               </span>
             </div>
             <p className="text-white small pe-lg-4" style={{ lineHeight: "1.8", maxWidth: "540px", opacity: 0.95 }}>
@@ -119,9 +119,25 @@ export default function Footer({ setActiveTab, onSelectCategory }) {
         </div>
 
         {/* แถบลิขสิทธิ์ */}
-        <div className="d-flex flex-wrap align-items-center justify-content-center pt-3 gap-2 small text-white border-top border-white border-opacity-25 mt-3" style={{ opacity: 0.9 }}>
+        <div className="d-flex flex-wrap align-items-center justify-content-between pt-3 gap-2 small text-white border-top border-white border-opacity-25 mt-3" style={{ opacity: 0.9 }}>
           <div>
             © 2026 <strong>CarGarage</strong> ระบบบริหารจัดการอู่ซ่อมรถและบริการอะไหล่ • All Rights Reserved.
+          </div>
+          <div>
+            <a
+              href="/admin"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onGoToAdmin) onGoToAdmin();
+                else window.location.href = "/admin";
+              }}
+              className="text-white-50 text-decoration-none hover-white d-flex align-items-center gap-1"
+              style={{ fontSize: "0.74rem" }}
+              title="สำหรับเจ้าหน้าที่ผู้ดูแลระบบเท่านั้น (Restricted Access)"
+            >
+              <i className="bi bi-shield-lock"></i>
+              <span>เข้าสู่ระบบเจ้าหน้าที่ (Admin Portal)</span>
+            </a>
           </div>
         </div>
       </div>

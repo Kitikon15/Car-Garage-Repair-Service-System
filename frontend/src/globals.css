@@ -4,81 +4,34 @@
    ======================================================== */
 
 :root,
-[data-garage-theme="red-white"] {
-  --sp-blue: #dc2626; /* Primary Racing Red */
-  --sp-blue-hover: #b91c1c;
-  --sp-blue-dark: #991b1b;
-  --sp-blue-darker: #7f1d1d;
-  --sp-blue-light: #fef2f2;
-  --sp-blue-subtle: #fee2e2;
-  --sp-yellow: #f59e0b; /* Radiant Racing Yellow / Gold */
-  --sp-yellow-hover: #d97706;
-  --sp-yellow-light: #fef3c7;
-  --sp-red: #dc2626;
-  --sp-gray-bg: #fdfdfd;
-  --sp-border: #f1f5f9;
-  --theme-accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%);
-  --theme-fire-gradient: linear-gradient(135deg, #eab308 0%, #f59e0b 50%, #ea580c 100%);
-  --theme-red-gradient: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
-}
-
-/* Theme 2: Cyber Cobalt (น้ำเงินไซเบอร์) */
-[data-garage-theme="cyber"] {
-  --sp-blue: #1d4ed8;
-  --sp-blue-hover: #1e40af;
-  --sp-blue-dark: #0a1128;
-  --sp-blue-darker: #060b1a;
-  --sp-blue-light: #eff6ff;
-  --sp-blue-subtle: #dbeafe;
-  --sp-yellow: #f59e0b;
-  --sp-yellow-hover: #d97706;
-  --sp-yellow-light: #fef3c7;
-  --sp-red: #ef4444;
-  --sp-gray-bg: #f8fafc;
-  --sp-border: #e2e8f0;
-  --theme-accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%);
-  --theme-fire-gradient: linear-gradient(135deg, #ff5400 0%, #ea580c 50%, #dc2626 100%);
-  --theme-red-gradient: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-}
-
-/* Theme 3: Midnight Dark (สปอร์ตดุดัน ดาร์กคาร์บอน) */
+[data-garage-theme="red-white"],
+[data-garage-theme="azure-gradient"],
+[data-garage-theme="cyber"],
 [data-garage-theme="racing"] {
-  --sp-blue: #b91c1c;
-  --sp-blue-hover: #991b1b;
-  --sp-blue-dark: #0f1117;
-  --sp-blue-darker: #08090c;
-  --sp-blue-light: #fef2f2;
-  --sp-blue-subtle: #fee2e2;
-  --sp-yellow: #f59e0b;
-  --sp-yellow-hover: #d97706;
-  --sp-yellow-light: #fef3c7;
-  --sp-red: #ef4444;
-  --sp-gray-bg: #1e2229;
-  --sp-border: #334155;
-  --theme-accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%);
-  --theme-fire-gradient: linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%);
-  --theme-red-gradient: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
-}
+  /* ========================================================
+     SIGNATURE IMAGE 1 GRADIENT THEME (AQUA SKY ICE TO ELECTRIC INDIGO)
+     Sampled Exact Pixels: #c6f6ff -> #b7e2fb -> #90abff -> #6971fe -> #5b5ffd
+     ======================================================== */
+  --sp-blue: #5b5ffd; /* Vibrant Royal Electric Indigo */
+  --sp-blue-hover: #484cf0;
+  --sp-blue-dark: #373abf;
+  --sp-blue-darker: #1e204c; /* Deep Indigo Header Strip */
+  --sp-blue-light: #f0f5ff;
+  --sp-blue-subtle: #dbeafe;
+  --sp-yellow: #a7c9ff; /* Soft Sky Periwinkle Accent */
+  --sp-yellow-hover: #90abff;
+  --sp-yellow-light: #c6f6ff;
+  --sp-red: #5b5ffd;
+  --sp-gray-bg: #f8faff;
+  --sp-border: #e2e8f0;
 
-/* Theme 4: Monochrome / โหมดขาวดำ (B&W Mode) */
-[data-garage-theme="monochrome"],
-body.mode-bw {
-  filter: grayscale(100%) contrast(108%);
-  --sp-blue: #18181b;
-  --sp-blue-hover: #27272a;
-  --sp-blue-dark: #09090b;
-  --sp-blue-darker: #000000;
-  --sp-blue-light: #f4f4f5;
-  --sp-blue-subtle: #e4e4e7;
-  --sp-yellow: #71717a;
-  --sp-yellow-hover: #52525b;
-  --sp-yellow-light: #f4f4f5;
-  --sp-red: #09090b;
-  --sp-gray-bg: #f4f4f5;
-  --sp-border: #d4d4d8;
-  --theme-accent-gradient: linear-gradient(135deg, #52525b 0%, #27272a 100%);
-  --theme-fire-gradient: linear-gradient(135deg, #3f3f46 0%, #18181b 100%);
-  --theme-red-gradient: linear-gradient(135deg, #27272a 0%, #09090b 100%);
+  /* Image 1 Exact Vertical & Diagonal Gradients */
+  --theme-image1-vertical: linear-gradient(180deg, #c6f6ff 0%, #b7e2fb 20%, #a7c9ff 40%, #90abff 60%, #7c8efe 80%, #5b5ffd 100%);
+  --theme-image1-card: linear-gradient(180deg, #eef9ff 0%, #e0eeff 45%, #c8daff 75%, #9cb3fe 100%);
+  --theme-accent-gradient: linear-gradient(135deg, #c6f6ff 0%, #b7e2fb 35%, #90abff 70%, #6971fe 100%);
+  --theme-fire-gradient: linear-gradient(135deg, #7c8efe 0%, #5b5ffd 50%, #4338ca 100%);
+  --theme-red-gradient: linear-gradient(135deg, #5b5ffd 0%, #6971fe 50%, #7c8efe 100%);
+  --theme-navbar-gradient: linear-gradient(90deg, #1e204c 0%, #2f3388 30%, #4f46e5 70%, #5b5ffd 100%);
 }
 
 body {
@@ -147,24 +100,24 @@ body {
 }
 
 .btn-sp-yellow {
-  background: var(--theme-accent-gradient, linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%));
-  border: 1px solid #eab308;
-  color: #0f172a !important;
+  background: var(--theme-accent-gradient) !important;
+  border: 1px solid #7c8efe;
+  color: #1e204c !important;
   font-weight: 700;
   transition: all 0.2s ease;
 }
 
 .btn-sp-yellow:hover {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  border-color: #d97706;
+  background: linear-gradient(135deg, #b7e2fb 0%, #90abff 100%) !important;
+  border-color: #5b5ffd;
   color: #000000 !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+  box-shadow: 0 4px 14px rgba(91, 95, 253, 0.45);
 }
 
 /* Top Announcement Bar */
 .sp-top-bar {
-  background-color: var(--sp-blue-darker);
-  color: #fecaca;
+  background-color: var(--sp-blue-darker) !important;
+  color: #c6f6ff !important;
   font-size: 0.8rem;
   letter-spacing: 0.01em;
 }
@@ -172,13 +125,13 @@ body {
 /* Header & Navbar */
 .sp-main-header {
   background-color: #ffffff;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid #e0e7ff;
 }
 
 .sp-navbar {
-  background-color: var(--sp-blue);
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.12);
-  min-height: 38px;
+  background: var(--theme-navbar-gradient) !important;
+  box-shadow: 0 4px 16px rgba(91, 95, 253, 0.22);
+  min-height: 42px;
 }
 
 .sp-nav-item {
@@ -429,9 +382,9 @@ body {
 
 /* Footer Styling */
 .sp-footer {
-  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  background: linear-gradient(180deg, #1e204c 0%, #0d0f24 100%);
   color: #ffffff;
-  border-top: 4px solid var(--sp-yellow, #f59e0b);
+  border-top: 4px solid var(--sp-blue, #5b5ffd);
 }
 
 .sp-footer-title {
@@ -451,7 +404,7 @@ body {
   bottom: 0;
   width: 32px;
   height: 3px;
-  background-color: var(--sp-yellow, #f59e0b);
+  background-color: var(--sp-blue, #5b5ffd);
   border-radius: 4px;
 }
 
@@ -514,7 +467,7 @@ body {
    ======================================================== */
 .sp-category-bar {
   background-color: #ffffff;
-  border-bottom: 1px solid #fee2e2;
+  border-bottom: 1px solid #e0e7ff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
@@ -526,14 +479,14 @@ body {
 }
 
 .sp-cat-link:hover {
-  color: #dc2626 !important;
-  background-color: #fef2f2 !important;
+  color: #5b5ffd !important;
+  background-color: #f0f5ff !important;
 }
 
 .sp-cat-link-active {
-  color: #dc2626 !important;
-  background-color: #fee2e2 !important;
-  box-shadow: inset 0 -2px 0 #dc2626;
+  color: #5b5ffd !important;
+  background-color: #dbeafe !important;
+  box-shadow: inset 0 -2px 0 #5b5ffd;
   border-radius: 8px 8px 0 0;
 }
 
@@ -551,9 +504,9 @@ body {
 .mega-menu-card {
   background: #ffffff;
   border-radius: 16px;
-  border: 1px solid #fee2e2;
-  border-top: 4px solid var(--sp-blue, #dc2626);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(220, 38, 38, 0.08);
+  border: 1px solid #e0e7ff;
+  border-top: 4px solid var(--sp-blue, #5b5ffd);
+  box-shadow: 0 25px 50px -12px rgba(30, 32, 76, 0.25), 0 0 0 1px rgba(91, 95, 253, 0.08);
   overflow: hidden;
   animation: megaMenuFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -570,14 +523,14 @@ body {
 }
 
 .mega-sub-link:hover {
-  color: #dc2626 !important;
-  background-color: #fef2f2;
+  color: #5b5ffd !important;
+  background-color: #f0f5ff;
   font-weight: 600;
   transform: translateX(3px);
 }
 
 .mega-sub-link:hover .mega-arrow {
-  color: #dc2626 !important;
+  color: #5b5ffd !important;
   transform: translateX(2px);
 }
 
@@ -595,9 +548,9 @@ body {
 }
 
 .mega-direct-link:hover {
-  color: #dc2626 !important;
-  background-color: #fef2f2;
-  border-left-color: #dc2626;
+  color: #5b5ffd !important;
+  background-color: #f0f5ff;
+  border-left-color: #5b5ffd;
   transform: translateX(3px);
 }
 
@@ -609,8 +562,8 @@ body {
 }
 
 .mega-brand-card:hover {
-  border-color: #fca5a5;
-  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.15);
+  border-color: #90abff;
+  box-shadow: 0 6px 18px rgba(91, 95, 253, 0.18);
   transform: translateY(-3px);
 }
 
@@ -624,12 +577,12 @@ body {
    UNIQUE THEME & CUSTOM BUTTON DESIGNS
    ======================================================== */
 .btn-garage-unique {
-  background: var(--theme-accent-gradient, linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%));
-  color: #0f172a !important;
-  border: 1px solid #eab308;
+  background: var(--theme-accent-gradient) !important;
+  color: #1e204c !important;
+  border: 1px solid #7c8efe;
   border-radius: 10px;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 14px rgba(91, 95, 253, 0.25);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
@@ -639,23 +592,25 @@ body {
 
 .btn-garage-unique:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
-  filter: brightness(1.06);
+  background: linear-gradient(135deg, #b7e2fb 0%, #90abff 100%) !important;
+  border-color: #5b5ffd;
+  box-shadow: 0 8px 24px rgba(91, 95, 253, 0.45);
+  filter: brightness(1.04);
   color: #000000 !important;
 }
 
 .btn-garage-unique:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+  box-shadow: 0 2px 8px rgba(91, 95, 253, 0.2);
 }
 
 .btn-garage-fire {
-  background: var(--theme-fire-gradient, linear-gradient(135deg, #f59e0b 0%, #ea580c 100%));
+  background: var(--theme-fire-gradient) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 10px;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 4px 15px rgba(91, 95, 253, 0.35);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
@@ -665,7 +620,7 @@ body {
 
 .btn-garage-fire:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.5);
+  box-shadow: 0 8px 24px rgba(91, 95, 253, 0.55);
   filter: brightness(1.08);
   color: #ffffff !important;
 }
@@ -742,10 +697,10 @@ body.mode-bw .badge.bg-danger {
    SHOP & CART CHARCOAL BANNER & LAYOUT
    ======================================================== */
 .shop-charcoal-banner {
-  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 60%, #1c1917 100%);
+  background: linear-gradient(135deg, #1e204c 0%, #2f3388 50%, #4f46e5 100%);
   color: #ffffff;
   padding: 2.2rem 1.5rem 1.8rem;
-  border-bottom: 2px solid #581c1c;
+  border-bottom: 2px solid #5b5ffd;
 }
 
 .shop-charcoal-title {
@@ -775,33 +730,33 @@ body.mode-bw .badge.bg-danger {
 }
 
 .shop-banner-link i {
-  color: #dc2626 !important;
+  color: #5b5ffd !important;
   font-size: 0.95rem;
   transition: transform 0.2s ease;
 }
 
 .shop-banner-link:hover {
   background-color: #f8fafc !important;
-  color: #dc2626 !important;
+  color: #5b5ffd !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .shop-banner-link:hover i {
   transform: scale(1.15);
-  color: #b91c1c !important;
+  color: #484cf0 !important;
 }
 
 .shop-banner-link.active {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
-  color: #0f172a !important;
-  border: 1px solid #d97706 !important;
+  background: var(--theme-accent-gradient) !important;
+  color: #1e204c !important;
+  border: 1px solid #7c8efe !important;
   font-weight: 800 !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 4px 14px rgba(91, 95, 253, 0.35) !important;
 }
 
 .shop-banner-link.active i {
-  color: #0f172a !important;
+  color: #1e204c !important;
 }
 
 /* Vehicle / Brand Filter Bar (4 Rounded Select Boxes) */
@@ -812,13 +767,13 @@ body.mode-bw .badge.bg-danger {
   padding: 0.85rem 1.2rem;
   font-size: 0.92rem;
   font-weight: 700;
-  color: #991b1b;
+  color: #1e204c;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
   width: 100%;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23dc2626' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%235b5ffd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 14px 10px;
@@ -826,8 +781,8 @@ body.mode-bw .badge.bg-danger {
 
 .shop-filter-select-box:focus,
 .shop-filter-select-box:hover {
-  border-color: #dc2626;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+  border-color: #5b5ffd;
+  box-shadow: 0 4px 12px rgba(91, 95, 253, 0.2);
   outline: none;
 }
 
@@ -841,12 +796,12 @@ body.mode-bw .badge.bg-danger {
 }
 
 .shop-sidebar-title {
-  color: #991b1b;
+  color: #1e204c;
   font-weight: 800;
   font-size: 1.05rem;
   padding-bottom: 0.75rem;
   margin-bottom: 0.75rem;
-  border-bottom: 2px solid #fee2e2;
+  border-bottom: 2px solid #e0e7ff;
 }
 
 .shop-sidebar-item {
@@ -868,18 +823,18 @@ body.mode-bw .badge.bg-danger {
 
 .shop-sidebar-item:hover,
 .shop-sidebar-item.active {
-  background-color: #fef2f2;
-  color: #dc2626;
+  background-color: #f0f5ff;
+  color: #5b5ffd;
   font-weight: 700;
 }
 
 .shop-sidebar-item.flash-sale-side {
-  color: #d90429;
+  color: #5b5ffd;
   font-weight: 700;
 }
 
 .shop-sidebar-item.flash-sale-side:hover {
-  background-color: #fef2f2;
+  background-color: #f0f5ff;
 }
 
 /* Product Cards matching screenshot */
@@ -903,7 +858,7 @@ body.mode-bw .badge.bg-danger {
 }
 
 .badge-discount-round {
-  background-color: #dc2626;
+  background: var(--theme-fire-gradient);
   color: #ffffff;
   font-weight: 700;
   font-size: 0.75rem;
@@ -912,7 +867,7 @@ body.mode-bw .badge.bg-danger {
 }
 
 .badge-express-delivery {
-  background-color: #dc2626;
+  background: linear-gradient(135deg, #5b5ffd 0%, #4338ca 100%);
   color: #ffffff;
   font-weight: 700;
   font-size: 0.75rem;
@@ -949,4 +904,156 @@ body.mode-bw .badge.bg-danger {
   gap: 0.3rem;
   border: 1px solid #a7f3d0;
 }
+
+/* ========================================================
+   ANIMATED MECHANIC TOOLS (PROMO BANNER SLIDER & FLOATING)
+   ======================================================== */
+
+/* Floating ambient tool icons */
+.floating-tool {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+@keyframes floatBob1 {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+@keyframes floatBob2 {
+  0% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(14px) translateX(-10px) rotate(-10deg);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+}
+
+@keyframes floatDrift {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate(12px, -14px) rotate(12deg) scale(1.05);
+  }
+  66% {
+    transform: translate(-10px, 10px) rotate(-8deg) scale(0.96);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes spinGearSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.anim-float-1 {
+  animation: floatBob1 6s ease-in-out infinite;
+}
+
+.anim-float-2 {
+  animation: floatBob2 7.5s ease-in-out infinite;
+}
+
+.anim-drift {
+  animation: floatDrift 9s ease-in-out infinite;
+}
+
+.anim-spin-gear {
+  animation: spinGearSlow 22s linear infinite;
+}
+
+/* Infinite Sliding Marquee for Mechanic Tools */
+.tools-ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, transparent 100%);
+  padding: 0.5rem 0;
+}
+
+.tools-ticker-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  animation: marqueeTools 26s linear infinite;
+}
+
+.tools-ticker-wrap:hover .tools-ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeTools {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.tools-ticker-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50rem;
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  cursor: default;
+}
+
+.tools-ticker-card:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #c6f6ff;
+  color: #c6f6ff;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(91, 95, 253, 0.35);
+}
+
+.tools-ticker-card .tool-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--theme-accent-gradient);
+  color: #1e204c;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar({
   activeTab = "dashboard",
@@ -19,6 +21,7 @@ export default function Navbar({
   isBWMode = false,
   toggleBWMode,
 }) {
+  const { lang, t } = useLanguage();
   const [searchCategory, setSearchCategory] = useState(activeCategory || "all");
 
   useEffect(() => {
@@ -28,12 +31,12 @@ export default function Navbar({
   }, [activeCategory]);
 
   const navItems = [
-    { id: "dashboard", label: "ภาพรวมศูนย์บริการ", icon: "bi-speedometer2" },
-    { id: "jobs", label: "ใบสั่งซ่อม & ประเมินราคา", icon: "bi-tools" },
-    { id: "order", label: "คลังเบิก-จ่ายอะไหล่", icon: "bi-box-seam-fill" },
-    { id: "parts", label: "จัดการสต็อกอะไหล่", icon: "bi-boxes" },
-    { id: "vehicleSearch", label: "ทะเบียนรถ & ประวัติ", icon: "bi-car-front-fill" },
-    { id: "contact", label: "ติดต่อศูนย์บริการ", icon: "bi-headset" },
+    { id: "dashboard", label: t("nav_home", "ภาพรวมศูนย์บริการ"), icon: "bi-speedometer2" },
+    { id: "jobs", label: t("nav_jobs", "ใบสั่งซ่อม & ประเมินราคา"), icon: "bi-tools" },
+    { id: "order", label: t("nav_order", "คลังเบิก-จ่ายอะไหล่"), icon: "bi-box-seam-fill" },
+    { id: "parts", label: t("nav_parts", "รายการอะไหล่ในสต็อก"), icon: "bi-boxes" },
+    { id: "vehicleSearch", label: t("nav_vehicle", "ทะเบียนรถ & ประวัติ"), icon: "bi-car-front-fill" },
+    { id: "contact", label: t("nav_contact", "ติดต่อศูนย์บริการ"), icon: "bi-headset" },
   ];
 
   const handleSearchSubmit = (e) => {
@@ -65,10 +68,12 @@ export default function Navbar({
             </span>
           </div>
 
-          <div className="d-flex align-items-center gap-3 text-light small">
+          <div className="d-flex align-items-center gap-2.5 text-light small">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-clock-history text-warning"></i> เปิดบริการทุกวัน 08:30 - 18:00 น.
+              <i className="bi bi-clock-history text-warning"></i> {lang === "th" ? "เปิดบริการทุกวัน 08:30 - 18:00 น." : "Open Daily 08:30 - 18:00"}
             </span>
+            <span className="opacity-50">|</span>
+            <LanguageSwitcher variant="customer" />
           </div>
         </div>
       </div>
@@ -96,7 +101,12 @@ export default function Navbar({
                 <span className="fs-4 fw-black text-sp-blue tracking-tight" style={{ letterSpacing: "-0.5px" }}>
                   Car<span className="text-warning">Garage</span>
                 </span>
-                <span className="badge bg-danger ms-1 small fw-bold">PRO</span>
+                <span
+                  className="badge ms-1 small fw-bold text-dark"
+                  style={{ background: "var(--theme-accent-gradient)", letterSpacing: "0.5px" }}
+                >
+                  PRO
+                </span>
               </div>
               <div className="text-muted" style={{ fontSize: "0.7rem", marginTop: "-2px" }}>
                 ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร
@@ -187,7 +197,7 @@ export default function Navbar({
                   ? "btn-garage-fire shadow-lg"
                   : cartCount > 0
                   ? "btn-garage-unique shadow"
-                  : "btn-outline-danger border-sp-blue text-sp-blue bg-white"
+                  : "btn-outline-primary border-sp-blue text-sp-blue bg-white"
               }`}
               onClick={() => {
                 if (setActiveTab) setActiveTab("cart");
@@ -197,7 +207,10 @@ export default function Navbar({
               <div className="position-relative">
                 <i className="bi bi-cart3 fs-5"></i>
                 {cartCount > 0 && (
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light">
+                  <span
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill text-white border border-light"
+                    style={{ background: "#5b5ffd" }}
+                  >
                     {cartCount}
                   </span>
                 )}

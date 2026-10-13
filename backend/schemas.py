@@ -58,3 +58,22 @@ class MaintenanceJobCreate(BaseModel):
     package_name: str = Field("PERIODIC_10K", example="PERIODIC_10K", description="BASIC_INSPECTION | PERIODIC_10K | COMPREHENSIVE_SERVICE")
     parts: List[JobPartInput] = Field(default_factory=list)
     auto_generate_invoice: bool = Field(True, description="Whether to immediately create an invoice")
+
+
+# --- Admin & Chat Schemas ---
+class PartUpdate(BaseModel):
+    part_name: Optional[str] = None
+    price: Optional[float] = Field(None, ge=0)
+    stock_qty: Optional[int] = Field(None, ge=0)
+
+
+class ChatMessageCreate(BaseModel):
+    conversation_id: str = Field(..., example="CUST-001")
+    customer_name: Optional[str] = Field("ลูกค้า", example="Alex Morgan")
+    sender: str = Field("customer", example="customer", description="'customer' or 'admin'")
+    text: str = Field(..., min_length=1, example="สอบถามเรื่องผ้าเบรกครับ")
+
+
+class AdminLoginRequest(BaseModel):
+    username: str = Field(..., example="admin")
+    password: str = Field(..., example="admin123")

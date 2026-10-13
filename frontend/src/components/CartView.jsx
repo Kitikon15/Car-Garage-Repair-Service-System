@@ -123,7 +123,7 @@ export default function CartView({
               <hr />
               <div className="d-flex justify-content-between fs-5 fw-black text-dark">
                 <span>ยอดชำระสุทธิ:</span>
-                <span className="text-danger">฿{orderSuccess.total.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
+                <span className="text-sp-blue">฿{orderSuccess.total.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
 
@@ -293,7 +293,7 @@ export default function CartView({
                     <span>รายการอะไหล่ในคำสั่งซื้อ ({cart.length} ชนิด)</span>
                   </h5>
                   <button
-                    className="btn btn-outline-danger btn-sm rounded-pill px-3"
+                    className="btn btn-outline-secondary btn-sm rounded-pill px-3"
                     onClick={onClearCart}
                   >
                     <i className="bi bi-trash3 me-1"></i> ล้างตะกร้า
@@ -378,7 +378,7 @@ export default function CartView({
                             </td>
 
                             {/* ยอดรวมต่อแถว */}
-                            <td className="text-end fw-black text-danger fs-6">
+                            <td className="text-end fw-black text-sp-blue fs-6">
                               ฿{itemTotal.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
                             </td>
 
@@ -470,7 +470,7 @@ export default function CartView({
 
                 <div className="d-flex justify-content-between align-items-baseline mb-4">
                   <span className="fw-black text-dark fs-5">ยอดรวมสุทธิ:</span>
-                  <span className="fw-black text-danger fs-3" style={{ letterSpacing: "-0.5px" }}>
+                  <span className="fw-black text-sp-blue fs-3" style={{ letterSpacing: "-0.5px" }}>
                     ฿{grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
                   </span>
                 </div>

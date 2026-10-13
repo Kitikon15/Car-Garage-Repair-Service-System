@@ -2,18 +2,62 @@
 
 import { useState } from "react";
 
-export default function ContactSales() {
-  const [submitted, setSubmitted] = useState(false);
+export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToAdminChat }) {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    topic: "อะไหล่ราคาส่ง",
+    name: "สมชาย วงศ์สว่าง",
+    phone: "081-234-5678",
+    topic: "ขอใบเสนอราคาอะไหล่ราคาส่ง",
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+
+    try {
+      const topicText = formData.topic || "ติดต่อฝ่ายขาย";
+      const detailText = formData.message ? `รายละเอียด: ${formData.message.trim()} ` : "";
+      const phoneText = formData.phone ? `โทร: ${formData.phone.trim()}` : "";
+      const chatText = `[${topicText}] ${detailText}${phoneText}`.trim();
+      const customerName = formData.name.trim() || "ลูกค้าทั่วไป (หน้าเว็บ)";
+
+      // 1. ส่งข้อความเข้าสู่ศูนย์ Live Chat Desk ผ่าน REST API
+      await fetch(`${apiUrl}/api/chat/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: "CUST-GUEST",
+          customer_name: customerName,
+          sender: "customer",
+          text: chatText || "สอบถามอะไหล่แท้ตรงรุ่น 🚗",
+        }),
+      });
+
+      // 2. บันทึก Session การล็อกอินของแอดมินสำหรับเดโม
+      sessionStorage.setItem("garage_admin_token", "admin-session-demo");
+      sessionStorage.setItem("garage_admin_name", "ผู้ดูแลระบบอู่ (Garage Admin)");
+      sessionStorage.setItem("garage_admin_tab", "chat");
+      sessionStorage.setItem("garage_admin_conv", "CUST-GUEST");
+
+      // 3. เด้งไปยังหน้าศูนย์ตอบแชทลูกค้า (Admin Live Chat Desk) ทันที
+      if (onGoToAdminChat) {
+        onGoToAdminChat("CUST-GUEST", formData);
+      } else {
+        window.location.href = "/admin?tab=chat&conv=CUST-GUEST";
+      }
+    } catch (err) {
+      console.warn("Error sending contact message:", err);
+      // Fallback: แม้เน็ตเวิร์กช้าก็ให้เด้งไปหน้าแชทตามคำสั่ง
+      sessionStorage.setItem("garage_admin_token", "admin-session-demo");
+      if (onGoToAdminChat) {
+        onGoToAdminChat("CUST-GUEST", formData);
+      } else {
+        window.location.href = "/admin?tab=chat&conv=CUST-GUEST";
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,24 +111,6 @@ export default function ContactSales() {
           <div className="card border-0 shadow-sm bg-white p-4 h-100">
             <h5 className="fw-bold mb-3 text-dark border-bottom pb-2">ส่งข้อความถึงฝ่ายขาย</h5>
 
-            {submitted ? (
-              <div className="p-5 text-center my-auto">
-                <i className="bi bi-check-circle-fill text-success fs-1 mb-3 d-block"></i>
-                <h4 className="fw-bold">ได้รับข้อมูลของคุณเรียบร้อยแล้ว!</h4>
-                <p className="text-muted small">
-                  เจ้าหน้าที่ฝ่ายขายจะติดต่อกลับทางเบอร์ <strong>{formData.phone}</strong> ภายใน 1 ชั่วโมงทำการ
-                </p>
-                <button
-                  className="btn btn-outline-primary btn-sm mt-3"
-                  onClick={() => {
-                    setSubmitted(false);
-                    setFormData({ name: "", phone: "", topic: "อะไหล่ราคาส่ง", message: "" });
-                  }}
-                >
-                  ส่งข้อความอื่นเพิ่มเติม
-                </button>
-              </div>
-            ) : (
               <form onSubmit={handleSubmit}>
                 <div className="row g-3 mb-3">
                   <div className="col-12 col-md-6">
@@ -136,12 +162,24 @@ export default function ContactSales() {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary px-4 py-2 fw-semibold">
-                  <i className="bi bi-send-fill me-2"></i>
-                  ส่งข้อมูลถึงฝ่ายขาย
+                <button
+                  type="submit"
+                  className="btn btn-primary px-4 py-2 fw-semibold d-flex align-items-center gap-2"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span>กำลังส่งและเปิดศูนย์ตอบแชท...</span>
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-send-fill"></i>
+                      <span>ส่งข้อมูลถึงฝ่ายขาย</span>
+                    </>
+                  )}
                 </button>
               </form>
-            )}
           </div>
         </div>
       </div>
