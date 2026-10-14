@@ -1,8 +1,8 @@
 # 🚗 Car Garage & Repair Service Management System (CarGarage PRO)
-> **ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร (Version 2.5 Update)**  
+> **ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร (Version 2.6 Update)**  
 > **Course Project:** Object-Oriented Programming (OOP) & Object-Oriented Analysis and Design (OOAD)  
 > **Architecture:** Decoupled RESTful Architecture — Python FastAPI (Backend) + React & Bootstrap 5 (Frontend - Vite)  
-> **Key Features:** Vuexy Admin Backoffice, Live Workshop Bays, Bilingual System (TH/EN), Live Chat Desk, Master Mechanic Tools Card  
+> **Key Features:** Cart Registration Gatekeeper, 3-in-1 Register Modal, Dynamic Brand/Model Cascading Selector, 100% Full Bilingual System (TH/EN), Vuexy Admin Backoffice, Live Workshop Bays, Live Chat Desk  
 > **Repository:** [Kitikon15/Car-Garage-Repair-Service-System](https://github.com/Kitikon15/Car-Garage-Repair-Service-System)
 
 ---
@@ -102,17 +102,20 @@ flowchart LR
 
 ## 📝 3. รายละเอียดข้อกำหนดยูสเคสเชิงลึก (Detailed Use Case Specifications)
 
-### 📌 UC-01: ลงทะเบียนลูกค้าและยานพาหนะ (Register Customer & Vehicle)
-- **Primary Actor:** พนักงานรับรถ (Service Advisor) / ลูกค้า (Customer)
+### 📌 UC-01: ลงทะเบียนลูกค้า ยานพาหนะ และเข้าสู่ระบบ (Register Customer, Vehicle & Quick Login)
+- **Primary Actor:** ลูกค้า (Customer) / พนักงานรับรถ (Service Advisor)
 - **Pre-conditions:** ระบบเปิดใช้งาน และเชื่อมต่อฐานข้อมูลได้ปกติ
 - **Main Flow:**
-  1. ผู้ใช้เปิดหน้าต่าง "ลงทะเบียนรถ/ลูกค้า" (Register Modal)
-  2. ระบุข้อมูลลูกค้า: รหัสลูกค้า, ชื่อ-นามสกุล, เบอร์โทรศัพท์
-  3. ระบุข้อมูลรถยนต์: ป้ายทะเบียน, ยี่ห้อ (Brand), รุ่น (Model)
-  4. ระบบตรวจสอบความถูกต้องของข้อมูล (Data Validation) ผ่าน Pydantic Schema
-  5. ระบบบันทึกข้อมูล Association ระหว่าง `Vehicle` กับ `Customer`
-- **Post-conditions:** รถยนต์และลูกค้าถูกผูกเข้าด้วยกัน พร้อมสำหรับการเปิดใบสั่งซ่อมบำรุง
-- **OOP Mapping:** `Customer` class (`customer.py`), `Vehicle` class (`vehicle.py`)
+  1. ผู้ใช้เปิดหน้าต่าง "ลงทะเบียนรถ/ลูกค้า" (Register Modal) จากปุ่มบน Navbar หรือถูกส่งต่อมาอัตโนมัติจากการพยายามเบิกอะไหล่เข้าตะกร้าสินค้า
+  2. เลือกระหว่าง 3 โหมดการทำงาน:
+     - **🚗 ลงทะเบียนรถยนต์ (Register Vehicle):** ระบุป้ายทะเบียน, เลือกยี่ห้อ (Brand) จาก 8 ค่ายชั้นนำ, เลือกรุ่น (Model) ที่คัดกรองตรงรุ่นอัตโนมัติ หรือพิมพ์ระบุเอง และเลือกเจ้าของรถ
+     - **👤 ลงทะเบียนลูกค้าใหม่ (Register Customer):** กรอกชื่อ-นามสกุล และเบอร์โทรศัพท์ติดต่อ ระบบจะทำการสร้างรหัสลูกค้า (`CUST-XXX`) ให้อัตโนมัติ
+     - **🔑 เลือกลูกค้าเดิม (Existing Customer Login):** สำหรับลูกค้าที่เคยลงทะเบียนไว้แล้ว สามารถเลือกลูกค้าเพื่อเข้าสู่ระบบได้ทันทีโดยไม่ต้องสร้างข้อมูลซ้ำ
+  3. ระบบตรวจสอบความถูกต้องของข้อมูล (Data Validation) ผ่าน Pydantic Schema
+  4. ระบบบันทึกข้อมูล Association ระหว่าง `Vehicle` กับ `Customer` และบันทึกเซสชันลูกค้าปัจจุบัน (`garage_registered_customer`) ลงใน `localStorage`
+  5. หากมีสินค้าที่รอเพิ่มลงตะกร้าค้างอยู่ (`pendingCartItem`) ระบบจะทำการเพิ่มสินค้าลงในตะกร้าให้อัตโนมัติทันที
+- **Post-conditions:** ลูกค้าเข้าสู่ระบบ มีป้ายชื่อแสดงบน Navbar และได้รับสิทธิ์ในการสั่งซื้อและเบิกอะไหล่
+- **OOP Mapping:** `Customer` class (`customer.py`), `Vehicle` class (`vehicle.py`), `RegisterModal.jsx`
 
 ---
 
@@ -324,38 +327,64 @@ classDiagram
 
 ## ⚡ 6. ฟังก์ชันเด่นของระบบ (Key System Features)
 
-1. **Garage Operations Command Center (ศูนย์ควบคุมการปฏิบัติการหน้าแรก)**:
+1. **ระบบควบคุมสิทธิ์และตรวจสอบการลงทะเบียนก่อนสั่งซื้อ (Cart Registration Gatekeeper & Customer Session)**:
+   - **Centralized Cart Security**: บล็อกไม่ให้ผู้ใช้ที่ยังไม่ได้ลงทะเบียนสามารถเพิ่มสินค้าลงในตะกร้าสินค้า (`cart`) ได้
+   - **Smart Interception & Auto-Prompt**: หากยังไม่ได้ลงทะเบียน ระบบจะแจ้งเตือนพร้อมเปิดหน้าต่างลงทะเบียนให้อัตโนมัติ โดยจดจำสินค้าที่ต้องการสั่งซื้อ (`pendingCartItem`)
+   - **Seamless Auto-Add**: ทันทีที่ผู้ใช้ลงทะเบียนหรือเข้าสู่ระบบสำเร็จ ระบบจะนำสินค้าชิ้นดังกล่าวเพิ่มเข้าสู่ตะกร้าให้ทันทีโดยไม่ต้องกดซ้ำ
+   - **Active Customer Status Badge**: แถบนำทาง (Navbar) แสดงป้ายชื่อและรหัสลูกค้าที่เข้าสู่ระบบ (`👤 [ชื่อลูกค้า] (CUST-XXX)`) พร้อมปุ่มสำหรับสลับโปรไฟล์หรือออกจากระบบ
+
+2. **หน้าต่างลงทะเบียนมัลติแท็บ 3-in-1 (3-in-1 Register & Customer Selector Modal)**:
+   - **🚗 ลงทะเบียนรถยนต์ (Register Vehicle)**: บันทึกเลขทะเบียน, เลือกยี่ห้อ (Brand) และเลือกรุ่น (Model) จากระบบคัดกรองตรงรุ่น พร้อมผูกเจ้าของ
+   - **👤 ลงทะเบียนลูกค้าใหม่ (Register Customer)**: บันทึกชื่อและเบอร์โทรศัพท์ติดต่อ พร้อมออกรหัส `Customer ID` ให้โดยอัตโนมัติ
+   - **🔑 เลือกลูกค้าเดิม (Existing Customer Login)**: สำหรับลูกค้าที่เคยลงทะเบียนไว้แล้ว สามารถเลือกชื่อจากรายชื่อในระบบเพื่อเข้าใช้งานได้ทันทีโดยไม่ต้องสร้างข้อมูลซ้ำ
+   - **Context-Aware Alert Banner**: แสดงข้อความแจ้งเตือนสีเหลืองด้านบนระบุชื่อสินค้าที่กำลังรอเพิ่มลงตะกร้า เพื่อให้ผู้ใช้งานทราบสาเหตุที่ต้องลงทะเบียนอย่างชัดเจน
+
+3. **ระบบเลือกยี่ห้อและรุ่นรถยนต์แบบไดนามิก (Smart Cascading Brand & Model Selector)**:
+   - รองรับ **8 ยี่ห้อรถยนต์ยอดนิยม** ในประเทศไทย: Toyota, Honda, Isuzu, Mazda, Nissan, Mitsubishi, Suzuki, Ford
+   - **Cascading Model Filter**: เมื่อเลือกยี่ห้อ ระบบจะคัดกรองรุ่นรถยนต์ที่สัมพันธ์กับยี่ห้อนั้นโดยอัตโนมัติ พร้อม 10 รุ่นรถยนต์ยอดนิยมตั้งต้น
+   - **Auto-Detect Brand**: หากเลือกรุ่นรถยนต์ ระบบจะตรวจจับและกำหนดยี่ห้อให้อัตโนมัติ
+   - **Custom Typing Support**: มีตัวเลือก *"✏️ อื่นๆ (พิมพ์ระบุเอง)"* รองรับทั้งยี่ห้อและรุ่นสำหรับรถยนต์นอกเหนือรายการ
+
+4. **Garage Operations Command Center (ศูนย์ควบคุมการปฏิบัติการหน้าแรก)**:
    - แบนเนอร์ฮีโร่พร้อมตัวนับสถิติสด (Live Metrics) รถในระบบ, อะไหล่ในคลัง, ใบสั่งซ่อม และสถานะเซิร์ฟเวอร์
    - ปุ่มทางลัดเปิดใบสั่งซ่อมบำรุง, จำลองประเมินราคา, เบิกจ่ายอะไหล่ และค้นหาประวัติรถ
-2. **ระบบประเมินราคาซ่อม & เปิดใบสั่งซ่อมบำรุง (Jobs & Repair Cost Estimator)**:
+
+5. **ระบบประเมินราคาซ่อม & เปิดใบสั่งซ่อมบำรุง (Jobs & Repair Cost Estimator)**:
    - จำลองเลือกสเปกอะไหล่และคำนวณค่าแรงแบบเรียลไทม์
    - รองรับทั้งงานซ่อมด่วน (Repair) และงานเช็กระยะบำรุงรักษา (Maintenance)
-3. **คลังเบิก-จ่ายอะไหล่มาตรฐาน OEM (Parts Dispensary & Inventory)**:
+
+6. **คลังเบิก-จ่ายอะไหล่มาตรฐาน OEM (Parts Dispensary & Inventory)**:
    - บรรจุข้อมูลอะไหล่รถยนต์จริงกว่า **27 รายการ** ครอบคลุม 10 ระบบงานซ่อม:
      - ระบบของเหลว & น้ำมันเครื่อง, ระบบเบรก & ช่วงล่าง, เครื่องยนต์ & ระบบส่งกำลัง, ระบบระบายความร้อน, ระบบไฟ & แบตเตอรี่, ไส้กรอง, ตัวถัง, อะไหล่ศูนย์ OEM และเครื่องมือช่าง
    - แบรนด์อะไหล่ชั้นนำ: Mobil 1, Castrol, Motul, Brembo, Bendix, NGK, Denso, Bosch, 3M, GS Battery
    - ตรวจจับสต็อกขั้นต่ำ (Low Stock Alert) และมีปุ่มเติมสต็อก (Restock) ทันที
-4. **ศูนย์ค้นหาตามรุ่นรถและประวัติ (Vehicle Hub & Fleet Search)**:
+
+7. **ศูนย์ค้นหาตามรุ่นรถและประวัติ (Vehicle Hub & Fleet Search)**:
    - ค้นหาอะไหล่ที่ตรงรุ่นกับยี่ห้อรถยนต์ยอดนิยม (Toyota, Honda, Isuzu, Ford, Mazda, Nissan, Mitsubishi)
-5. **ระบบการเงินและใบแจ้งหนี้ (Billing & Invoices)**:
+
+8. **ระบบการเงินและใบแจ้งหนี้ (Billing & Invoices)**:
    - ออกใบเสร็จรับเงิน แจกแจงรายการค่าแรง, ค่าอะไหล่, ส่วนลด, ภาษีมูลค่าเพิ่ม (VAT 7%)
    - รองรับการกดบันทึกการชำระเงิน (Mark as Paid) แบบเรียลไทม์
-6. **แถบนำทางเพรียวบาง สบายตา (Sleek Compact Navigation)**:
-   - แถบเมนูสีแดงเพรียวบาง 38–40px ข้อความบรรทัดเดียวไม่ตกบรรทัด
-   - ปุ่ม Active แท็บทรงแคปซูลโค้งมนพรีเมียม (Gold Pill Accent) พร้อมตะกร้าเบิกอะไหล่
-7. **ระบบสลับภาษา 2 ภาษาเต็มรูปแบบ (Bilingual Support: TH / EN)**:
+
+9. **ระบบแปลภาษา 2 ภาษาเต็มรูปแบบ 100% (100% Full Bilingual: TH / EN)**:
    - สลับภาษาระหว่าง **ภาษาไทย (TH)** และ **English (EN)** ได้แบบไดนามิกผ่าน `LanguageContext.jsx`
+   - ตรวจสอบความถูกต้องและแปลครอบคลุมทุกองค์ประกอบ 100% ไม่มีภาษาไทยหลุดรอดในโหมดภาษาอังกฤษ เพื่อรองรับลูกค้าชาวต่างชาติ
    - ไอคอนสลับภาษามาตรฐานสากลสไตล์ Vuexy `[A 文] EN / TH` บน Topbar ทั้งหน้าลูกค้าและหน้าแอดมิน
-   - รองรับการแปลครอบคลุมทุกส่วน: เมนูนำทาง, การ์ดสถิติ, รายการอะไหล่, ข้อมูลรถ, ใบแจ้งหนี้, และโต๊ะแชทสด
-8. **Vuexy Admin Backoffice & Garage Analytics (`/admin`)**:
-   - แดชบอร์ดผู้ดูแลระบบสไตล์โมเดิร์น Vuexy / Materio Dashboard รองรับ Dark/Light Theme
-   - **Live Workshop Bays Monitor**: มอนิเตอร์สถานะช่องซ่อมรถยนต์ 4 ช่องสด (Bay 1: เช็กระยะ, Bay 2: ยกเครื่องยนต์, Bay 3: ของเหลว, Bay 4: ซ่อมเบรก) พร้อมแถบแสดงเปอร์เซ็นต์ความคืบหน้า
-   - **Master Technician Card**: การ์ดหัวหน้าช่างประจำอู่ "ช่างจันทร์ บรรลัยการช่าง" พร้อมกราฟิกเครื่องมือช่าง Automotive Mechanic Tools SVG (ประแจแหวนข้างปากตาย, ไขควง, น็อตหกเหลี่ยม, เฟืองเกียร์)
-   - **Garage Notification Center**: ศูนย์แจ้งเตือนอู่รถยนต์ 4 รายการ (อะไหล่ใกล้หมด, ลูกค้าเข้าเช็กระยะ, ใบงานเสร็จสิ้น, แชทใหม่) พร้อมเคาน์เตอร์ตัวเลขแจ้งเตือนไดนามิก และปุ่ม "ทำเครื่องหมายว่าอ่านแล้วทั้งหมด" (Mark all as read)
-   - **Customer Live Chat Desk**: ระบบโต๊ะตอบแชทลูกค้าสด พร้อมฟังก์ชัน Auto-Read อัตโนมัติเมื่อแอดมินคลิกเลือกบทสนทนาหรือตอบกลับ
-   - **Full Inventory & SKU Control**: สิทธิ์แอดมินในการเพิ่มสินค้าใหม่ (Add Part SKU), แก้ไขราคา/สต็อก และลบรายการสินค้า
-9. **ระบบสตาร์ทอัจฉริยะคลิกเดียว (1-Click Launch Script)**:
-   - ไฟล์สคริปต์ `start_all.bat` สำหรับ Windows สามารถเปิดทั้ง FastAPI Backend (Port 8000) และ React Vite Frontend (Port 3000) พร้อมกันในคลิกเดียว
+
+10. **ระบบสลับธีมสีและโหมดขาวดำ (Multi-Theme & B&W Accessibility Mode)**:
+    - รองรับการปรับแต่งชุดสี 4 รูปแบบ: Red-White (Default), Cyberpunk Neon, Classic Racing, และ Monochrome
+    - สลับโหมดขาวดำ (Black & White Accessibility) ได้ในคลิกเดียว
+
+11. **Vuexy Admin Backoffice & Garage Analytics (`/admin`)**:
+    - แดชบอร์ดผู้ดูแลระบบสไตล์โมเดิร์น Vuexy / Materio Dashboard รองรับ Dark/Light Theme
+    - **Live Workshop Bays Monitor**: มอนิเตอร์สถานะช่องซ่อมรถยนต์ 4 ช่องสด (Bay 1: เช็กระยะ, Bay 2: ยกเครื่องยนต์, Bay 3: ของเหลว, Bay 4: ซ่อมเบรก) พร้อมแถบแสดงเปอร์เซ็นต์ความคืบหน้า
+    - **Master Technician Card**: การ์ดหัวหน้าช่างประจำอู่ "ช่างจันทร์ บรรลัยการช่าง" พร้อมกราฟิกเครื่องมือช่าง Automotive Mechanic Tools SVG (ประแจแหวนข้างปากตาย, ไขควง, น็อตหกเหลี่ยม, เฟืองเกียร์)
+    - **Garage Notification Center**: ศูนย์แจ้งเตือนอู่รถยนต์ 4 รายการ (อะไหล่ใกล้หมด, ลูกค้าเข้าเช็กระยะ, ใบงานเสร็จสิ้น, แชทใหม่) พร้อมเคาน์เตอร์ตัวเลขแจ้งเตือนไดนามิก และปุ่ม "ทำเครื่องหมายว่าอ่านแล้วทั้งหมด" (Mark all as read)
+    - **Customer Live Chat Desk**: ระบบโต๊ะตอบแชทลูกค้าสด พร้อมฟังก์ชัน Auto-Read อัตโนมัติเมื่อแอดมินคลิกเลือกบทสนทนาหรือตอบกลับ
+    - **Full Inventory & SKU Control**: สิทธิ์แอดมินในการเพิ่มสินค้าใหม่ (Add Part SKU), แก้ไขราคา/สต็อก และลบรายการสินค้า
+
+12. **ระบบสตาร์ทอัจฉริยะคลิกเดียว (1-Click Launch Script)**:
+    - ไฟล์สคริปต์ `start_all.bat` สำหรับ Windows สามารถเปิดทั้ง FastAPI Backend (Port 8000) และ React Vite Frontend (Port 3000) พร้อมกันในคลิกเดียว
 
 ---
 
