@@ -207,6 +207,11 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [fetchData]);
 
+  // เลื่อนกลับขึ้นด้านบนสุดเมื่อผู้ใช้สลับหน้าหรือคลิกลิงก์นำทาง
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeTab]);
+
   // ฟังก์ชันจัดการค้นหาจากแถบ Header และ Mega Menu
   const handlePerformSearch = (query, category) => {
     setHeaderSearchQuery(query || "");
@@ -694,6 +699,7 @@ export default function Dashboard() {
       {/* 3. Footer สไตล์ ServiceGarage (ServiceGarage System) */}
       <Footer
         setActiveTab={setActiveTab}
+        setJobsSubTab={setJobsSubTab}
         onSelectCategory={(catId) => handlePerformSearch("", catId)}
         onGoToAdmin={navigateToAdmin}
       />
