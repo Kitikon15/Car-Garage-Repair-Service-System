@@ -11,6 +11,8 @@ export default function Navbar({
   cartTotal = 0,
   apiOnline,
   onOpenRegister,
+  currentCustomer,
+  onLogoutCustomer,
   searchQuery = "",
   setSearchQuery,
   onPerformSearch,
@@ -182,15 +184,51 @@ export default function Navbar({
               <span className="d-none d-xl-inline">{isTh ? "ใบสั่งซ่อม" : "Repair Job"}</span>
             </button>
 
-            {/* ปุ่มลงทะเบียนรถ/ลูกค้า */}
-            <button
-              className="btn btn-outline-sp-primary btn-sm d-flex align-items-center gap-1 py-1.5 px-3 rounded-pill"
-              onClick={onOpenRegister}
-              title={isTh ? "ลงทะเบียนรถยนต์ / เจ้าของ" : "Register Vehicle / Customer"}
-            >
-              <i className="bi bi-person-plus-fill fs-6"></i>
-              <span className="d-none d-lg-inline">{isTh ? "ลงทะเบียนรถ/ลูกค้า" : "Register Car/Client"}</span>
-            </button>
+            {/* สถานะลูกค้าที่ลงทะเบียนแล้ว หรือปุ่มลงทะเบียน */}
+            {currentCustomer ? (
+              <div className="d-flex align-items-center gap-1.5 bg-white border border-success-subtle py-1 px-2.5 rounded-pill shadow-sm">
+                <div
+                  className="d-flex align-items-center gap-1.5"
+                  role="button"
+                  onClick={onOpenRegister}
+                  title={isTh ? `ลูกค้าที่ลงทะเบียนแล้ว: ${currentCustomer.name} (${currentCustomer.customer_id})` : `Registered: ${currentCustomer.name}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="bi bi-person-check-fill text-success fs-6"></i>
+                  <div className="text-start d-none d-lg-block" style={{ lineHeight: "1.1" }}>
+                    <div className="fw-bold text-dark text-truncate" style={{ maxWidth: "120px", fontSize: "0.76rem" }}>
+                      {currentCustomer.name}
+                    </div>
+                    <span className="badge bg-success-subtle text-success p-0 fw-normal" style={{ fontSize: "0.68rem" }}>
+                      {currentCustomer.customer_id}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-link text-muted p-0 ms-1"
+                  title={isTh ? "ออกจากระบบ / เปลี่ยนลูกค้า" : "Logout / Switch Customer"}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm(isTh ? "ต้องการออกจากระบบลูกค้านี้หรือไม่?" : "Do you want to log out from this customer profile?")) {
+                      if (onLogoutCustomer) onLogoutCustomer();
+                    }
+                  }}
+                  style={{ textDecoration: "none" }}
+                >
+                  <i className="bi bi-box-arrow-right text-danger fs-6"></i>
+                </button>
+              </div>
+            ) : (
+              <button
+                className="btn btn-outline-sp-primary btn-sm d-flex align-items-center gap-1 py-1.5 px-3 rounded-pill"
+                onClick={onOpenRegister}
+                title={isTh ? "ลงทะเบียนรถยนต์ / เจ้าของ" : "Register Vehicle / Customer"}
+              >
+                <i className="bi bi-person-plus-fill fs-6"></i>
+                <span className="d-none d-lg-inline">{isTh ? "ลงทะเบียนรถ/ลูกค้า" : "Register Car/Client"}</span>
+              </button>
+            )}
 
             {/* ปุ่มรายการเบิกอะไหล่ (Cart) */}
             <button

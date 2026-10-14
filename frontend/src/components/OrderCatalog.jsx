@@ -359,7 +359,8 @@ export default function OrderCatalog({
       alert(isTh ? "จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!" : "Requested quantity exceeds available stock!");
       return;
     }
-    onAddToCart(part, qty);
+    const success = onAddToCart(part, qty);
+    if (success === false) return;
     setAddedNotice(
       isTh
         ? `เพิ่ม "${part.part_name}" (${qty} ชิ้น) ลงในตะกร้าเรียบร้อยแล้ว!`

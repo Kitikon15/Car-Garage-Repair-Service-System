@@ -93,7 +93,10 @@ export default function GarageBuilder({ vehicles, parts, onJobCreated, onAddToCa
       alert(isTh ? "กรุณาเลือกอะไหล่ในสเปกอย่างน้อย 1 รายการ" : "Please select at least 1 part in the build spec");
       return;
     }
-    activeSelectedParts.forEach((part) => onAddToCart(part, 1));
+    for (const part of activeSelectedParts) {
+      const ok = onAddToCart(part, 1);
+      if (ok === false) return;
+    }
     setBuildNotice(isTh ? `เพิ่มอะไหล่ทั้ง ${activeSelectedParts.length} รายการลงในตะกร้าเรียบร้อยแล้ว!` : `Added all ${activeSelectedParts.length} parts to cart successfully!`);
     setTimeout(() => setBuildNotice(""), 3500);
   };

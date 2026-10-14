@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductImage from "./ProductImage";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -12,12 +12,14 @@ export default function CartView({
   onContinueShopping,
   apiUrl,
   onOrderCompleted,
+  currentCustomer,
+  onOpenRegister,
 }) {
   const { lang } = useLanguage ? useLanguage() : { lang: "th" };
   const isTh = lang !== "en";
 
-  const [checkoutName, setCheckoutName] = useState("");
-  const [checkoutPhone, setCheckoutPhone] = useState("");
+  const [checkoutName, setCheckoutName] = useState(() => currentCustomer?.name || "");
+  const [checkoutPhone, setCheckoutPhone] = useState(() => currentCustomer?.phone || "");
   const [checkoutAddress, setCheckoutAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("transfer"); // 'transfer' | 'cod' | 'credit'
   const [couponCode, setCouponCode] = useState("");
@@ -25,6 +27,13 @@ export default function CartView({
   const [couponApplied, setCouponApplied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
+
+  useEffect(() => {
+    if (currentCustomer) {
+      if (!checkoutName && currentCustomer.name) setCheckoutName(currentCustomer.name);
+      if (!checkoutPhone && currentCustomer.phone) setCheckoutPhone(currentCustomer.phone);
+    }
+  }, [currentCustomer]);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountAmount = couponApplied ? couponDiscount : 0;
@@ -51,6 +60,11 @@ export default function CartView({
   const handleCheckout = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
+    if (!currentCustomer) {
+      alert(isTh ? "⚠️ กรุณาลงทะเบียนลูกค้าก่อนทำการสั่งซื้อ" : "⚠️ Please register as a customer before checkout");
+      if (onOpenRegister) onOpenRegister();
+      return;
+    }
     if (!checkoutName || !checkoutPhone) {
       alert(isTh ? "กรุณากรอกชื่อและเบอร์โทรศัพท์สำหรับจัดส่ง" : "Please enter recipient name and phone number for delivery");
       return;
@@ -556,6 +570,25 @@ export default function CartView({
                       </label>
                     </div>
                   </div>
+
+                  {/* แจ้งเตือนเมื่อยังไม่ลงทะเบียนลูกค้า */}
+                  {!currentCustomer && (
+                    <div className="alert alert-warning py-2.5 px-3 small d-flex align-items-center justify-content-between mb-3 rounded-3 shadow-sm border-warning">
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="bi bi-shield-lock-fill text-warning fs-5"></i>
+                        <span className="text-dark fw-semibold">
+                          {isTh ? "ยังไม่ได้ลงทะเบียนลูกค้า กรุณาลงทะเบียนก่อนสั่งซื้อ" : "Not registered yet. Please register before ordering."}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn btn-warning btn-sm py-1 px-3 fw-bold rounded-pill text-dark shadow-sm"
+                        onClick={onOpenRegister}
+                      >
+                        {isTh ? "ลงทะเบียน" : "Register"}
+                      </button>
+                    </div>
+                  )}
 
                   {/* ปุ่มยืนยันคำสั่งซื้อสไตล์ Unique Gradient */}
                   <button

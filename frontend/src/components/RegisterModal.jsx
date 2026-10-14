@@ -79,14 +79,25 @@ const MODEL_TO_BRAND = {
   "Celerio": "Suzuki",
 };
 
-export default function RegisterModal({ isOpen, onClose, customers, onRefresh, apiUrl }) {
+export default function RegisterModal({
+  isOpen,
+  onClose,
+  customers,
+  onRefresh,
+  apiUrl,
+  onRegisterSuccess,
+  pendingItemName,
+}) {
   const { lang } = useLanguage ? useLanguage() : { lang: "th" };
   const isTh = lang !== "en";
 
-  const [tab, setTab] = useState("vehicle"); // "vehicle" หรือ "customer"
+  const [tab, setTab] = useState(() => (pendingItemName ? "customer" : "vehicle")); // "vehicle" | "customer" | "login"
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // สถานะเลือกลูกค้าเดิมที่มีอยู่แล้ว
+  const [selectedExistingCustId, setSelectedExistingCustId] = useState("");
 
   // สถานะเปิดกล่องพิมพ์เองสำหรับยี่ห้อและรุ่น
   const [isCustomBrand, setIsCustomBrand] = useState(false);
@@ -180,8 +191,16 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
       }
       const data = await res.json();
       const newCustId = data.customer?.customer_id;
+      const registeredData = {
+        customer_id: newCustId,
+        name: custForm.name.trim(),
+        phone: custForm.phone.trim(),
+      };
+
+      if (onRegisterSuccess) {
+        onRegisterSuccess(registeredData);
+      }
       
-      setMsg(isTh ? `ลงทะเบียนสำเร็จ! รหัสลูกค้าของคุณคือ ${newCustId}` : `Registration successful! Customer ID is ${newCustId}`);
       setCustForm({ name: "", phone: "" });
       
       // เลือกเจ้าของนี้ในแท็บรถยนต์ให้อัตโนมัติทันที
@@ -190,10 +209,28 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
       }
 
       onRefresh();
-      setTimeout(() => {
-        setMsg("");
-        setTab("vehicle"); // สลับไปแท็บลงทะเบียนรถทันที
-      }, 1200);
+
+      if (pendingItemName) {
+        setMsg(
+          isTh
+            ? `ลงทะเบียนสำเร็จ! รหัส ${newCustId} กำลังเพิ่ม "${pendingItemName}" ลงในตะกร้าของคุณ...`
+            : `Registered successfully! Customer ${newCustId}. Adding "${pendingItemName}" to your cart...`
+        );
+        setTimeout(() => {
+          setMsg("");
+          onClose();
+        }, 1100);
+      } else {
+        setMsg(
+          isTh
+            ? `ลงทะเบียนสำเร็จ! รหัสลูกค้าของคุณคือ ${newCustId}`
+            : `Registration successful! Customer ID is ${newCustId}`
+        );
+        setTimeout(() => {
+          setMsg("");
+          setTab("vehicle"); // สลับไปแท็บลงทะเบียนรถต่อ
+        }, 1200);
+      }
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -229,20 +266,72 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
         const err = await res.json();
         throw new Error(err.detail || (isTh ? "ลงทะเบียนรถยนต์ไม่สำเร็จ" : "Vehicle registration failed"));
       }
-      setMsg(isTh ? "ลงทะเบียนรถยนต์และบันทึกข้อมูลเจ้าของรถสำเร็จเรียบร้อย!" : "Vehicle registered and linked successfully!");
+
+      const owner = customers?.find((c) => c.customer_id === vehForm.customer_id) || {
+        customer_id: vehForm.customer_id,
+        name: `Customer ${vehForm.customer_id}`,
+        phone: "",
+      };
+      const enrichedCustomer = {
+        ...owner,
+        license_plate: vehForm.license_plate.trim().toUpperCase(),
+        brand: vehForm.brand.trim(),
+        model: vehForm.model.trim(),
+      };
+
+      if (onRegisterSuccess) {
+        onRegisterSuccess(enrichedCustomer);
+      }
+
       setVehForm({ license_plate: "", brand: "", model: "", customer_id: "" });
       setIsCustomBrand(false);
       setIsCustomModel(false);
       onRefresh();
+
+      if (pendingItemName) {
+        setMsg(
+          isTh
+            ? `ลงทะเบียนรถยนต์สำเร็จ! กำลังเพิ่ม "${pendingItemName}" ลงในตะกร้าของคุณ...`
+            : `Vehicle registered successfully! Adding "${pendingItemName}" to your cart...`
+        );
+      } else {
+        setMsg(isTh ? "ลงทะเบียนรถยนต์และบันทึกข้อมูลเจ้าของรถสำเร็จเรียบร้อย!" : "Vehicle registered and linked successfully!");
+      }
+
       setTimeout(() => {
         setMsg("");
         onClose();
-      }, 1200);
+      }, 1100);
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSelectExistingCustomer = (e) => {
+    e.preventDefault();
+    const found = customers?.find((c) => c.customer_id === selectedExistingCustId);
+    if (!found) {
+      setErrorMsg(isTh ? "กรุณาเลือกลูกค้าจากรายชื่อ" : "Please select a customer from the list");
+      return;
+    }
+    if (onRegisterSuccess) {
+      onRegisterSuccess(found);
+    }
+    if (pendingItemName) {
+      setMsg(
+        isTh
+          ? `เข้าสู่ระบบในชื่อ "${found.name}" สำเร็จ! กำลังเพิ่ม "${pendingItemName}" ลงในตะกร้า...`
+          : `Logged in as "${found.name}"! Adding "${pendingItemName}" to your cart...`
+      );
+    } else {
+      setMsg(isTh ? `เข้าสู่ระบบในชื่อ "${found.name}" สำเร็จ!` : `Logged in as "${found.name}" successfully!`);
+    }
+    setTimeout(() => {
+      setMsg("");
+      onClose();
+    }, 900);
   };
 
   return (
@@ -258,6 +347,23 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
           </div>
 
           <div className="modal-body p-4">
+            {/* กล่องแจ้งเตือนเมื่อเปิดจากความพยายามเพิ่มสินค้าลงตะกร้า */}
+            {pendingItemName && (
+              <div className="alert alert-warning py-2.5 px-3 small d-flex align-items-center gap-2 mb-3 shadow-sm rounded-3 border-warning">
+                <i className="bi bi-shield-lock-fill fs-4 text-warning"></i>
+                <div>
+                  <div className="fw-bold text-dark">
+                    {isTh ? "จำเป็นต้องลงทะเบียนก่อนเพิ่มสินค้าลงในตะกร้า" : "Registration Required Before Adding to Cart"}
+                  </div>
+                  <div className="text-muted" style={{ fontSize: "0.82rem" }}>
+                    {isTh
+                      ? `กรุณาลงทะเบียนลูกค้าหรือเลือกลูกค้าเดิมเพื่อเพิ่ม "${pendingItemName}" ลงในตะกร้าทันที`
+                      : `Please register or select existing customer to add "${pendingItemName}" to your cart.`}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <ul className="nav nav-pills nav-fill mb-3 p-1 bg-light rounded-2">
               <li className="nav-item">
                 <button
@@ -275,12 +381,20 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
                   <i className="bi bi-person me-1"></i> {isTh ? "ลงทะเบียนลูกค้าใหม่" : "Register Customer"}
                 </button>
               </li>
+              <li className="nav-item">
+                <button
+                  className={`nav-link py-2 fw-semibold small ${tab === "login" ? "active shadow-sm" : ""}`}
+                  onClick={() => { setTab("login"); setErrorMsg(""); }}
+                >
+                  <i className="bi bi-person-check me-1"></i> {isTh ? "เลือกลูกค้าเดิม" : "Existing Customer"}
+                </button>
+              </li>
             </ul>
 
             {msg && <div className="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3"><i className="bi bi-check-circle-fill"></i> {msg}</div>}
             {errorMsg && <div className="alert alert-danger py-2 small d-flex align-items-center gap-2 mb-3"><i className="bi bi-exclamation-triangle-fill"></i> {errorMsg}</div>}
 
-            {tab === "customer" ? (
+            {tab === "customer" && (
               <form onSubmit={handleCreateCustomer}>
                 <div className="alert alert-info py-2 small d-flex align-items-center gap-2 mb-3">
                   <i className="bi bi-info-circle-fill fs-6"></i>
@@ -323,7 +437,9 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
                   {loading ? (isTh ? "กำลังบันทึก..." : "Saving...") : (isTh ? "บันทึกข้อมูลลูกค้า" : "Save Customer")}
                 </button>
               </form>
-            ) : (
+            )}
+
+            {tab === "vehicle" && (
               <form onSubmit={handleCreateVehicle}>
                 <div className="mb-2">
                   <label className="form-label small fw-semibold">
@@ -461,6 +577,47 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
 
                 <button type="submit" className="btn btn-primary btn-sm w-100 py-2 fw-semibold" disabled={loading}>
                   {loading ? (isTh ? "กำลังบันทึก..." : "Saving...") : (isTh ? "บันทึกรถและผูกกับเจ้าของ" : "Save & Link Vehicle")}
+                </button>
+              </form>
+            )}
+
+            {tab === "login" && (
+              <form onSubmit={handleSelectExistingCustomer}>
+                <div className="alert alert-light border py-2 px-3 small d-flex align-items-center gap-2 mb-3 rounded-2">
+                  <i className="bi bi-person-badge fs-5 text-primary"></i>
+                  <span>
+                    {isTh
+                      ? "หากคุณเคยลงทะเบียนลูกค้าไว้แล้ว สามารถเลือกลูกค้าเพื่อเข้าใช้งานและสั่งซื้อได้ทันที"
+                      : "If you are already registered, select your profile to log in and proceed."}
+                  </span>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label small fw-semibold">
+                    {isTh ? "เลือกลูกค้าที่ลงทะเบียนแล้ว" : "Select Registered Customer"}
+                  </label>
+                  <select
+                    className="form-select form-select-sm"
+                    required
+                    value={selectedExistingCustId}
+                    onChange={(e) => setSelectedExistingCustId(e.target.value)}
+                  >
+                    <option value="">{isTh ? "-- เลือกลูกค้าจากรายชื่อในระบบ --" : "-- Select Customer Profile --"}</option>
+                    {customers?.map((c) => (
+                      <option key={c.customer_id} value={c.customer_id}>
+                        {c.name} ({c.customer_id}) {c.phone ? `• ${c.phone}` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100 py-2 fw-semibold"
+                  disabled={loading || !selectedExistingCustId}
+                >
+                  <i className="bi bi-box-arrow-in-right me-1"></i>
+                  {isTh ? "ยืนยันเข้าสู่ระบบด้วยลูกค้านี้" : "Confirm & Login as Customer"}
                 </button>
               </form>
             )}

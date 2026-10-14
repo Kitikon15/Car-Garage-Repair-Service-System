@@ -85,7 +85,8 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
       alert(isTh ? "จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!" : "Requested quantity exceeds available stock!");
       return;
     }
-    onAddToCart(part, qty);
+    const success = onAddToCart(part, qty);
+    if (success === false) return;
     setNotice(
       isTh
         ? `เพิ่ม "${part.part_name}" (${qty} ชิ้น) สำหรับ ${selectedBrand} ${selectedModel} ลงตะกร้าแล้ว!`

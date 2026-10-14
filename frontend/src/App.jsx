@@ -181,6 +181,66 @@ export default function Dashboard() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [lastCreatedMessage, setLastCreatedMessage] = useState("");
 
+  // สถานะลูกค้าที่เข้าสู่ระบบ / ลงทะเบียนแล้ว
+  const [currentCustomer, setCurrentCustomer] = useState(() => {
+    try {
+      const saved = localStorage.getItem("garage_registered_customer");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // สินค้าที่รอเพิ่มลงในตะกร้าหลังจากลงทะเบียนสำเร็จ
+  const [pendingCartItem, setPendingCartItem] = useState(null);
+
+  const handleRegisterSuccess = (customerData) => {
+    setCurrentCustomer(customerData);
+    try {
+      localStorage.setItem("garage_registered_customer", JSON.stringify(customerData));
+    } catch (e) {
+      console.warn("localStorage error:", e);
+    }
+
+    if (pendingCartItem) {
+      const { part, qty } = pendingCartItem;
+      setCart((prev) => {
+        const existing = prev.find((item) => item.part_id === part.part_id);
+        if (existing) {
+          return prev.map((item) =>
+            item.part_id === part.part_id
+              ? { ...item, quantity: Math.min(part.stock_qty, item.quantity + qty) }
+              : item
+          );
+        }
+        return [
+          ...prev,
+          {
+            part_id: part.part_id,
+            part_name: part.part_name,
+            price: part.price,
+            quantity: qty,
+            stock_qty: part.stock_qty,
+          },
+        ];
+      });
+      setLastCreatedMessage(
+        isTh
+          ? `ลงทะเบียนสำเร็จ! เพิ่ม "${pendingCartItem.part.part_name}" (${pendingCartItem.qty} ชิ้น) ลงในตะกร้าเรียบร้อยแล้ว`
+          : `Registration successful! Added "${pendingCartItem.part.part_name}" (${pendingCartItem.qty} pcs) to your cart.`
+      );
+      setPendingCartItem(null);
+    }
+    fetchData();
+  };
+
+  const handleLogoutCustomer = () => {
+    setCurrentCustomer(null);
+    try {
+      localStorage.removeItem("garage_registered_customer");
+    } catch (e) {}
+  };
+
   const fetchData = useCallback(async () => {
     try {
       const [statsRes, partsRes, vehiclesRes, customersRes, invoicesRes] = await Promise.all([
@@ -225,8 +285,19 @@ export default function Dashboard() {
     setActiveTab("order");
   };
 
-  // ฟังก์ชันจัดการตะกร้าสินค้า
+  // ฟังก์ชันจัดการตะกร้าสินค้า (บล็อกผู้ใช้ที่ยังไม่ลงทะเบียน)
   const handleAddToCart = (part, qty) => {
+    if (!currentCustomer) {
+      setPendingCartItem({ part, qty });
+      alert(
+        isTh
+          ? "⚠️ กรุณาลงทะเบียนลูกค้าหรือรถยนต์ก่อนเพิ่มสินค้าลงในตะกร้า\n(ระบบกำลังเปิดหน้าต่างลงทะเบียนให้คุณ)"
+          : "⚠️ Please register your customer profile or vehicle before adding items to cart.\n(Opening registration window for you)"
+      );
+      setShowRegisterModal(true);
+      return false;
+    }
+
     setCart((prev) => {
       const existing = prev.find((item) => item.part_id === part.part_id);
       if (existing) {
@@ -247,6 +318,7 @@ export default function Dashboard() {
         },
       ];
     });
+    return true;
   };
 
   const handleUpdateCartQty = (partId, newQty) => {
@@ -321,6 +393,8 @@ export default function Dashboard() {
         cartTotal={totalCartAmount}
         apiOnline={apiOnline}
         onOpenRegister={() => setShowRegisterModal(true)}
+        currentCustomer={currentCustomer}
+        onLogoutCustomer={handleLogoutCustomer}
         searchQuery={headerSearchQuery}
         setSearchQuery={setHeaderSearchQuery}
         onPerformSearch={handlePerformSearch}
@@ -733,6 +807,8 @@ export default function Dashboard() {
             onClearCart={handleClearCart}
             onContinueShopping={() => setActiveTab("order")}
             apiUrl={API_BASE_URL}
+            currentCustomer={currentCustomer}
+            onOpenRegister={() => setShowRegisterModal(true)}
             onOrderCompleted={() => {
               fetchData();
             }}
@@ -759,10 +835,15 @@ export default function Dashboard() {
       {/* Modal ลงทะเบียนลูกค้าและยานพาหนะ */}
       <RegisterModal
         isOpen={showRegisterModal}
-        onClose={() => setShowRegisterModal(false)}
+        onClose={() => {
+          setShowRegisterModal(false);
+          setPendingCartItem(null);
+        }}
         customers={customers}
         onRefresh={fetchData}
         apiUrl={API_BASE_URL}
+        onRegisterSuccess={handleRegisterSuccess}
+        pendingItemName={pendingCartItem?.part?.part_name}
       />
 
       {/* ระบบแชทสดสัมพันธ์ลูกค้า (Customer Live Chat Widget) สำหรับผู้ใช้งาน */}
