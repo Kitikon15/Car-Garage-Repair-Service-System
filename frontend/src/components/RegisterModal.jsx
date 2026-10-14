@@ -1,12 +1,96 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
+
+// รายการยี่ห้อรถยนต์ตามที่กำหนด
+const BRAND_OPTIONS = [
+  "Toyota",
+  "Honda",
+  "Isuzu",
+  "Mazda",
+  "Nissan",
+  "Mitsubishi",
+  "Suzuki",
+  "Ford",
+];
+
+// รายการ 10 รุ่นรถยนต์ยอดนิยมตั้งต้น
+const DEFAULT_POPULAR_MODELS = [
+  "Civic",
+  "City",
+  "Accord",
+  "Camry",
+  "Corolla Altis",
+  "Vios",
+  "Yaris",
+  "D-Max",
+  "Ranger",
+  "Triton",
+];
+
+// จับคู่รุ่นรถยนต์แยกตามยี่ห้อเพื่อความสะดวกในการเลือก
+const BRAND_MODEL_MAP = {
+  Toyota: ["Camry", "Corolla Altis", "Corolla Cross", "Vios", "Yaris", "Fortuner", "Hilux Revo"],
+  Honda: ["Civic", "City", "Accord", "CR-V", "HR-V", "Jazz"],
+  Isuzu: ["D-Max", "MU-X"],
+  Mazda: ["Mazda 2", "Mazda 3", "CX-3", "CX-5", "BT-50"],
+  Nissan: ["Almera", "Navara", "Kicks", "Teana"],
+  Mitsubishi: ["Triton", "Pajero Sport", "Mirage", "Xpander"],
+  Suzuki: ["Swift", "Ciaz", "Jimny", "Celerio"],
+  Ford: ["Ranger", "Everest"],
+};
+
+// ตารางจับคู่รุ่นกลับไปยังยี่ห้อ (Auto-detect Brand เมื่อเลือกรุ่น)
+const MODEL_TO_BRAND = {
+  "Civic": "Honda",
+  "City": "Honda",
+  "Accord": "Honda",
+  "CR-V": "Honda",
+  "HR-V": "Honda",
+  "Jazz": "Honda",
+  "Camry": "Toyota",
+  "Corolla Altis": "Toyota",
+  "Vios": "Toyota",
+  "Yaris": "Toyota",
+  "Corolla Cross": "Toyota",
+  "Fortuner": "Toyota",
+  "Hilux Revo": "Toyota",
+  "D-Max": "Isuzu",
+  "MU-X": "Isuzu",
+  "Ranger": "Ford",
+  "Everest": "Ford",
+  "Triton": "Mitsubishi",
+  "Pajero Sport": "Mitsubishi",
+  "Mirage": "Mitsubishi",
+  "Xpander": "Mitsubishi",
+  "Mazda 2": "Mazda",
+  "Mazda 3": "Mazda",
+  "CX-3": "Mazda",
+  "CX-5": "Mazda",
+  "BT-50": "Mazda",
+  "Almera": "Nissan",
+  "Navara": "Nissan",
+  "Kicks": "Nissan",
+  "Teana": "Nissan",
+  "Swift": "Suzuki",
+  "Ciaz": "Suzuki",
+  "Jimny": "Suzuki",
+  "Celerio": "Suzuki",
+};
 
 export default function RegisterModal({ isOpen, onClose, customers, onRefresh, apiUrl }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [tab, setTab] = useState("vehicle"); // "vehicle" หรือ "customer"
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // สถานะเปิดกล่องพิมพ์เองสำหรับยี่ห้อและรุ่น
+  const [isCustomBrand, setIsCustomBrand] = useState(false);
+  const [isCustomModel, setIsCustomModel] = useState(false);
 
   // ฟอร์มลูกค้า (ตัด customer_id ออก ให้ระบบสร้างให้อัตโนมัติ)
   const [custForm, setCustForm] = useState({
@@ -24,6 +108,59 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
 
   if (!isOpen) return null;
 
+  // คัดกรองตัวเลือกรุ่นรถตามยี่ห้อที่เลือก
+  const availableModels =
+    vehForm.brand && BRAND_MODEL_MAP[vehForm.brand]
+      ? BRAND_MODEL_MAP[vehForm.brand]
+      : DEFAULT_POPULAR_MODELS;
+
+  // ฟังก์ชันเปลี่ยนยี่ห้อรถยนต์
+  const handleBrandChange = (val) => {
+    if (val === "__custom__") {
+      setIsCustomBrand(true);
+      setVehForm((prev) => ({ ...prev, brand: "" }));
+    } else if (val === "") {
+      setIsCustomBrand(false);
+      setVehForm((prev) => ({ ...prev, brand: "", model: "" }));
+    } else {
+      setIsCustomBrand(false);
+      setVehForm((prev) => {
+        const brandModels = BRAND_MODEL_MAP[val] || [];
+        const isCurrentModelValid = brandModels.includes(prev.model);
+        return {
+          ...prev,
+          brand: val,
+          model: isCurrentModelValid ? prev.model : "",
+        };
+      });
+      if (isCustomModel) {
+        setIsCustomModel(false);
+      }
+    }
+  };
+
+  // ฟังก์ชันเปลี่ยนรุ่นรถยนต์
+  const handleModelChange = (val) => {
+    if (val === "__custom__") {
+      setIsCustomModel(true);
+      setVehForm((prev) => ({ ...prev, model: "" }));
+    } else if (val === "") {
+      setIsCustomModel(false);
+      setVehForm((prev) => ({ ...prev, model: "" }));
+    } else {
+      setIsCustomModel(false);
+      const autoBrand = MODEL_TO_BRAND[val];
+      setVehForm((prev) => ({
+        ...prev,
+        model: val,
+        brand: (!prev.brand || isCustomBrand) && autoBrand ? autoBrand : (prev.brand || autoBrand || ""),
+      }));
+      if (autoBrand && isCustomBrand) {
+        setIsCustomBrand(false);
+      }
+    }
+  };
+
   const handleCreateCustomer = async (e) => {
     e.preventDefault();
     try {
@@ -39,12 +176,12 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.detail || "ลงทะเบียนลูกค้าไม่สำเร็จ");
+        throw new Error(err.detail || (isTh ? "ลงทะเบียนลูกค้าไม่สำเร็จ" : "Customer registration failed"));
       }
       const data = await res.json();
       const newCustId = data.customer?.customer_id;
       
-      setMsg(`ลงทะเบียนสำเร็จ! รหัสลูกค้าของคุณคือ ${newCustId}`);
+      setMsg(isTh ? `ลงทะเบียนสำเร็จ! รหัสลูกค้าของคุณคือ ${newCustId}` : `Registration successful! Customer ID is ${newCustId}`);
       setCustForm({ name: "", phone: "" });
       
       // เลือกเจ้าของนี้ในแท็บรถยนต์ให้อัตโนมัติทันที
@@ -67,6 +204,15 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
   const handleCreateVehicle = async (e) => {
     e.preventDefault();
     try {
+      if (!vehForm.brand.trim()) {
+        setErrorMsg(isTh ? "กรุณาเลือกหรือระบุยี่ห้อรถยนต์" : "Please select or enter vehicle brand");
+        return;
+      }
+      if (!vehForm.model.trim()) {
+        setErrorMsg(isTh ? "กรุณาเลือกหรือระบุรุ่นรถยนต์" : "Please select or enter vehicle model");
+        return;
+      }
+
       setLoading(true);
       setErrorMsg("");
       const res = await fetch(`${apiUrl}/api/vehicles`, {
@@ -81,10 +227,12 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.detail || "ลงทะเบียนรถยนต์ไม่สำเร็จ");
+        throw new Error(err.detail || (isTh ? "ลงทะเบียนรถยนต์ไม่สำเร็จ" : "Vehicle registration failed"));
       }
-      setMsg("ลงทะเบียนรถยนต์และบันทึกข้อมูลเจ้าของรถสำเร็จเรียบร้อย!");
+      setMsg(isTh ? "ลงทะเบียนรถยนต์และบันทึกข้อมูลเจ้าของรถสำเร็จเรียบร้อย!" : "Vehicle registered and linked successfully!");
       setVehForm({ license_plate: "", brand: "", model: "", customer_id: "" });
+      setIsCustomBrand(false);
+      setIsCustomModel(false);
       onRefresh();
       setTimeout(() => {
         setMsg("");
@@ -100,129 +248,219 @@ export default function RegisterModal({ isOpen, onClose, customers, onRefresh, a
   return (
     <div className="modal show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1055 }} tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title fw-bold">
-              <i className="bi bi-person-plus text-primary me-2"></i>
-              ลงทะเบียนลูกค้าและยานพาหนะ
+        <div className="modal-content shadow border-0 rounded-3">
+          <div className="modal-header border-bottom py-3">
+            <h5 className="modal-title fw-bold fs-6 d-flex align-items-center">
+              <i className="bi bi-person-plus text-primary me-2 fs-5"></i>
+              {isTh ? "ลงทะเบียนลูกค้าและยานพาหนะ" : "Register Customer & Vehicle"}
             </h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
 
-          <div className="modal-body">
-            <ul className="nav nav-pills nav-fill mb-3">
+          <div className="modal-body p-4">
+            <ul className="nav nav-pills nav-fill mb-3 p-1 bg-light rounded-2">
               <li className="nav-item">
                 <button
-                  className={`nav-link ${tab === "vehicle" ? "active" : ""}`}
+                  className={`nav-link py-2 fw-semibold small ${tab === "vehicle" ? "active shadow-sm" : ""}`}
                   onClick={() => { setTab("vehicle"); setErrorMsg(""); }}
                 >
-                  <i className="bi bi-car-front me-1"></i> ลงทะเบียนรถยนต์
+                  <i className="bi bi-car-front me-1"></i> {isTh ? "ลงทะเบียนรถยนต์" : "Register Vehicle"}
                 </button>
               </li>
               <li className="nav-item">
                 <button
-                  className={`nav-link ${tab === "customer" ? "active" : ""}`}
+                  className={`nav-link py-2 fw-semibold small ${tab === "customer" ? "active shadow-sm" : ""}`}
                   onClick={() => { setTab("customer"); setErrorMsg(""); }}
                 >
-                  <i className="bi bi-person me-1"></i> ลงทะเบียนลูกค้าใหม่
+                  <i className="bi bi-person me-1"></i> {isTh ? "ลงทะเบียนลูกค้าใหม่" : "Register Customer"}
                 </button>
               </li>
             </ul>
 
-            {msg && <div className="alert alert-success py-2 small">{msg}</div>}
-            {errorMsg && <div className="alert alert-danger py-2 small">{errorMsg}</div>}
+            {msg && <div className="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3"><i className="bi bi-check-circle-fill"></i> {msg}</div>}
+            {errorMsg && <div className="alert alert-danger py-2 small d-flex align-items-center gap-2 mb-3"><i className="bi bi-exclamation-triangle-fill"></i> {errorMsg}</div>}
 
             {tab === "customer" ? (
               <form onSubmit={handleCreateCustomer}>
                 <div className="alert alert-info py-2 small d-flex align-items-center gap-2 mb-3">
-                  <i className="bi bi-info-circle-fill"></i>
-                  <span>ระบบจะสร้าง<strong>รหัสลูกค้า (Customer ID)</strong> ให้อัตโนมัติเมื่อกดบันทึก</span>
+                  <i className="bi bi-info-circle-fill fs-6"></i>
+                  <span>
+                    {isTh ? (
+                      <>ระบบจะสร้าง<strong>รหัสลูกค้า (Customer ID)</strong> ให้อัตโนมัติเมื่อกดบันทึก</>
+                    ) : (
+                      <>A unique <strong>Customer ID</strong> will be generated automatically upon saving.</>
+                    )}
+                  </span>
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label small fw-semibold">ชื่อ-นามสกุล ลูกค้า</label>
+                  <label className="form-label small fw-semibold">
+                    {isTh ? "ชื่อ-นามสกุล ลูกค้า" : "Customer Full Name"}
+                  </label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="เช่น สมชาย ใจดี"
+                    placeholder={isTh ? "เช่น สมชาย ใจดี" : "e.g. John Doe"}
                     required
                     value={custForm.name}
                     onChange={(e) => setCustForm({ ...custForm, name: e.target.value })}
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label small fw-semibold">เบอร์โทรศัพท์ติดต่อ</label>
+                  <label className="form-label small fw-semibold">
+                    {isTh ? "เบอร์โทรศัพท์ติดต่อ" : "Phone Number"}
+                  </label>
                   <input
                     type="tel"
                     className="form-control"
-                    placeholder="เช่น 081-234-5678"
+                    placeholder={isTh ? "เช่น 081-234-5678" : "e.g. 081-234-5678"}
                     required
                     value={custForm.phone}
                     onChange={(e) => setCustForm({ ...custForm, phone: e.target.value })}
                   />
                 </div>
                 <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold" disabled={loading}>
-                  {loading ? "กำลังบันทึก..." : "บันทึกข้อมูลลูกค้า"}
+                  {loading ? (isTh ? "กำลังบันทึก..." : "Saving...") : (isTh ? "บันทึกข้อมูลลูกค้า" : "Save Customer")}
                 </button>
               </form>
             ) : (
               <form onSubmit={handleCreateVehicle}>
                 <div className="mb-2">
-                  <label className="form-label small fw-semibold">เจ้าของรถยนต์ (เลือกลูกค้า)</label>
+                  <label className="form-label small fw-semibold">
+                    {isTh ? "เจ้าของรถยนต์ (เลือกลูกค้า)" : "Vehicle Owner (Select Customer)"}
+                  </label>
                   <select
                     className="form-select form-select-sm"
                     required
                     value={vehForm.customer_id}
                     onChange={(e) => setVehForm({ ...vehForm, customer_id: e.target.value })}
                   >
-                    <option value="">-- เลือกลูกค้าที่เป็นเจ้าของรถ --</option>
+                    <option value="">{isTh ? "-- เลือกลูกค้าที่เป็นเจ้าของรถ --" : "-- Select Customer Owner --"}</option>
                     {customers?.map((c) => (
                       <option key={c.customer_id} value={c.customer_id}>
                         {c.name} ({c.customer_id})
                       </option>
                     ))}
                   </select>
-                  <small className="text-muted" style={{ fontSize: "0.75rem" }}>
-                    หากยังไม่มีลูกค้า ให้กดแท็บ "ลงทะเบียนลูกค้าใหม่" ด้านบน
+                  <small className="text-muted d-block mt-1" style={{ fontSize: "0.75rem" }}>
+                    {isTh
+                      ? 'หากยังไม่มีลูกค้า ให้กดแท็บ "ลงทะเบียนลูกค้าใหม่" ด้านบน'
+                      : 'If not registered, click "Register Customer" tab above'}
                   </small>
                 </div>
+
                 <div className="mb-2">
-                  <label className="form-label small fw-semibold">หมายเลขทะเบียนรถ</label>
+                  <label className="form-label small fw-semibold">
+                    {isTh ? "หมายเลขทะเบียนรถ" : "License Plate"}
+                  </label>
                   <input
                     type="text"
                     className="form-control form-control-sm"
-                    placeholder="เช่น กข-1234 กทม."
+                    placeholder={isTh ? "เช่น กข-1234 กทม." : "e.g. 1AB-1234 BKK"}
                     required
                     value={vehForm.license_plate}
                     onChange={(e) => setVehForm({ ...vehForm, license_plate: e.target.value })}
                   />
                 </div>
+
                 <div className="row g-2 mb-3">
+                  {/* ยี่ห้อรถ (Brand) */}
                   <div className="col-6">
-                    <label className="form-label small fw-semibold">ยี่ห้อ (Brand)</label>
-                    <input
-                      type="text"
-                      className="form-control form-control-sm"
-                      placeholder="เช่น Toyota"
-                      required
-                      value={vehForm.brand}
-                      onChange={(e) => setVehForm({ ...vehForm, brand: e.target.value })}
-                    />
+                    <label className="form-label small fw-semibold">
+                      {isTh ? "ยี่ห้อ (Brand)" : "Brand"}
+                    </label>
+                    <select
+                      className="form-select form-select-sm"
+                      value={isCustomBrand ? "__custom__" : (vehForm.brand || "")}
+                      onChange={(e) => handleBrandChange(e.target.value)}
+                    >
+                      <option value="">{isTh ? "ยี่ห้อรถ (ทั้งหมด)" : "-- Select Brand --"}</option>
+                      {BRAND_OPTIONS.map((b) => (
+                        <option key={b} value={b}>
+                          {b}
+                        </option>
+                      ))}
+                      <option value="__custom__">
+                        ✏️ {isTh ? "อื่นๆ (พิมพ์ระบุเอง)" : "Other (Type custom)"}
+                      </option>
+                    </select>
+
+                    {isCustomBrand && (
+                      <div className="input-group input-group-sm mt-1">
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          placeholder={isTh ? "เช่น BYD, BMW..." : "e.g. BYD, BMW..."}
+                          required
+                          autoFocus
+                          value={vehForm.brand}
+                          onChange={(e) => setVehForm({ ...vehForm, brand: e.target.value })}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary"
+                          title={isTh ? "เลือกจากรายการ" : "Choose from list"}
+                          onClick={() => {
+                            setIsCustomBrand(false);
+                            setVehForm((prev) => ({ ...prev, brand: "" }));
+                          }}
+                        >
+                          <i className="bi bi-x"></i>
+                        </button>
+                      </div>
+                    )}
                   </div>
+
+                  {/* รุ่นรถ (Model) */}
                   <div className="col-6">
-                    <label className="form-label small fw-semibold">รุ่น (Model)</label>
-                    <input
-                      type="text"
-                      className="form-control form-control-sm"
-                      placeholder="เช่น Corolla Cross 2023"
-                      required
-                      value={vehForm.model}
-                      onChange={(e) => setVehForm({ ...vehForm, model: e.target.value })}
-                    />
+                    <label className="form-label small fw-semibold">
+                      {isTh ? "รุ่น (Model)" : "Model"}
+                    </label>
+                    <select
+                      className="form-select form-select-sm"
+                      value={isCustomModel ? "__custom__" : (vehForm.model || "")}
+                      onChange={(e) => handleModelChange(e.target.value)}
+                    >
+                      <option value="">{isTh ? "รุ่นรถ (ทั้งหมด)" : "-- Select Model --"}</option>
+                      {availableModels.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                      <option value="__custom__">
+                        ✏️ {isTh ? "อื่นๆ (พิมพ์ระบุเอง)" : "Other (Type custom)"}
+                      </option>
+                    </select>
+
+                    {isCustomModel && (
+                      <div className="input-group input-group-sm mt-1">
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          placeholder={isTh ? "เช่น Corolla Cross 2023..." : "e.g. Corolla Cross 2023..."}
+                          required
+                          autoFocus
+                          value={vehForm.model}
+                          onChange={(e) => setVehForm({ ...vehForm, model: e.target.value })}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-secondary"
+                          title={isTh ? "เลือกจากรายการ" : "Choose from list"}
+                          onClick={() => {
+                            setIsCustomModel(false);
+                            setVehForm((prev) => ({ ...prev, model: "" }));
+                          }}
+                        >
+                          <i className="bi bi-x"></i>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <button type="submit" className="btn btn-primary btn-sm w-100" disabled={loading}>
-                  {loading ? "กำลังบันทึก..." : "บันทึกรถและผูกกับเจ้าของ"}
+
+                <button type="submit" className="btn btn-primary btn-sm w-100 py-2 fw-semibold" disabled={loading}>
+                  {loading ? (isTh ? "กำลังบันทึก..." : "Saving...") : (isTh ? "บันทึกรถและผูกกับเจ้าของ" : "Save & Link Vehicle")}
                 </button>
               </form>
             )}
