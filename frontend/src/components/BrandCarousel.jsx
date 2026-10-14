@@ -1,8 +1,11 @@
 "use client";
 
 import { useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function BrandCarousel({ onSelectBrand }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
   const scrollContainerRef = useRef(null);
 
   const brands = [
@@ -72,9 +75,11 @@ export default function BrandCarousel({ onSelectBrand }) {
         <div>
           <h5 className="fw-bold mb-0 text-sp-blue d-flex align-items-center gap-2">
             <i className="bi bi-car-front-fill"></i>
-            <span>ช้อปตามยี่ห้อรถ</span>
+            <span>{isTh ? "ช้อปตามยี่ห้อรถ" : "Shop by Car Brand"}</span>
           </h5>
-          <small className="text-muted">เลือกแบรนด์รถยนต์เพื่อค้นหาอะไหล่ที่ตรงรุ่นโดยเฉพาะ</small>
+          <small className="text-muted">
+            {isTh ? "เลือกแบรนด์รถยนต์เพื่อค้นหาอะไหล่ที่ตรงรุ่นโดยเฉพาะ" : "Select your vehicle make to find exact-fit replacement parts"}
+          </small>
         </div>
 
         {/* ปุ่มเลื่อนซ้าย / ขวา */}
@@ -84,7 +89,7 @@ export default function BrandCarousel({ onSelectBrand }) {
             className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm"
             style={{ width: "36px", height: "36px" }}
             onClick={scrollLeft}
-            title="เลื่อนซ้าย"
+            title={isTh ? "เลื่อนซ้าย" : "Scroll left"}
             aria-label="Scroll brands left"
           >
             <i className="bi bi-chevron-left"></i>
@@ -94,7 +99,7 @@ export default function BrandCarousel({ onSelectBrand }) {
             className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm"
             style={{ width: "36px", height: "36px" }}
             onClick={scrollRight}
-            title="เลื่อนขวา"
+            title={isTh ? "เลื่อนขวา" : "Scroll right"}
             aria-label="Scroll brands right"
           >
             <i className="bi bi-chevron-right"></i>
@@ -126,7 +131,7 @@ export default function BrandCarousel({ onSelectBrand }) {
               transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
             }}
             onClick={() => onSelectBrand && onSelectBrand(b.id)}
-            title={`ดูอะไหล่สำหรับ ${b.name}`}
+            title={isTh ? `ดูอะไหล่สำหรับ ${b.name}` : `View parts for ${b.name}`}
           >
             {/* โลโก้แบรนด์รถยนต์ทางการ */}
             <div

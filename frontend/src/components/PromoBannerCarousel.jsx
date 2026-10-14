@@ -1,5 +1,7 @@
 "use client";
 
+import { useLanguage } from "../context/LanguageContext";
+
 export default function PromoBannerCarousel({
   onShopNow,
   onEstimate,
@@ -9,18 +11,21 @@ export default function PromoBannerCarousel({
   partsCount = 0,
   invoicesCount = 0,
 }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   // รายการเครื่องมือช่างและอุปกรณ์ช่างอู่สำหรับแถบเลื่อนไปเลื่อนมา (Sliding Marquee Tools)
   const mechanicTools = [
-    { icon: "bi-wrench-adjustable", name: "ประแจปอนด์ดิจิทัล", desc: "Digital Torque Wrench", cat: "วัดแรงบิด" },
-    { icon: "bi-cpu-fill", name: "เครื่องสแกน OBD-II / ECU", desc: "Diagnostic Scanner", cat: "ตรวจเช็กระบบไฟ" },
-    { icon: "bi-tools", name: "บล็อกลมกระแทกไฮพาวเวอร์", desc: "Air Impact Wrench", cat: "ถอดประกอบช่วงล่าง" },
-    { icon: "bi-droplet-half", name: "เครื่องฟลัชชิ่งน้ำมันเครื่อง & เกียร์", desc: "Oil Flushing Unit", cat: "เปลี่ยนถ่ายของเหลว" },
-    { icon: "bi-car-front-fill", name: "แม่แรงไฮดรอลิก & ลิฟต์ยกรถ 4 เสา", desc: "Hydraulic Car Lift", cat: "ยกรถตรวจช่วงล่าง" },
-    { icon: "bi-disc-fill", name: "เครื่องเจียรจานเบรกอัตโนมัติ", desc: "Brake Disc Lathe", cat: "ระบบเบรก" },
-    { icon: "bi-battery-charging", name: "เครื่องวิเคราะห์แบตเตอรี่ & ไดชาร์จ", desc: "Battery Analyzer", cat: "ตรวจวัดกระแสไฟ" },
-    { icon: "bi-snow", name: "สถานีแวคคั่มและเติมน้ำยาแอร์ R134a", desc: "A/C Recovery Station", cat: "ระบบปรับอากาศ" },
-    { icon: "bi-speedometer2", name: "เกจวัดแรงดันกำลังอัดกระบอกสูบ", desc: "Compression Tester", cat: "ตรวจเช็กเครื่องยนต์" },
-    { icon: "bi-gear-wide-connected", name: "ชุดเครื่องมือตั้งมาร์กสายพานไทม์มิ่ง", desc: "Timing Tool Kit", cat: "ระบบสายพาน" },
+    { icon: "bi-wrench-adjustable", name: isTh ? "ประแจปอนด์ดิจิทัล" : "Digital Torque Wrench", desc: isTh ? "Digital Torque Wrench" : "Precision Torque 20-200Nm", cat: isTh ? "วัดแรงบิด" : "Torque" },
+    { icon: "bi-cpu-fill", name: isTh ? "เครื่องสแกน OBD-II / ECU" : "OBD-II / ECU Scanner", desc: isTh ? "Diagnostic Scanner" : "Full Vehicle Diagnostics", cat: isTh ? "ตรวจเช็กระบบไฟ" : "Diagnostics" },
+    { icon: "bi-tools", name: isTh ? "บล็อกลมกระแทกไฮพาวเวอร์" : "Air Impact Wrench", desc: isTh ? "Air Impact Wrench" : "Chassis & Wheel Service", cat: isTh ? "ถอดประกอบช่วงล่าง" : "Suspension" },
+    { icon: "bi-droplet-half", name: isTh ? "เครื่องฟลัชชิ่งน้ำมันเครื่อง & เกียร์" : "Oil Flushing Unit", desc: isTh ? "Oil Flushing Unit" : "Fluid & Transmission Exchange", cat: isTh ? "เปลี่ยนถ่ายของเหลว" : "Fluids" },
+    { icon: "bi-car-front-fill", name: isTh ? "แม่แรงไฮดรอลิก & ลิฟต์ยกรถ 4 เสา" : "Hydraulic Car Lift (4-Post)", desc: isTh ? "Hydraulic Car Lift" : "Underbody Inspection", cat: isTh ? "ยกรถตรวจช่วงล่าง" : "Lifting" },
+    { icon: "bi-disc-fill", name: isTh ? "เครื่องเจียรจานเบรกอัตโนมัติ" : "Auto Brake Disc Lathe", desc: isTh ? "Brake Disc Lathe" : "Rotor Resurfacing", cat: isTh ? "ระบบเบรก" : "Brakes" },
+    { icon: "bi-battery-charging", name: isTh ? "เครื่องวิเคราะห์แบตเตอรี่ & ไดชาร์จ" : "Battery Analyzer & Tester", desc: isTh ? "Battery Analyzer" : "Charging System Testing", cat: isTh ? "ตรวจวัดกระแสไฟ" : "Electrical" },
+    { icon: "bi-snow", name: isTh ? "สถานีแวคคั่มและเติมน้ำยาแอร์ R134a" : "A/C Recovery Station R134a", desc: isTh ? "A/C Recovery Station" : "Climate Control Service", cat: isTh ? "ระบบปรับอากาศ" : "Air-Con" },
+    { icon: "bi-speedometer2", name: isTh ? "เกจวัดแรงดันกำลังอัดกระบอกสูบ" : "Compression Tester Gauge", desc: isTh ? "Compression Tester" : "Engine Health Analysis", cat: isTh ? "ตรวจเช็กเครื่องยนต์" : "Engine" },
+    { icon: "bi-gear-wide-connected", name: isTh ? "ชุดเครื่องมือตั้งมาร์กสายพานไทม์มิ่ง" : "Timing Tool Alignment Kit", desc: isTh ? "Timing Tool Kit" : "Camshaft & Crankshaft Sync", cat: isTh ? "ระบบสายพาน" : "Timing" },
   ];
 
   // ไอคอนเครื่องมือช่างลอยไปลอยมาในพื้นหลัง (Floating Ambient Tools)
@@ -82,7 +87,11 @@ export default function PromoBannerCarousel({
               }}
             >
               <i className="bi bi-shield-check text-warning"></i>
-              <span>ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์มาตรฐาน</span>
+              <span>
+                {isTh
+                  ? "ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์มาตรฐาน"
+                  : "Professional Automotive Garage Management System"}
+              </span>
             </div>
 
             <h1 className="fw-black text-white display-5 mb-3" style={{ letterSpacing: "-0.5px", lineHeight: 1.25 }}>
@@ -90,7 +99,9 @@ export default function PromoBannerCarousel({
             </h1>
 
             <p className="text-white text-opacity-90 lead mb-4 pe-lg-4" style={{ fontSize: "1.05rem", lineHeight: 1.7, maxWidth: "860px" }}>
-              ควบคุมงานซ่อมบำรุงรถยนต์ ตรวจเช็กระยะตามรอบ เบิกจ่ายอะไหล่แท้ตัดสต็อกแบบเรียลไทม์ คำนวณราคาประเมินค่าแรงมาตรฐาน และออกใบเสร็จรับเงินอย่างเป็นระบบครบวงจร
+              {isTh
+                ? "ควบคุมงานซ่อมบำรุงรถยนต์ ตรวจเช็กระยะตามรอบ เบิกจ่ายอะไหล่แท้ตัดสต็อกแบบเรียลไทม์ คำนวณราคาประเมินค่าแรงมาตรฐาน และออกใบเสร็จรับเงินอย่างเป็นระบบครบวงจร"
+                : "Manage vehicle repairs, scheduled maintenance, real-time parts requisition with inventory deduction, polymorphic labor estimation, and systematic invoicing."}
             </p>
 
             {/* ปุ่มปฏิบัติการหลัก (Action Buttons) */}
@@ -102,7 +113,7 @@ export default function PromoBannerCarousel({
                 style={{ fontSize: "0.95rem" }}
               >
                 <i className="bi bi-calculator-fill fs-5"></i>
-                <span>ประเมินราคาซ่อม &amp; ค่าแรง</span>
+                <span>{isTh ? "ประเมินราคาซ่อม & ค่าแรง" : "Repair Cost & Labor Estimator"}</span>
               </button>
 
               <button
@@ -112,7 +123,7 @@ export default function PromoBannerCarousel({
                 style={{ fontSize: "0.95rem" }}
               >
                 <i className="bi bi-tools fs-5"></i>
-                <span>เปิดใบสั่งซ่อมบำรุง</span>
+                <span>{isTh ? "เปิดใบสั่งซ่อมบำรุง" : "Create Service Job"}</span>
               </button>
 
               <button
@@ -122,7 +133,7 @@ export default function PromoBannerCarousel({
                 style={{ fontSize: "0.95rem" }}
               >
                 <i className="bi bi-box-seam fs-5"></i>
-                <span>คลังเบิกจ่ายอะไหล่</span>
+                <span>{isTh ? "คลังเบิกจ่ายอะไหล่" : "Parts Inventory Hub"}</span>
               </button>
             </div>
           </div>
@@ -136,14 +147,17 @@ export default function PromoBannerCarousel({
                 className="badge rounded-pill fw-bold px-2.5 py-1 small d-flex align-items-center gap-1 text-dark"
                 style={{ background: "var(--theme-accent-gradient)" }}
               >
-                <i className="bi bi-wrench-adjustable-circle-fill text-dark"></i> เครื่องมือช่าง &amp; อุปกรณ์ประจำศูนย์
+                <i className="bi bi-wrench-adjustable-circle-fill text-dark"></i>
+                {isTh ? "เครื่องมือช่าง & อุปกรณ์ประจำศูนย์" : "Workshop Tools & Equipment"}
               </span>
               <span className="text-white text-opacity-75 small d-none d-sm-inline">
-                เครื่องมือมาตรฐานช่างยนต์ตรวจเช็กและซ่อมบำรุงครบวงจร
+                {isTh
+                  ? "เครื่องมือมาตรฐานช่างยนต์ตรวจเช็กและซ่อมบำรุงครบวงจร"
+                  : "Professional automotive diagnostics & maintenance toolset"}
               </span>
             </div>
             <span className="text-white text-opacity-50 small d-none d-md-flex align-items-center gap-1" style={{ fontSize: "0.75rem" }}>
-              <i className="bi bi-cursor-fill text-warning"></i> ชี้เมาส์เพื่อหยุดเลื่อนชั่วคราว
+              <i className="bi bi-cursor-fill text-warning"></i> {isTh ? "ชี้เมาส์เพื่อหยุดเลื่อนชั่วคราว" : "Hover to pause ticker"}
             </span>
           </div>
 
@@ -177,4 +191,3 @@ export default function PromoBannerCarousel({
     </div>
   );
 }
-

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import ProductImage from "./ProductImage";
 
 export default function OrderCatalog({
@@ -12,6 +13,9 @@ export default function OrderCatalog({
   initialCategory = "all",
   activeCategory,
 }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const currentInitialSearch = searchQuery !== undefined ? searchQuery : initialSearch;
   const currentInitialCat = activeCategory || initialCategory || "all";
 
@@ -43,41 +47,41 @@ export default function OrderCatalog({
   }, [initialSearch, searchQuery]);
 
   const bannerLinks = [
-    { id: "all", label: "อะไหล่ทั้งหมดในคลัง", icon: "bi-grid-fill" },
-    { id: "fluids", label: "น้ำมันเครื่อง & ของเหลว", icon: "bi-droplet-half" },
-    { id: "suspension", label: "ช่วงล่าง & ระบบเบรก", icon: "bi-bezier2" },
-    { id: "engine", label: "เครื่องยนต์ & ระบบส่งกำลัง", icon: "bi-gear-wide-connected" },
-    { id: "cooling", label: "ระบบระบายความร้อน & หม้อน้ำ", icon: "bi-fan" },
-    { id: "electrical", label: "ระบบไฟ & แบตเตอรี่", icon: "bi-lightning-charge-fill" },
-    { id: "filters", label: "ไส้กรอง & งานเช็กระยะ", icon: "bi-funnel-fill" },
-    { id: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ", icon: "bi-car-front" },
-    { id: "genuine", label: "อะไหล่แท้ศูนย์ (OEM)", icon: "bi-patch-check-fill" },
-    { id: "tools", label: "เครื่องมือช่าง & อุปกรณ์อู่", icon: "bi-tools" },
+    { id: "all", label: isTh ? "อะไหล่ทั้งหมดในคลัง" : "All Parts", icon: "bi-grid-fill" },
+    { id: "fluids", label: isTh ? "น้ำมันเครื่อง & ของเหลว" : "Fluids & Oils", icon: "bi-droplet-half" },
+    { id: "suspension", label: isTh ? "ช่วงล่าง & ระบบเบรก" : "Suspension & Brakes", icon: "bi-bezier2" },
+    { id: "engine", label: isTh ? "เครื่องยนต์ & ระบบส่งกำลัง" : "Engine & Drivetrain", icon: "bi-gear-wide-connected" },
+    { id: "cooling", label: isTh ? "ระบบระบายความร้อน & หม้อน้ำ" : "Cooling & Radiator", icon: "bi-fan" },
+    { id: "electrical", label: isTh ? "ระบบไฟ & แบตเตอรี่" : "Electrical & Batteries", icon: "bi-lightning-charge-fill" },
+    { id: "filters", label: isTh ? "ไส้กรอง & งานเช็กระยะ" : "Filters & Maintenance", icon: "bi-funnel-fill" },
+    { id: "body", label: isTh ? "ชิ้นส่วนตัวถัง & โคมไฟ" : "Body Parts & Lights", icon: "bi-car-front" },
+    { id: "genuine", label: isTh ? "อะไหล่แท้ศูนย์ (OEM)" : "Genuine OEM Parts", icon: "bi-patch-check-fill" },
+    { id: "tools", label: isTh ? "เครื่องมือช่าง & อุปกรณ์อู่" : "Garage Tools & Equipment", icon: "bi-tools" },
   ];
 
   const sidebarCategories = [
-    { id: "all", label: "อะไหล่ทั้งหมดในคลัง (All Parts)" },
-    { id: "fluids", label: "น้ำมันเครื่อง & ของเหลว (Fluids)" },
-    { id: "suspension", label: "ช่วงล่าง & ระบบเบรก (Brakes & Shocks)" },
-    { id: "engine", label: "เครื่องยนต์ & ส่งกำลัง (Engine & Belts)" },
-    { id: "cooling", label: "ระบบระบายความร้อน (Cooling)" },
-    { id: "electrical", label: "ระบบไฟ & แบตเตอรี่ (Electrical)" },
-    { id: "filters", label: "ไส้กรอง & เช็กระยะ (Maintenance Filters)" },
-    { id: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ (Body & Lights)" },
-    { id: "genuine", label: "อะไหล่แท้ศูนย์ OEM (Genuine Parts)" },
-    { id: "tools", label: "เครื่องมือช่าง & อุปกรณ์งานซ่อม (Garage Tools)" },
+    { id: "all", label: isTh ? "อะไหล่ทั้งหมดในคลัง (All Parts)" : "All Parts in Warehouse" },
+    { id: "fluids", label: isTh ? "น้ำมันเครื่อง & ของเหลว (Fluids)" : "Engine Oil & Fluids" },
+    { id: "suspension", label: isTh ? "ช่วงล่าง & ระบบเบรก (Brakes & Shocks)" : "Brakes, Shocks & Suspension" },
+    { id: "engine", label: isTh ? "เครื่องยนต์ & ส่งกำลัง (Engine & Belts)" : "Engine, Belts & Drivetrain" },
+    { id: "cooling", label: isTh ? "ระบบระบายความร้อน (Cooling)" : "Cooling System & Radiators" },
+    { id: "electrical", label: isTh ? "ระบบไฟ & แบตเตอรี่ (Electrical)" : "Electrical & Batteries" },
+    { id: "filters", label: isTh ? "ไส้กรอง & เช็กระยะ (Maintenance Filters)" : "Maintenance Service Filters" },
+    { id: "body", label: isTh ? "ชิ้นส่วนตัวถัง & โคมไฟ (Body & Lights)" : "Body Panels & Lighting" },
+    { id: "genuine", label: isTh ? "อะไหล่แท้ศูนย์ OEM (Genuine Parts)" : "Genuine OEM Parts" },
+    { id: "tools", label: isTh ? "เครื่องมือช่าง & อุปกรณ์งานซ่อม (Garage Tools)" : "Garage Repair Tools" },
   ];
 
   const brandOptions = [
-    { id: "all", label: "แบรนด์ทั้งหมด" },
+    { id: "all", label: isTh ? "แบรนด์ทั้งหมด" : "All Brands" },
     { id: "TOYOTA", label: "Toyota Genuine" },
     { id: "HONDA", label: "Honda Genuine" },
     { id: "DENSO", label: "Denso" },
-    { id: "BREMBO", label: "Brembo (เบรมโบ้)" },
-    { id: "SHELL", label: "Shell (เชลล์)" },
-    { id: "BOSCH", label: "Bosch (บ๊อช)" },
-    { id: "AISIN", label: "Aisin (ไอชิน)" },
-    { id: "KOYORAD", label: "Koyorad (โคโยแรด)" },
+    { id: "BREMBO", label: "Brembo" },
+    { id: "SHELL", label: "Shell" },
+    { id: "BOSCH", label: "Bosch" },
+    { id: "AISIN", label: "Aisin" },
+    { id: "KOYORAD", label: "Koyorad" },
     { id: "555", label: "555 Three Five" },
     { id: "GATES", label: "Gates PowerGrip" },
     { id: "NSK", label: "NSK Bearings" },
@@ -95,7 +99,7 @@ export default function OrderCatalog({
   ];
 
   const makerOptions = [
-    { id: "all", label: "ยี่ห้อรถ (ทั้งหมด)" },
+    { id: "all", label: isTh ? "ยี่ห้อรถ (ทั้งหมด)" : "All Vehicle Makes" },
     { id: "Toyota", label: "Toyota" },
     { id: "Honda", label: "Honda" },
     { id: "Isuzu", label: "Isuzu" },
@@ -107,7 +111,7 @@ export default function OrderCatalog({
   ];
 
   const modelOptions = [
-    { id: "all", label: "รุ่นรถ (ทั้งหมด)" },
+    { id: "all", label: isTh ? "รุ่นรถ (ทั้งหมด)" : "All Models" },
     { id: "Civic", label: "Civic" },
     { id: "City", label: "City" },
     { id: "Accord", label: "Accord" },
@@ -121,7 +125,7 @@ export default function OrderCatalog({
   ];
 
   const yearOptions = [
-    { id: "all", label: "รุ่นปี (ทั้งหมด)" },
+    { id: "all", label: isTh ? "รุ่นปี (ทั้งหมด)" : "All Model Years" },
     { id: "2024", label: "2024" },
     { id: "2023", label: "2023" },
     { id: "2022", label: "2022" },
@@ -352,11 +356,15 @@ export default function OrderCatalog({
   const handleAdd = (part) => {
     const qty = quantities[part.part_id] || 1;
     if (qty > part.stock_qty) {
-      alert("จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!");
+      alert(isTh ? "จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!" : "Requested quantity exceeds available stock!");
       return;
     }
     onAddToCart(part, qty);
-    setAddedNotice(`เพิ่ม "${part.part_name}" (${qty} ชิ้น) ลงในตะกร้าเรียบร้อยแล้ว!`);
+    setAddedNotice(
+      isTh
+        ? `เพิ่ม "${part.part_name}" (${qty} ชิ้น) ลงในตะกร้าเรียบร้อยแล้ว!`
+        : `Added "${part.part_name}" (${qty} pcs) to cart successfully!`
+    );
     setTimeout(() => setAddedNotice(""), 3500);
   };
 
@@ -369,10 +377,12 @@ export default function OrderCatalog({
             <div>
               <h1 className="shop-charcoal-title mb-1 d-flex align-items-center gap-2">
                 <i className="bi bi-boxes text-warning"></i>
-                <span>คลังเบิก-จ่ายอะไหล่ยานยนต์</span>
+                <span>{isTh ? "คลังเบิก-จ่ายอะไหล่ยานยนต์" : "Automotive Parts Requisition Hub"}</span>
               </h1>
               <p className="text-white opacity-90 small mb-0 fw-medium">
-                ระบบจัดการชิ้นส่วนอะไหล่แท้ห้าง OEM และเทียบเท่า สำหรับงานซ่อมบำรุงในอู่ (Workshop Parts Inventory)
+                {isTh
+                  ? "ระบบจัดการชิ้นส่วนอะไหล่แท้ห้าง OEM และเทียบเท่า สำหรับงานซ่อมบำรุงในอู่ (Workshop Parts Inventory)"
+                  : "OEM genuine and high-grade aftermarket spare parts inventory for garage repair services"}
               </p>
             </div>
 
@@ -382,7 +392,7 @@ export default function OrderCatalog({
               onClick={onGoToCart}
             >
               <i className="bi bi-cart3 fs-6"></i>
-              <span>รายการเบิกอะไหล่ &amp; ตะกร้า</span>
+              <span>{isTh ? "รายการเบิกอะไหล่ & ตะกร้า" : "Parts Requisition Cart"}</span>
             </button>
           </div>
 
@@ -428,7 +438,7 @@ export default function OrderCatalog({
               className="btn btn-garage-unique btn-sm px-3 py-1"
               onClick={onGoToCart}
             >
-              ดูตะกร้าสินค้า <i className="bi bi-arrow-right ms-1"></i>
+              {isTh ? "ดูตะกร้าสินค้า" : "View Cart"} <i className="bi bi-arrow-right ms-1"></i>
             </button>
           </div>
         )}
@@ -440,11 +450,11 @@ export default function OrderCatalog({
             <ol className="breadcrumb mb-0 fw-semibold" style={{ fontSize: "0.95rem" }}>
               <li className="breadcrumb-item">
                 <a href="#" className="text-decoration-none text-muted" onClick={(e) => { e.preventDefault(); setSelectedCategory("all"); setSearch(""); }}>
-                  หน้าแรก
+                  {isTh ? "หน้าแรก" : "Home"}
                 </a>
               </li>
               <li className="breadcrumb-item active text-dark" aria-current="page">
-                คลังเบิก-จ่ายอะไหล่ {selectedCategory !== "all" ? `(${selectedCategory})` : ""}
+                {isTh ? "คลังเบิก-จ่ายอะไหล่" : "Parts Inventory"} {selectedCategory !== "all" ? `(${selectedCategory})` : ""}
               </li>
             </ol>
           </nav>
@@ -453,7 +463,7 @@ export default function OrderCatalog({
           <div className="d-flex align-items-center gap-3 flex-wrap">
             {/* จำนวนสินค้า */}
             <div className="d-flex align-items-center gap-2 small text-muted">
-              <span>แสดงสินค้า :</span>
+              <span>{isTh ? "แสดงสินค้า :" : "Show :"}</span>
               {[9, 12, 18, 24].map((num) => (
                 <button
                   key={num}
@@ -475,7 +485,7 @@ export default function OrderCatalog({
                 type="button"
                 className={`btn btn-sm ${layoutMode === "list" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
                 onClick={() => setLayoutMode("list")}
-                title="มุมมองแบบรายการ (List)"
+                title={isTh ? "มุมมองแบบรายการ (List)" : "List View"}
               >
                 <i className="bi bi-list fs-6"></i>
               </button>
@@ -483,7 +493,7 @@ export default function OrderCatalog({
                 type="button"
                 className={`btn btn-sm ${layoutMode === "grid-3" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
                 onClick={() => setLayoutMode("grid-3")}
-                title="มุมมอง 3 คอลัมน์"
+                title={isTh ? "มุมมอง 3 คอลัมน์" : "3-Column Grid"}
               >
                 <i className="bi bi-grid fs-6"></i>
               </button>
@@ -491,7 +501,7 @@ export default function OrderCatalog({
                 type="button"
                 className={`btn btn-sm ${layoutMode === "grid-4" ? "btn-light fw-bold text-sp-blue" : "btn-link text-muted"} p-1 px-2 border-0`}
                 onClick={() => setLayoutMode("grid-4")}
-                title="มุมมอง 4 คอลัมน์"
+                title={isTh ? "มุมมอง 4 คอลัมน์" : "4-Column Grid"}
               >
                 <i className="bi bi-grid-3x3-gap-fill fs-6"></i>
               </button>
@@ -504,10 +514,10 @@ export default function OrderCatalog({
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
-              <option value="popular">สินค้ายอดนิยม ▾</option>
-              <option value="price-low">ราคา: ต่ำ - สูง</option>
-              <option value="price-high">ราคา: สูง - ต่ำ</option>
-              <option value="stock">สต็อกคงเหลือมากสุด</option>
+              <option value="popular">{isTh ? "สินค้ายอดนิยม ▾" : "Most Popular ▾"}</option>
+              <option value="price-low">{isTh ? "ราคา: ต่ำ - สูง" : "Price: Low - High"}</option>
+              <option value="price-high">{isTh ? "ราคา: สูง - ต่ำ" : "Price: High - Low"}</option>
+              <option value="stock">{isTh ? "สต็อกคงเหลือมากสุด" : "Highest Stock"}</option>
             </select>
           </div>
         </div>
@@ -577,9 +587,9 @@ export default function OrderCatalog({
           <div className="col-12 col-lg-3">
             <div className="shop-sidebar-card mb-4" style={{ position: "relative", zIndex: 1 }}>
               <div className="shop-sidebar-title d-flex align-items-center justify-content-between">
-                <span>หมวดหมู่สินค้า</span>
+                <span>{isTh ? "หมวดหมู่สินค้า" : "Categories"}</span>
                 <span className="badge bg-sp-blue-light text-sp-blue rounded-pill small">
-                  {filteredParts.length} รายการ
+                  {filteredParts.length} {isTh ? "รายการ" : "items"}
                 </span>
               </div>
 
@@ -614,12 +624,14 @@ export default function OrderCatalog({
 
               {/* ช่องค้นหาเพิ่มเติมใน Sidebar */}
               <div className="mt-4 pt-3 border-top">
-                <label className="form-label small fw-bold text-muted mb-2">ค้นหาชื่ออะไหล่ / รหัส</label>
+                <label className="form-label small fw-bold text-muted mb-2">
+                  {isTh ? "ค้นหาชื่ออะไหล่ / รหัส" : "Search Part Name / SKU"}
+                </label>
                 <div className="input-group input-group-sm">
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="พิมพ์ชื่อสินค้า..."
+                    placeholder={isTh ? "พิมพ์ชื่อสินค้า..." : "Type part name..."}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
@@ -647,7 +659,9 @@ export default function OrderCatalog({
                 <div className="d-flex align-items-center gap-2">
                   <i className="bi bi-info-circle-fill text-warning fs-5"></i>
                   <span>
-                    แสดงสินค้าแนะนำที่พร้อมใช้งานในหมวดนี้ <strong>({displayParts.length} รายการ)</strong>
+                    {isTh
+                      ? `แสดงสินค้าแนะนำที่พร้อมใช้งานในหมวดนี้ (${displayParts.length} รายการ)`
+                      : `Showing recommended available parts in this category (${displayParts.length} items)`}
                   </span>
                 </div>
                 <button
@@ -659,7 +673,10 @@ export default function OrderCatalog({
                     setSearch("");
                   }}
                 >
-                  <i className="bi bi-arrow-counterclockwise me-1"></i> ดูสินค้าทั้งหมด ({parts?.length || 0})
+                  <i className="bi bi-arrow-counterclockwise me-1"></i>{" "}
+                  {isTh
+                    ? `ดูสินค้าทั้งหมด (${parts?.length || 0})`
+                    : `View All Items (${parts?.length || 0})`}
                 </button>
               </div>
             )}
@@ -667,8 +684,14 @@ export default function OrderCatalog({
             {displayParts.length === 0 ? (
               <div className="card bg-white border-0 shadow-sm p-5 text-center">
                 <i className="bi bi-search text-muted fs-1 mb-3"></i>
-                <h5 className="fw-bold text-dark">ไม่พบรายการอะไหล่ตามเงื่อนไขที่เลือก</h5>
-                <p className="text-muted small">ลองเปลี่ยนหมวดหมู่หรือคำค้นหาเพื่อค้นหาชิ้นส่วนอื่นในคลัง</p>
+                <h5 className="fw-bold text-dark">
+                  {isTh ? "ไม่พบรายการอะไหล่ตามเงื่อนไขที่เลือก" : "No auto parts found matching your criteria"}
+                </h5>
+                <p className="text-muted small">
+                  {isTh
+                    ? "ลองเปลี่ยนหมวดหมู่หรือคำค้นหาเพื่อค้นหาชิ้นส่วนอื่นในคลัง"
+                    : "Try changing categories or search keywords to find parts in warehouse"}
+                </p>
                 <div>
                   <button
                     className="btn btn-garage-unique btn-sm px-4 py-2 mt-2"
@@ -678,7 +701,7 @@ export default function OrderCatalog({
                       setSearch("");
                     }}
                   >
-                    ล้างตัวกรองทั้งหมด
+                    {isTh ? "ล้างตัวกรองทั้งหมด" : "Clear All Filters"}
                   </button>
                 </div>
               </div>
@@ -700,10 +723,11 @@ export default function OrderCatalog({
                         {/* ป้ายมาตรฐานชิ้นส่วนงานช่าง และสถานะพร้อมเบิกใช้งาน */}
                         <div className="d-flex align-items-center justify-content-between mb-2 position-relative" style={{ zIndex: 2 }}>
                           <span className="badge-oem-spec shadow-sm">
-                            <i className="bi bi-patch-check-fill text-warning"></i> {isOEM ? "แท้ห้าง OEM" : "เกรดพรีเมียม"}
+                            <i className="bi bi-patch-check-fill text-warning"></i>{" "}
+                            {isOEM ? (isTh ? "แท้ห้าง OEM" : "Genuine OEM") : (isTh ? "เกรดพรีเมียม" : "Premium Grade")}
                           </span>
                           <span className="badge-stock-status shadow-sm">
-                            <i className="bi bi-box-seam-fill"></i> สต็อกอู่
+                            <i className="bi bi-box-seam-fill"></i> {isTh ? "สต็อกอู่" : "In Stock"}
                           </span>
                         </div>
 
@@ -726,11 +750,12 @@ export default function OrderCatalog({
                           </span>
                           {part.stock_qty > 5 ? (
                             <span className="text-success small fw-semibold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
-                              <i className="bi bi-check-circle-fill"></i> พร้อมเบิกใช้งาน
+                              <i className="bi bi-check-circle-fill"></i> {isTh ? "พร้อมเบิกใช้งาน" : "Ready for Requisition"}
                             </span>
                           ) : (
                             <span className="text-danger small fw-bold d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
-                              <i className="bi bi-exclamation-circle-fill"></i> เหลือในคลัง {part.stock_qty} ชิ้น
+                              <i className="bi bi-exclamation-circle-fill"></i>{" "}
+                              {isTh ? `เหลือในคลัง ${part.stock_qty} ชิ้น` : `Only ${part.stock_qty} pcs left`}
                             </span>
                           )}
                         </div>
@@ -755,13 +780,15 @@ export default function OrderCatalog({
                         {/* ราคาเบิกอะไหล่มาตรฐานประจำศูนย์ */}
                         <div className="d-flex align-items-baseline justify-content-between mb-3">
                           <div>
-                            <div className="text-muted small" style={{ fontSize: "0.72rem" }}>ราคาเบิก / หน่วย</div>
+                            <div className="text-muted small" style={{ fontSize: "0.72rem" }}>
+                              {isTh ? "ราคาเบิก / หน่วย" : "Unit Price"}
+                            </div>
                             <span className="fw-black text-sp-blue fs-5" style={{ letterSpacing: "-0.5px" }}>
-                              ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 0 })}
+                              ฿{part.price.toLocaleString(isTh ? "th-TH" : "en-US", { minimumFractionDigits: 0 })}
                             </span>
                           </div>
                           <span className="badge bg-light text-secondary border small">
-                            รวมภาษีมูลค่าเพิ่ม
+                            {isTh ? "รวมภาษีมูลค่าเพิ่ม" : "VAT Included"}
                           </span>
                         </div>
 
@@ -801,7 +828,7 @@ export default function OrderCatalog({
                             disabled={part.stock_qty === 0}
                           >
                             <i className="bi bi-cart-plus-fill"></i>
-                            <span>เบิก / ใส่ตะกร้า</span>
+                            <span>{isTh ? "เบิก / ใส่ตะกร้า" : "Add to Cart"}</span>
                           </button>
                         </div>
                       </div>

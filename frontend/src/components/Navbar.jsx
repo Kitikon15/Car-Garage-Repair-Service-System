@@ -49,6 +49,8 @@ export default function Navbar({
   };
 
 
+  const isTh = lang !== "en";
+
   return (
     <header className="sticky-top shadow-sm" style={{ zIndex: 1050 }}>
       {/* 1. แถบประกาศข้อมูลระบบงานอู่ (Garage Operations Top Bar) */}
@@ -56,21 +58,21 @@ export default function Navbar({
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-3">
             <span className="text-white fw-semibold d-flex align-items-center gap-1">
-              <i className="bi bi-wrench-adjustable-circle-fill text-warning"></i> ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ (Car Garage Management)
+              <i className="bi bi-wrench-adjustable-circle-fill text-warning"></i> {isTh ? "ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ (Car Garage Management)" : "Car Garage Repair & Service Management System"}
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light small">
-              <i className="bi bi-calculator-fill text-warning"></i> ประเมินราคาซ่อม &amp; ตัดสต็อกอะไหล่อัตโนมัติ
+              <i className="bi bi-calculator-fill text-warning"></i> {isTh ? "ประเมินราคาซ่อม & ตัดสต็อกอะไหล่อัตโนมัติ" : "Automated Repair Estimation & Stock Deduction"}
             </span>
             <span className="opacity-50">|</span>
             <span className="d-flex align-items-center gap-1 text-light small">
-              <i className="bi bi-shield-check text-success"></i> ช่างผู้เชี่ยวชาญดูแล อะไหล่แท้ 100%
+              <i className="bi bi-shield-check text-success"></i> {isTh ? "ช่างผู้เชี่ยวชาญดูแล อะไหล่แท้ 100%" : "Certified Technicians • 100% Genuine OEM Parts"}
             </span>
           </div>
 
           <div className="d-flex align-items-center gap-2.5 text-light small">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-clock-history text-warning"></i> {lang === "th" ? "เปิดบริการทุกวัน 08:30 - 18:00 น." : "Open Daily 08:30 - 18:00"}
+              <i className="bi bi-clock-history text-warning"></i> {isTh ? "เปิดบริการทุกวัน 08:30 - 18:00 น." : "Open Daily 08:30 - 18:00"}
             </span>
             <span className="opacity-50">|</span>
             <LanguageSwitcher variant="customer" />
@@ -109,7 +111,7 @@ export default function Navbar({
                 </span>
               </div>
               <div className="text-muted" style={{ fontSize: "0.7rem", marginTop: "-2px" }}>
-                ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร
+                {isTh ? "ระบบบริหารจัดการศูนย์บริการและอู่ซ่อมรถยนต์ครบวงจร" : "Comprehensive Automotive Service & Repair Management"}
               </div>
             </div>
           </a>
@@ -139,29 +141,29 @@ export default function Navbar({
                   cursor: "pointer",
                 }}
               >
-                <option value="all">ทุกระบบงานซ่อม &amp; อะไหล่</option>
-                <option value="fluids">ระบบของเหลว &amp; น้ำมันเครื่อง</option>
-                <option value="suspension">ระบบเบรก &amp; ช่วงล่าง</option>
-                <option value="engine">ระบบเครื่องยนต์ &amp; ส่งกำลัง</option>
-                <option value="cooling">ระบบระบายความร้อน &amp; หม้อน้ำ</option>
-                <option value="electrical">ระบบไฟ &amp; แบตเตอรี่</option>
-                <option value="filters">ไส้กรอง &amp; งานเช็กระยะ</option>
-                <option value="body">ชิ้นส่วนตัวถัง &amp; โคมไฟ</option>
-                <option value="genuine">อะไหล่แท้ศูนย์ OEM</option>
-                <option value="tools">เครื่องมือช่าง &amp; อุปกรณ์อู่</option>
+                <option value="all">{isTh ? "ทุกระบบงานซ่อม & อะไหล่" : "All Systems & Parts"}</option>
+                <option value="fluids">{isTh ? "ระบบของเหลว & น้ำมันเครื่อง" : "Fluids & Engine Oils"}</option>
+                <option value="suspension">{isTh ? "ระบบเบรก & ช่วงล่าง" : "Brakes & Suspension"}</option>
+                <option value="engine">{isTh ? "ระบบเครื่องยนต์ & ส่งกำลัง" : "Engine & Transmission"}</option>
+                <option value="cooling">{isTh ? "ระบบระบายความร้อน & หม้อน้ำ" : "Cooling & Radiators"}</option>
+                <option value="electrical">{isTh ? "ระบบไฟ & แบตเตอรี่" : "Electrical & Batteries"}</option>
+                <option value="filters">{isTh ? "ไส้กรอง & งานเช็กระยะ" : "Filters & Maintenance"}</option>
+                <option value="body">{isTh ? "ชิ้นส่วนตัวถัง & โคมไฟ" : "Body Parts & Lighting"}</option>
+                <option value="genuine">{isTh ? "อะไหล่แท้ศูนย์ OEM" : "Genuine OEM Parts"}</option>
+                <option value="tools">{isTh ? "เครื่องมือช่าง & อุปกรณ์อู่" : "Mechanic Tools & Equipment"}</option>
               </select>
 
               <input
                 type="text"
                 className="sp-search-input"
-                placeholder="ค้นหา รหัสอะไหล่, ชื่อสินค้า, แบรนด์ หรือรุ่นรถ..."
+                placeholder={isTh ? "ค้นหา รหัสอะไหล่, ชื่อสินค้า, แบรนด์ หรือรุ่นรถ..." : "Search part SKU, name, brand or car model..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
               />
 
               <button type="submit" className="sp-search-btn">
                 <i className="bi bi-search"></i>
-                <span className="d-none d-sm-inline">ค้นหา</span>
+                <span className="d-none d-sm-inline">{isTh ? "ค้นหา" : "Search"}</span>
               </button>
             </form>
           </div>
@@ -174,20 +176,20 @@ export default function Navbar({
               onClick={() => {
                 if (setActiveTab) setActiveTab("jobs");
               }}
-              title="เปิดใบสั่งซ่อม / ประเมินราคา"
+              title={isTh ? "เปิดใบสั่งซ่อม / ประเมินราคา" : "Create Repair Job / Estimate Cost"}
             >
               <i className="bi bi-tools"></i>
-              <span className="d-none d-xl-inline">ใบสั่งซ่อม</span>
+              <span className="d-none d-xl-inline">{isTh ? "ใบสั่งซ่อม" : "Repair Job"}</span>
             </button>
 
             {/* ปุ่มลงทะเบียนรถ/ลูกค้า */}
             <button
               className="btn btn-outline-sp-primary btn-sm d-flex align-items-center gap-1 py-1.5 px-3 rounded-pill"
               onClick={onOpenRegister}
-              title="ลงทะเบียนรถยนต์ / เจ้าของ"
+              title={isTh ? "ลงทะเบียนรถยนต์ / เจ้าของ" : "Register Vehicle / Customer"}
             >
               <i className="bi bi-person-plus-fill fs-6"></i>
-              <span className="d-none d-lg-inline">ลงทะเบียนรถ/ลูกค้า</span>
+              <span className="d-none d-lg-inline">{isTh ? "ลงทะเบียนรถ/ลูกค้า" : "Register Car/Client"}</span>
             </button>
 
             {/* ปุ่มรายการเบิกอะไหล่ (Cart) */}
@@ -202,7 +204,7 @@ export default function Navbar({
               onClick={() => {
                 if (setActiveTab) setActiveTab("cart");
               }}
-              title="ดูรายการเบิกอะไหล่"
+              title={isTh ? "ดูรายการเบิกอะไหล่" : "View Parts Requisition Cart"}
             >
               <div className="position-relative">
                 <i className="bi bi-cart3 fs-5"></i>
@@ -216,7 +218,7 @@ export default function Navbar({
                 )}
               </div>
               <div className="text-start d-none d-sm-block">
-                <div className="small fw-semibold" style={{ fontSize: "0.72rem", lineHeight: "1" }}>รายการเบิก</div>
+                <div className="small fw-semibold" style={{ fontSize: "0.72rem", lineHeight: "1" }}>{isTh ? "รายการเบิก" : "Parts Cart"}</div>
                 <div className="fw-bold" style={{ fontSize: "0.85rem", lineHeight: "1.2" }}>
                   ฿{cartTotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
                 </div>
@@ -226,7 +228,7 @@ export default function Navbar({
             {/* Server Online Badge */}
             <span
               className={`badge ${apiOnline ? "bg-success" : "bg-danger"} p-2 rounded-circle`}
-              title={apiOnline ? "เซิร์ฟเวอร์ออนไลน์" : "เซิร์ฟเวอร์ออฟไลน์"}
+              title={apiOnline ? (isTh ? "เซิร์ฟเวอร์ออนไลน์" : "Server Online") : (isTh ? "เซิร์ฟเวอร์ออฟไลน์" : "Server Offline")}
             >
               <i className={`bi ${apiOnline ? "bi-check" : "bi-x"} text-white`}></i>
             </span>

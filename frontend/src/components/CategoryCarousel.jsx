@@ -1,49 +1,52 @@
 "use client";
 
 import { useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function CategoryCarousel({ onSelectCategory }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
   const scrollContainerRef = useRef(null);
 
   const categories = [
     {
       id: "fluids",
-      title: "น้ำมันเครื่องและของเหลว",
+      title: isTh ? "น้ำมันเครื่องและของเหลว" : "Engine Oil & Fluids",
       image: "/images/categories/cat_fluids.png",
     },
     {
       id: "suspension",
-      title: "ช่วงล่างและระบบเบรก",
+      title: isTh ? "ช่วงล่างและระบบเบรก" : "Suspension & Brakes",
       image: "/images/categories/cat_suspension.png",
     },
     {
       id: "cooling",
-      title: "ระบบระบายความร้อน",
+      title: isTh ? "ระบบระบายความร้อน" : "Cooling System",
       image: "/images/categories/cat_cooling.png",
     },
     {
       id: "engine",
-      title: "ระบบเครื่องยนต์และส่งกำลัง",
+      title: isTh ? "ระบบเครื่องยนต์และส่งกำลัง" : "Engine & Drivetrain",
       image: "/images/categories/cat_engine.png",
     },
     {
       id: "filters",
-      title: "ไส้กรองและงานเช็กระยะ",
+      title: isTh ? "ไส้กรองและงานเช็กระยะ" : "Maintenance Filters",
       image: "/images/categories/cat_care.png",
     },
     {
       id: "electrical",
-      title: "ระบบไฟและแบตเตอรี่",
+      title: isTh ? "ระบบไฟและแบตเตอรี่" : "Electrical & Batteries",
       image: "/images/categories/cat_tools.png",
     },
     {
       id: "body",
-      title: "ชิ้นส่วนตัวถังและโคมไฟ",
+      title: isTh ? "ชิ้นส่วนตัวถังและโคมไฟ" : "Body Parts & Lights",
       image: "/images/categories/cat_body.png",
     },
     {
       id: "tools",
-      title: "เครื่องมือช่างและเคมีภัณฑ์",
+      title: isTh ? "เครื่องมือช่างและเคมีภัณฑ์" : "Garage Tools & Chemicals",
       image: "/images/categories/cat_tools.png",
     },
   ];
@@ -67,9 +70,11 @@ export default function CategoryCarousel({ onSelectCategory }) {
         <div>
           <h5 className="fw-bold mb-0 text-sp-blue d-flex align-items-center gap-2">
             <i className="bi bi-grid-fill"></i>
-            <span>หมวดหมู่สินค้า</span>
+            <span>{isTh ? "หมวดหมู่สินค้า" : "Product Categories"}</span>
           </h5>
-          <small className="text-muted">เลือกหมวดหมู่ชิ้นส่วนยานยนต์ที่ต้องการค้นหา</small>
+          <small className="text-muted">
+            {isTh ? "เลือกหมวดหมู่ชิ้นส่วนยานยนต์ที่ต้องการค้นหา" : "Browse auto parts by mechanical category"}
+          </small>
         </div>
 
         {/* ปุ่มเลื่อนซ้าย / ขวา */}
@@ -79,7 +84,7 @@ export default function CategoryCarousel({ onSelectCategory }) {
             className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm"
             style={{ width: "36px", height: "36px" }}
             onClick={scrollLeft}
-            title="เลื่อนซ้าย"
+            title={isTh ? "เลื่อนซ้าย" : "Scroll left"}
             aria-label="Scroll categories left"
           >
             <i className="bi bi-chevron-left"></i>
@@ -89,7 +94,7 @@ export default function CategoryCarousel({ onSelectCategory }) {
             className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm"
             style={{ width: "36px", height: "36px" }}
             onClick={scrollRight}
-            title="เลื่อนขวา"
+            title={isTh ? "เลื่อนขวา" : "Scroll right"}
             aria-label="Scroll categories right"
           >
             <i className="bi bi-chevron-right"></i>

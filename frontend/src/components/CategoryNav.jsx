@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import MegaMenu, { megaMenuData } from "./MegaMenu";
 
 export default function CategoryNav({
@@ -9,17 +10,20 @@ export default function CategoryNav({
   onGoToJobs,
   onGoToVehicleSearch,
 }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [activeMegaCategory, setActiveMegaCategory] = useState(null);
   const navContainerRef = useRef(null);
 
   const categories = [
-    { key: "fluids", label: "น้ำมันเครื่อง & ของเหลว" },
-    { key: "suspension", label: "ช่วงล่าง & ระบบเบรก" },
-    { key: "engine", label: "เครื่องยนต์ & ส่งกำลัง" },
-    { key: "cooling", label: "ระบบระบายความร้อน" },
-    { key: "body", label: "ชิ้นส่วนตัวถัง & โคมไฟ" },
-    { key: "care", label: "เคมีภัณฑ์ & การบำรุงรักษา" },
-    { key: "paint", label: "สี & ตัวถังยานยนต์" },
+    { key: "fluids", label: isTh ? "น้ำมันเครื่อง & ของเหลว" : "Engine Oil & Fluids" },
+    { key: "suspension", label: isTh ? "ช่วงล่าง & ระบบเบรก" : "Suspension & Brakes" },
+    { key: "engine", label: isTh ? "เครื่องยนต์ & ส่งกำลัง" : "Engine & Drivetrain" },
+    { key: "cooling", label: isTh ? "ระบบระบายความร้อน" : "Cooling System" },
+    { key: "body", label: isTh ? "ชิ้นส่วนตัวถัง & โคมไฟ" : "Body Parts & Lights" },
+    { key: "care", label: isTh ? "เคมีภัณฑ์ & การบำรุงรักษา" : "Care & Maintenance" },
+    { key: "paint", label: isTh ? "สี & ตัวถังยานยนต์" : "Automotive Paint & Body" },
   ];
 
   // สลับเปิด/ปิด เมนูเมื่อคลิกเท่านั้น (Click to open/toggle)

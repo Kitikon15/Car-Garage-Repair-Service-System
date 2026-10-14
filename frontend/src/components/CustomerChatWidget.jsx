@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST-001" }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [isOpen, setIsOpen] = useState(false);
   const [conversationId, setConversationId] = useState(defaultConversation);
   const [customerName, setCustomerName] = useState("Alex Morgan");
@@ -66,15 +70,13 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
         fetchMessages();
       }
     } catch (err) {
-      alert("ส่งข้อความไม่สำเร็จ: " + err.message);
+      alert((isTh ? "ส่งข้อความไม่สำเร็จ: " : "Failed to send message: ") + err.message);
     }
   };
 
-  const sampleInquiries = [
-    "สอบถามอะไหล่แท้ตรงรุ่น 🚗",
-    "ประเมินราคาซ่อมเบื้องต้น 📋",
-    "ปรึกษาอาการเบรกเสียงดัง 🛠️",
-  ];
+  const sampleInquiries = isTh
+    ? ["สอบถามอะไหล่แท้ตรงรุ่น 🚗", "ประเมินราคาซ่อมเบื้องต้น 📋", "ปรึกษาอาการเบรกเสียงดัง 🛠️"]
+    : ["OEM parts inquiry 🚗", "Initial repair estimate 📋", "Squeaking brake noise 🛠️"];
 
   return (
     <aside
@@ -113,7 +115,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
                 </div>
                 <div className="small text-white text-opacity-80 d-flex align-items-center gap-1" style={{ fontSize: "0.72rem" }}>
                   <span className="badge bg-success rounded-circle p-1" style={{ width: "7px", height: "7px" }}> </span>
-                  <span>ช่างเทคนิค &amp; แอดมินออนไลน์</span>
+                  <span>{isTh ? "ช่างเทคนิค & แอดมินออนไลน์" : "Technicians & Admins Online"}</span>
                 </div>
               </div>
             </div>
@@ -122,13 +124,13 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
               type="button"
               className="btn-close btn-close-white"
               onClick={() => setIsOpen(false)}
-              title="ปิดหน้าต่างแชท"
+              title={isTh ? "ปิดหน้าต่างแชท" : "Close chat window"}
             ></button>
           </div>
 
           {/* แถบเลือกลูกค้าสำหรับทดสอบแชท */}
           <div className="px-3 py-1.5 bg-light border-bottom d-flex align-items-center justify-content-between" style={{ fontSize: "0.76rem" }}>
-            <span className="text-muted fw-bold">สนทนาในชื่อ:</span>
+            <span className="text-muted fw-bold">{isTh ? "สนทนาในชื่อ:" : "Chat as:"}</span>
             <select
               className="form-select form-select-sm py-0 px-2"
               style={{ fontSize: "0.75rem", width: "180px" }}
@@ -139,13 +141,13 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
                 if (val === "CUST-001") setCustomerName("Alex Morgan");
                 else if (val === "CUST-002") setCustomerName("Samantha Hayes");
                 else if (val === "CUST-003") setCustomerName("David Kim");
-                else setCustomerName("ลูกค้าทั่วไป");
+                else setCustomerName(isTh ? "ลูกค้าทั่วไป" : "Guest Customer");
               }}
             >
               <option value="CUST-001">Alex Morgan (Camry)</option>
               <option value="CUST-002">Samantha Hayes (Civic)</option>
               <option value="CUST-003">David Kim (F-150)</option>
-              <option value="CUST-GUEST">ลูกค้าทั่วไป (Guest)</option>
+              <option value="CUST-GUEST">{isTh ? "ลูกค้าทั่วไป (Guest)" : "Guest Customer"}</option>
             </select>
           </div>
 
@@ -158,8 +160,12 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
             {messages.length === 0 ? (
               <div className="text-center py-4 text-muted">
                 <i className="bi bi-chat-quote fs-2 text-primary opacity-50 mb-1"></i>
-                <div className="fw-bold small">ยินดีต้อนรับสู่ศูนย์บริการ CarGarage</div>
-                <div style={{ fontSize: "0.75rem" }}>พิมพ์ข้อความเพื่อสอบถามอะไหล่หรือขอรับคำปรึกษาได้ทันที</div>
+                <div className="fw-bold small">{isTh ? "ยินดีต้อนรับสู่ศูนย์บริการ CarGarage" : "Welcome to CarGarage Support"}</div>
+                <div style={{ fontSize: "0.75rem" }}>
+                  {isTh
+                    ? "พิมพ์ข้อความเพื่อสอบถามอะไหล่หรือขอรับคำปรึกษาได้ทันที"
+                    : "Type a message below to inquire about parts or ask for advice."}
+                </div>
               </div>
             ) : (
               messages.map((m, idx) => {
@@ -182,7 +188,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
                     >
                       <div className="d-flex align-items-center gap-1 mb-0.5">
                         <span className="fw-bold" style={{ fontSize: "0.7rem", opacity: 0.85 }}>
-                          {isCustomer ? "คุณ" : "👨‍🔧 ช่างศูนย์ CarGarage"}
+                          {isCustomer ? (isTh ? "คุณ" : "You") : (isTh ? "👨‍🔧 ช่างศูนย์ CarGarage" : "👨‍🔧 CarGarage Tech")}
                         </span>
                         <span className="ms-auto" style={{ fontSize: "0.65rem", opacity: 0.75 }}>
                           {m.timestamp}
@@ -223,7 +229,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
               <input
                 type="text"
                 className="form-control form-control-sm rounded-pill px-3"
-                placeholder="พิมพ์ข้อความสอบถามที่นี่..."
+                placeholder={isTh ? "พิมพ์ข้อความสอบถามที่นี่..." : "Type your message here..."}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
               />
@@ -231,7 +237,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
                 type="submit"
                 className="btn btn-sp-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
                 style={{ width: "34px", height: "34px" }}
-                title="ส่งข้อความ"
+                title={isTh ? "ส่งข้อความ" : "Send message"}
               >
                 <i className="bi bi-send-fill" style={{ fontSize: "0.8rem" }}></i>
               </button>
@@ -250,7 +256,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
           >
             <span className="badge bg-success rounded-circle p-1" style={{ width: "8px", height: "8px" }}> </span>
             <span className="fw-bold text-dark" style={{ fontSize: "0.82rem" }}>
-              แชทปรึกษาช่างอู่ &amp; แอดมิน
+              {isTh ? "แชทปรึกษาช่างอู่ & แอดมิน" : "Live Mechanic & Admin Chat"}
             </span>
           </div>
         )}
@@ -267,7 +273,7 @@ export default function CustomerChatWidget({ apiUrl, defaultConversation = "CUST
             transition: "transform 0.2s ease",
           }}
           onClick={() => setIsOpen(!isOpen)}
-          title="เปิด/ปิด แชทสดกับช่างอู่"
+          title={isTh ? "เปิด/ปิด แชทสดกับช่างอู่" : "Toggle Live Mechanic Chat"}
         >
           <i className={`bi ${isOpen ? "bi-x-lg" : "bi-chat-dots-fill"} fs-4`}></i>
           {unreadCount > 0 && !isOpen && (

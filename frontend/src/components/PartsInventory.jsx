@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import ProductImage from "./ProductImage";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = false }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [restockingId, setRestockingId] = useState(null);
   const [restockQty, setRestockQty] = useState(5);
   const [showAddPartModal, setShowAddPartModal] = useState(false);
@@ -27,13 +31,13 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.detail || "ไม่สามารถเติมสต็อกได้");
+        throw new Error(err.detail || (isTh ? "ไม่สามารถเติมสต็อกได้" : "Failed to restock"));
       }
       setRestockingId(null);
       setRestockQty(5);
       onRefresh();
     } catch (err) {
-      alert(`การเติมสต็อกผิดพลาด: ${err.message}`);
+      alert(isTh ? `การเติมสต็อกผิดพลาด: ${err.message}` : `Restock error: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -57,7 +61,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.detail || "ไม่สามารถเพิ่มอะไหล่ได้");
+        throw new Error(err.detail || (isTh ? "ไม่สามารถเพิ่มอะไหล่ได้" : "Failed to add part"));
       }
       setShowAddPartModal(false);
       setNewPart({ part_id: "", part_name: "", price: "", stock_qty: "" });
@@ -75,10 +79,12 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
         <div>
           <h5 className="card-title mb-0 fw-bold d-flex align-items-center gap-2">
             <i className="bi bi-boxes text-primary"></i>
-            <span>คลังอะไหล่และอุปกรณ์ (Parts Inventory)</span>
+            <span>{isTh ? "คลังอะไหล่และอุปกรณ์ (Parts Inventory)" : "Parts & Supplies Inventory"}</span>
           </h5>
           <small className="text-muted">
-            รายการอะไหล่แท้และอุปกรณ์ซ่อมบำรุงพร้อมใช้งานในระบบ ({parts?.length || 0} รายการ)
+            {isTh
+              ? `รายการอะไหล่แท้และอุปกรณ์ซ่อมบำรุงพร้อมใช้งานในระบบ (${parts?.length || 0} รายการ)`
+              : `Genuine replacement parts and supplies available in system (${parts?.length || 0} items)`}
           </small>
         </div>
         {isAdmin && (
@@ -87,7 +93,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
             onClick={() => setShowAddPartModal(true)}
           >
             <i className="bi bi-plus-circle"></i>
-            <span>เพิ่มอะไหล่</span>
+            <span>{isTh ? "เพิ่มอะไหล่" : "Add Part"}</span>
           </button>
         )}
       </div>
@@ -96,19 +102,19 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
         <table className="table table-hover align-middle mb-0">
           <thead className="table-light">
             <tr>
-              <th scope="col" className="ps-3">รหัส SKU</th>
-              <th scope="col">รายการอะไหล่</th>
-              <th scope="col" className="text-end">ราคา/ชิ้น</th>
-              <th scope="col" className="text-center">คงเหลือ</th>
-              <th scope="col" className="text-center">สถานะ</th>
-              {isAdmin && <th scope="col" className="text-end pe-3">จัดการสต็อก</th>}
+              <th scope="col" className="ps-3">{isTh ? "รหัส SKU" : "SKU"}</th>
+              <th scope="col">{isTh ? "รายการอะไหล่" : "Part Details"}</th>
+              <th scope="col" className="text-end">{isTh ? "ราคา/ชิ้น" : "Unit Price"}</th>
+              <th scope="col" className="text-center">{isTh ? "คงเหลือ" : "In Stock"}</th>
+              <th scope="col" className="text-center">{isTh ? "สถานะ" : "Status"}</th>
+              {isAdmin && <th scope="col" className="text-end pe-3">{isTh ? "จัดการสต็อก" : "Manage Stock"}</th>}
             </tr>
           </thead>
           <tbody>
             {parts?.length === 0 ? (
               <tr>
                 <td colSpan={isAdmin ? 6 : 5} className="text-center py-4 text-muted">
-                  ยังไม่มีรายการอะไหล่ในคลัง
+                  {isTh ? "ยังไม่มีรายการอะไหล่ในคลัง" : "No parts in inventory"}
                 </td>
               </tr>
             ) : (
@@ -130,18 +136,18 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                       <span className={`fw-bold ${isOut ? "text-danger" : isLow ? "text-warning" : "text-dark"}`}>
                         {p.stock_qty}
                       </span>{" "}
-                      <span className="text-muted small">ชิ้น</span>
+                      <span className="text-muted small">{isTh ? "ชิ้น" : "pcs"}</span>
                     </td>
                     <td className="text-center">
                       {isOut ? (
-                        <span className="badge bg-danger">สินค้าหมด</span>
+                        <span className="badge bg-danger">{isTh ? "สินค้าหมด" : "Out of Stock"}</span>
                       ) : isLow ? (
                         <span className="badge bg-warning text-dark">
-                          <i className="bi bi-exclamation-triangle-fill me-1"></i> สต็อกใกล้หมด
+                          <i className="bi bi-exclamation-triangle-fill me-1"></i> {isTh ? "สต็อกใกล้หมด" : "Low Stock"}
                         </span>
                       ) : (
                         <span className="badge bg-success-subtle text-success border border-success-subtle">
-                          พร้อมใช้งาน
+                          {isTh ? "พร้อมใช้งาน" : "In Stock"}
                         </span>
                       )}
                     </td>
@@ -161,14 +167,14 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                               className="btn btn-sm btn-success"
                               onClick={() => handleRestock(p.part_id)}
                               disabled={loading}
-                              title="ยืนยันการเติมสต็อก"
+                              title={isTh ? "ยืนยันการเติมสต็อก" : "Confirm restock"}
                             >
                               <i className="bi bi-check-lg"></i>
                             </button>
                             <button
                               className="btn btn-sm btn-outline-secondary"
                               onClick={() => setRestockingId(null)}
-                              title="ยกเลิก"
+                              title={isTh ? "ยกเลิก" : "Cancel"}
                             >
                               <i className="bi bi-x-lg"></i>
                             </button>
@@ -176,13 +182,13 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                         ) : (
                           <button
                             className="btn btn-sm btn-outline-secondary"
-                            title="เติมจำนวนสต็อกอะไหล่"
+                            title={isTh ? "เติมจำนวนสต็อกอะไหล่" : "Restock parts"}
                             onClick={() => {
                               setRestockingId(p.part_id);
                               setRestockQty(5);
                             }}
                           >
-                            <i className="bi bi-plus-square me-1"></i> เติมสต็อก
+                            <i className="bi bi-plus-square me-1"></i> {isTh ? "เติมสต็อก" : "Restock"}
                           </button>
                         )}
                       </td>
@@ -204,7 +210,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                 <div className="modal-header">
                   <h5 className="modal-title fw-bold">
                     <i className="bi bi-plus-circle text-primary me-2"></i>
-                    เพิ่มรายการอะไหล่เข้าคลัง
+                    {isTh ? "เพิ่มรายการอะไหล่เข้าคลัง" : "Add Part to Inventory"}
                   </h5>
                   <button
                     type="button"
@@ -217,22 +223,22 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                     <div className="alert alert-danger py-2 small">{errorMsg}</div>
                   )}
                   <div className="mb-3">
-                    <label className="form-label small fw-semibold">รหัส SKU อะไหล่</label>
+                    <label className="form-label small fw-semibold">{isTh ? "รหัส SKU อะไหล่" : "Part SKU Code"}</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="เช่น PART-010"
+                      placeholder={isTh ? "เช่น PART-010" : "e.g. PART-010"}
                       required
                       value={newPart.part_id}
                       onChange={(e) => setNewPart({ ...newPart, part_id: e.target.value })}
                     />
                   </div>
                   <div className="mb-3">
-                    <label className="form-label small fw-semibold">ชื่ออะไหล่ / อุปกรณ์</label>
+                    <label className="form-label small fw-semibold">{isTh ? "ชื่ออะไหล่ / อุปกรณ์" : "Part Name / Description"}</label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="เช่น ฝาหม้อน้ำ 1.1 Bar"
+                      placeholder={isTh ? "เช่น ฝาหม้อน้ำ 1.1 Bar" : "e.g. Radiator Cap 1.1 Bar"}
                       required
                       value={newPart.part_name}
                       onChange={(e) => setNewPart({ ...newPart, part_name: e.target.value })}
@@ -240,7 +246,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                   </div>
                   <div className="row g-2 mb-3">
                     <div className="col-6">
-                      <label className="form-label small fw-semibold">ราคาต่อหน่วย (฿)</label>
+                      <label className="form-label small fw-semibold">{isTh ? "ราคาต่อหน่วย (฿)" : "Unit Price (฿)"}</label>
                       <input
                         type="number"
                         step="0.01"
@@ -253,7 +259,7 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                       />
                     </div>
                     <div className="col-6">
-                      <label className="form-label small fw-semibold">จำนวนเริ่มต้น</label>
+                      <label className="form-label small fw-semibold">{isTh ? "จำนวนเริ่มต้น" : "Initial Quantity"}</label>
                       <input
                         type="number"
                         min="0"
@@ -272,10 +278,10 @@ export default function PartsInventory({ parts, onRefresh, apiUrl, isAdmin = fal
                     className="btn btn-secondary"
                     onClick={() => setShowAddPartModal(false)}
                   >
-                    ยกเลิก
+                    {isTh ? "ยกเลิก" : "Cancel"}
                   </button>
                   <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? "กำลังบันทึก..." : "บันทึกอะไหล่"}
+                    {loading ? (isTh ? "กำลังบันทึก..." : "Saving...") : (isTh ? "บันทึกอะไหล่" : "Save Part")}
                   </button>
                 </div>
               </form>

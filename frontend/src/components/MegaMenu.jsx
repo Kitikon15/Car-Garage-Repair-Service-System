@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export const megaMenuData = {
   fluids: {
@@ -353,6 +354,105 @@ const categoryDescriptions = {
   care: "แชมพูล้างรถ เคลือบแก้ว น้ำยาทำความสะอาดภายใน และอุปกรณ์คาร์แคร์",
 };
 
+const categoryDescriptionsEn = {
+  fluids: "Fully synthetic engine oil, transmission fluid, coolant, and international standard lubricants.",
+  body: "Headlights, tail lights, bumpers, side mirrors, and OEM-spec body panels fitting 100%.",
+  suspension: "Brembo/TRW brake systems, shock absorbers, coil springs, ball joints, and control arms.",
+  cooling: "Radiators, electric cooling fans, thermostats, and complete engine cooling components.",
+  engine: "Spark plugs, belts, filters, cylinder gaskets, and powertrain components.",
+  paint: "Automotive spray paints, body filler putty, polishing compounds, and bodywork repair tools.",
+  care: "Car wash shampoos, ceramic coatings, interior cleaners, and professional car care supplies.",
+};
+
+const categoryNamesEn = {
+  fluids: "Engine Oil & Fluids",
+  body: "Body Parts & Lights",
+  suspension: "Suspension & Brakes",
+  cooling: "Cooling System",
+  engine: "Engine & Drivetrain",
+  paint: "Automotive Paint & Body",
+  care: "Care & Maintenance",
+};
+
+const labelTranslationMap = {
+  "น้ำมันเครื่อง": "Engine Oil",
+  "น้ำมันเครื่องเบนซิน": "Gasoline Engine Oil",
+  "น้ำมันเครื่องดีเซล": "Diesel Engine Oil",
+  "น้ำมันเครื่องมอเตอร์ไซค์": "Motorcycle Engine Oil",
+  "น้ำมันเกียร์": "Transmission Fluid",
+  "น้ำมันเกียร์อัตโนมัติทั่วไป": "Automatic Transmission Fluid (ATF)",
+  "น้ำมันเกียร์อัตโนมัติ CVT": "CVT Transmission Fluid",
+  "น้ำมันเกียร์ธรรมดา": "Manual Transmission Fluid (MTF)",
+  "น้ำยาหล่อเย็นหม้อน้ำ": "Radiator Coolant",
+  "น้ำยาแอร์": "A/C Refrigerant",
+  "น้ำมันเบรก": "Brake Fluid",
+  "น้ำมันพวงมาลัยพาวเวอร์": "Power Steering Fluid",
+  "น้ำยาล้างหัวฉีด": "Fuel Injector Cleaner",
+  "น้ำมันเฟืองท้าย": "Differential Gear Oil",
+  "น้ำยาล้างคาร์บูเรเตอร์": "Carburetor Cleaner",
+  "น้ำมันไฮดรอลิค": "Hydraulic Fluid",
+  "ฟลัชชิ่งออยล์": "Flushing Oil",
+  "ไฟและระบบส่องสว่าง": "Lighting & Lamps",
+  "ไฟหน้ารถยนต์": "Car Headlights",
+  "ไฟท้าย": "Tail Lights",
+  "ไฟตัดหมอก": "Fog Lights",
+  "ไฟเลี้ยวและไฟส่องป้าย": "Turn Signals & Plate Lamps",
+  "กระจกและอุปกรณ์": "Mirrors & Glass",
+  "กระจกมองข้างไฟฟ้า": "Power Side Mirrors",
+  "เลนส์กระจกมองข้าง": "Side Mirror Glass",
+  "กระจกบังลมหน้า": "Front Windshield",
+  "ชิ้นส่วนตัวถังภายนอก": "Exterior Body Parts",
+  "กันชนหน้า / กันชนหลัง": "Front / Rear Bumpers",
+  "หน้ากระจังรถยนต์": "Front Grille",
+  "ฝากระโปรงหน้า": "Front Hood / Bonnet",
+  "แก้มบังโคลนหน้า-หลัง": "Front / Rear Fenders",
+  "ระบบกันสะเทือน": "Suspension System",
+  "โช้คอัพหน้า-หลัง": "Front / Rear Shock Absorbers",
+  "สปริงโหลดและสปริงเดิม": "Coil Springs",
+  "ลูกหมากปีกนกและคันชัก": "Ball Joints & Tie Rods",
+  "ยางแท่นเครื่องและแท่นเกียร์": "Engine & Transmission Mounts",
+  "ระบบเบรก": "Braking System",
+  "ผ้าเบรกหน้า-หลัง": "Front / Rear Brake Pads",
+  "จานเบรกมาตรฐานและแต่ง": "Brake Rotors / Discs",
+  "ก้ามเบรกหลัง (ดรัมเบรก)": "Rear Drum Brake Shoes",
+  "แม่ปั๊มเบรกและกระบอกเบรก": "Brake Master Cylinders",
+  "สายอ่อนเบรก": "Brake Lines & Hoses",
+  "ระบบสายพานและไทม์มิ่ง": "Belts & Timing",
+  "สายพานไทม์มิ่ง": "Timing Belts",
+  "สายพานหน้าเครื่อง (พัดลม/ได)": "Serpentine Accessory Belts",
+  "ลูกรอกสายพาน": "Belt Tensioner Pulleys",
+  "ระบบจุดระเบิด": "Ignition System",
+  "หัวเทียนมาตรฐาน / อิริเดียม": "Spark Plugs (Standard/Iridium)",
+  "คอยล์จุดระเบิด": "Ignition Coils",
+  "ปั๊มน้ำหล่อเย็นเครื่องยนต์": "Engine Water Pumps",
+  "ปะเก็นฝาสูบและชุดซีล": "Head Gaskets & Oil Seals",
+  "หม้อน้ำและพัดลม": "Radiators & Fans",
+  "หม้อน้ำรถยนต์": "Engine Radiators",
+  "พัดลมหม้อน้ำและพัดลมแอร์": "Radiator & Condenser Fans",
+  "ฝาหม้อน้ำแรงดัน": "Radiator Pressure Caps",
+  "ระบบควบคุมอุณหภูมิ": "Thermostat System",
+  "วาล์วน้ำ": "Engine Thermostats",
+  "ท่อยางหม้อน้ำบน-ล่าง": "Radiator Upper/Lower Hoses",
+  "ปั๊มน้ำรถยนต์": "Water Pumps",
+  "ผลิตภัณฑ์ทำความสะอาดภายนอก": "Exterior Detailing",
+  "แชมพูล้างรถผสมแว็กซ์": "Car Wash Shampoo & Wax",
+  "น้ำยาเคลือบสีและเซรามิก": "Color Wax & Ceramic Coatings",
+  "ดินน้ำมันลูบผิวสี": "Detailing Clay Bars",
+  "เคมีภัณฑ์บำรุงรักษาเชิงกล": "Maintenance Chemicals",
+  "น้ำยาทำความสะอาดเบรก": "Brake Cleaner Spray",
+  "น้ำยาฉีดล้างลิ้นปีกผีเสื้อ": "Throttle Body Cleaner",
+  "สเปรย์หล่อลื่นอเนกประสงค์": "Multi-Purpose Lubricant Spray",
+  "จารบีทนความร้อนสูง": "High-Temp Bearing Grease",
+  "สีพ่นและสีสเปรย์ตัวถัง": "Automotive Paints & Sprays",
+  "สีสเปรย์พ่นรถยนต์มาตรฐาน": "Standard Automotive Spray Paint",
+  "สีสเปรย์รองพื้นกันสนิม": "Anti-Rust Primer Spray",
+  "แลกเกอร์เคลือบเงา 2K": "2K Clear Coat Lacquer",
+  "งานโป๊วและขัดสี": "Putty & Polishing",
+  "สีโป๊วตัวถังรถยนต์": "Auto Body Putty / Filler",
+  "ยาขัดหยาบและขัดละเอียด": "Rubbing & Polishing Compounds",
+  "กระดาษทรายน้ำสำหรับงานสี": "Wet Sandpaper for Auto Paint",
+};
+
 export default function MegaMenu({
   activeCategoryKey,
   onClose,
@@ -361,7 +461,11 @@ export default function MegaMenu({
   onGoToJobs,
   onGoToVehicleSearch,
 }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
   const modalRef = useRef(null);
+
+  const getLabel = (thaiText) => (isTh ? thaiText : (labelTranslationMap[thaiText] || thaiText));
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -376,6 +480,8 @@ export default function MegaMenu({
   }
 
   const category = megaMenuData[activeCategoryKey];
+  const catName = isTh ? category.name : (categoryNamesEn[category.id] || category.name);
+  const catDesc = isTh ? (categoryDescriptions[category.id] || "ศูนย์รวมอะไหล่รถยนต์คุณภาพสูง คัดสรรเฉพาะแบรนด์มาตรฐาน") : (categoryDescriptionsEn[category.id] || "High quality automotive replacement parts and genuine OEM components");
 
   return (
     <>
@@ -425,14 +531,14 @@ export default function MegaMenu({
             <div>
               <div className="d-flex align-items-center gap-2">
                 <h5 className="fw-black text-dark mb-0" style={{ letterSpacing: "-0.3px" }}>
-                  {category.name}
+                  {catName}
                 </h5>
                 <span className="badge ms-1 small fw-bold text-dark" style={{ fontSize: "0.68rem", background: "var(--theme-accent-gradient)" }}>
-                  อะไหล่แท้ 100%
+                  {isTh ? "อะไหล่แท้ 100%" : "100% Genuine OEM"}
                 </span>
               </div>
               <p className="text-muted mb-0 small" style={{ fontSize: "0.82rem" }}>
-                {categoryDescriptions[category.id] || "ศูนย์รวมอะไหล่รถยนต์คุณภาพสูง คัดสรรเฉพาะแบรนด์มาตรฐาน"}
+                {catDesc}
               </p>
             </div>
           </div>
@@ -446,10 +552,10 @@ export default function MegaMenu({
                 onSelectItem && onSelectItem("", category.id);
                 onClose();
               }}
-              title="ดูสินค้าทั้งหมดในหมวดนี้"
+              title={isTh ? "ดูสินค้าทั้งหมดในหมวดนี้" : "View all items in this category"}
             >
               <i className="bi bi-box-seam-fill"></i>
-              <span>ดูสินค้าทั้งหมดในหมวดนี้</span>
+              <span>{isTh ? "ดูสินค้าทั้งหมดในหมวดนี้" : "View All In Category"}</span>
               <i className="bi bi-arrow-right ms-1"></i>
             </button>
 
@@ -458,7 +564,7 @@ export default function MegaMenu({
               className="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
               style={{ width: "34px", height: "34px" }}
               onClick={onClose}
-              title="ปิดหน้าต่างเมนู"
+              title={isTh ? "ปิดหน้าต่างเมนู" : "Close Menu"}
             >
               <i className="bi bi-x-lg"></i>
             </button>
@@ -483,7 +589,7 @@ export default function MegaMenu({
                     >
                       <span className="d-flex align-items-center gap-2">
                         <i className="bi bi-record-circle text-primary small"></i>
-                        <span>{group.title}</span>
+                        <span>{getLabel(group.title)}</span>
                       </span>
                       <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
                     </button>
@@ -498,7 +604,7 @@ export default function MegaMenu({
                           className="fw-bold text-dark mb-0"
                           style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
                         >
-                          {group.title}
+                          {getLabel(group.title)}
                         </h6>
                       </div>
                       <div className="d-flex flex-column gap-1 ps-1">
@@ -514,7 +620,7 @@ export default function MegaMenu({
                           >
                             <span className="d-flex align-items-center gap-2">
                               <i className="bi bi-chevron-right text-primary opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
-                              <span>{item.label}</span>
+                              <span>{getLabel(item.label)}</span>
                             </span>
                             <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
                           </button>
@@ -539,7 +645,7 @@ export default function MegaMenu({
                     className="fw-bold text-dark mb-0"
                     style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
                   >
-                    ผลิตภัณฑ์เฉพาะระบบและการดูแล
+                    {isTh ? "ผลิตภัณฑ์เฉพาะระบบและการดูแล" : "System Products & Maintenance"}
                   </h6>
                 </div>
               )}
@@ -557,7 +663,7 @@ export default function MegaMenu({
                     >
                       <span className="d-flex align-items-center gap-2">
                         <i className="bi bi-record-circle text-primary small"></i>
-                        <span>{group.title}</span>
+                        <span>{getLabel(group.title)}</span>
                       </span>
                       <i className="bi bi-chevron-right small text-muted mega-arrow"></i>
                     </button>
@@ -572,7 +678,7 @@ export default function MegaMenu({
                           className="fw-bold text-dark mb-0"
                           style={{ fontSize: "0.96rem", letterSpacing: "-0.2px" }}
                         >
-                          {group.title}
+                          {getLabel(group.title)}
                         </h6>
                       </div>
                       <div className="d-flex flex-column gap-1 ps-1">
@@ -588,7 +694,7 @@ export default function MegaMenu({
                           >
                             <span className="d-flex align-items-center gap-2">
                               <i className="bi bi-chevron-right text-primary opacity-50 small" style={{ fontSize: "0.7rem" }}></i>
-                              <span>{item.label}</span>
+                              <span>{getLabel(item.label)}</span>
                             </span>
                             <i className="bi bi-arrow-up-right small text-muted opacity-0 mega-arrow" style={{ fontSize: "0.75rem" }}></i>
                           </button>
@@ -600,7 +706,7 @@ export default function MegaMenu({
               ))}
             </div>
 
-            {/* คอลัมน์ที่ 3: ศูนย์บริการและงานช่างประจำอู่ ServiceGarage (แทนที่แบรนด์สินค้า) */}
+            {/* คอลัมน์ที่ 3: ศูนย์บริการและงานช่างประจำอู่ ServiceGarage */}
             <div className="col-12 col-md-4 ps-md-4">
               <div
                 className="p-3 rounded-4 shadow-sm"
@@ -619,7 +725,7 @@ export default function MegaMenu({
                     </div>
                     <div>
                       <span className="fw-black text-dark" style={{ fontSize: "0.95rem" }}>
-                        บริการงานช่าง &amp; อู่ซ่อม
+                        {isTh ? "บริการงานช่าง & อู่ซ่อม" : "Garage & Technical Services"}
                       </span>
                     </div>
                   </div>
@@ -629,26 +735,31 @@ export default function MegaMenu({
                 </div>
 
                 <p className="text-muted small mb-3" style={{ fontSize: "0.82rem", lineHeight: "1.5" }}>
-                  มีบริการตรวจเช็กสภาพและเปลี่ยนอะไหล่โดยช่างผู้เชี่ยวชาญ พร้อมระบบประเมินราคาซ่อมและค่าแรงมาตรฐาน
+                  {isTh
+                    ? "มีบริการตรวจเช็กสภาพและเปลี่ยนอะไหล่โดยช่างผู้เชี่ยวชาญ พร้อมระบบประเมินราคาซ่อมและค่าแรงมาตรฐาน"
+                    : "Expert technician inspection and parts replacement with standardized repair estimation and labor costs."}
                 </p>
 
                 <div className="d-flex flex-column gap-2 mb-3">
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>ออกใบสั่งซ่อมทันที:</strong> แยกงานซ่อมบำรุงและรายการเช็กระยะชัดเจน
+                      <strong>{isTh ? "ออกใบสั่งซ่อมทันที:" : "Instant Repair Orders:"}</strong>{" "}
+                      {isTh ? "แยกงานซ่อมบำรุงและรายการเช็กระยะชัดเจน" : "Clear separation of maintenance and repair items"}
                     </span>
                   </div>
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>ตัดสต็อกอัตโนมัติ:</strong> อัปเดตยอดคงเหลือคลังอะไหล่แบบ Real-time
+                      <strong>{isTh ? "ตัดสต็อกอัตโนมัติ:" : "Auto Stock Deduction:"}</strong>{" "}
+                      {isTh ? "อัปเดตยอดคงเหลือคลังอะไหล่แบบ Real-time" : "Real-time warehouse inventory synchronization"}
                     </span>
                   </div>
                   <div className="d-flex align-items-start gap-2 small">
                     <i className="bi bi-check-circle-fill text-success mt-1"></i>
                     <span className="text-dark">
-                      <strong>คำนวณภาษี &amp; ส่วนลด:</strong> ราคาสุทธิมาตรฐาน ออกใบเสร็จรับเงินถูกต้อง
+                      <strong>{isTh ? "คำนวณภาษี & ส่วนลด:" : "Tax & Discount Calculator:"}</strong>{" "}
+                      {isTh ? "ราคาสุทธิมาตรฐาน ออกใบเสร็จรับเงินถูกต้อง" : "Standardized net pricing and official invoices"}
                     </span>
                   </div>
                 </div>
@@ -663,7 +774,7 @@ export default function MegaMenu({
                     }}
                   >
                     <i className="bi bi-calculator-fill me-1"></i>
-                    <span>ประเมินราคาซ่อม &amp; ค่าแรงทันที</span>
+                    <span>{isTh ? "ประเมินราคาซ่อม & ค่าแรงทันที" : "Instant Repair & Labor Estimator"}</span>
                   </button>
 
                   <button
@@ -675,7 +786,7 @@ export default function MegaMenu({
                     }}
                   >
                     <i className="bi bi-car-front-fill me-1"></i>
-                    <span>ค้นหาอะไหล่ตามรุ่นรถยนต์</span>
+                    <span>{isTh ? "ค้นหาอะไหล่ตามรุ่นรถยนต์" : "Search Parts by Vehicle Model"}</span>
                   </button>
                 </div>
               </div>
@@ -693,20 +804,24 @@ export default function MegaMenu({
         >
           <div className="d-flex flex-wrap align-items-center gap-3 text-muted">
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-tools text-primary"></i> บริการซ่อมบำรุงและติดตั้ง ณ ศูนย์ ServiceGarage
+              <i className="bi bi-tools text-primary"></i>{" "}
+              {isTh ? "บริการซ่อมบำรุงและติดตั้ง ณ ศูนย์ ServiceGarage" : "Maintenance & installation at ServiceGarage Centers"}
             </span>
             <span className="opacity-50 d-none d-sm-inline">•</span>
             <span className="d-flex align-items-center gap-1">
-              <i className="bi bi-shield-check text-primary"></i> รับประกันคุณภาพอะไหล่แท้ทุกชิ้นงาน
+              <i className="bi bi-shield-check text-primary"></i>{" "}
+              {isTh ? "รับประกันคุณภาพอะไหล่แท้ทุกชิ้นงาน" : "100% Genuine OEM Quality Warranty"}
             </span>
             <span className="opacity-50 d-none d-md-inline">•</span>
             <span className="d-flex align-items-center gap-1 d-none d-md-inline-flex">
-              <i className="bi bi-receipt text-success"></i> ออกใบสั่งซ่อมและใบแจ้งหนี้อัตโนมัติ
+              <i className="bi bi-receipt text-success"></i>{" "}
+              {isTh ? "ออกใบสั่งซ่อมและใบแจ้งหนี้อัตโนมัติ" : "Automated Repair Orders & Official Invoices"}
             </span>
           </div>
 
           <div className="small text-muted fw-semibold mt-1 mt-sm-0">
-            <i className="bi bi-info-circle text-warning me-1"></i> คลิกเลือกหมวดหมู่เพื่อค้นหาอะไหล่
+            <i className="bi bi-info-circle text-warning me-1"></i>{" "}
+            {isTh ? "คลิกเลือกหมวดหมู่เพื่อค้นหาอะไหล่" : "Select category to browse parts"}
           </div>
         </div>
       </div>

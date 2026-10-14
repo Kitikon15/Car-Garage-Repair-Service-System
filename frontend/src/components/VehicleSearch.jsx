@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import ProductImage from "./ProductImage";
 
 export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart, initialBrand = "Toyota" }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [selectedBrand, setSelectedBrand] = useState(initialBrand || "Toyota");
   const [selectedModel, setSelectedModel] = useState("Camry");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -30,12 +34,12 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
   }, [initialBrand]);
 
   const categories = [
-    { id: "all", label: "ทุกระบบอะไหล่" },
-    { id: "engine", label: "น้ำมันเครื่อง & ของเหลว" },
-    { id: "brake", label: "ระบบเบรก & จานเบรก" },
-    { id: "filter", label: "ไส้กรองน้ำมัน & กรองอากาศ" },
-    { id: "battery", label: "แบตเตอรี่ & ระบบสตาร์ต" },
-    { id: "suspension", label: "ช่วงล่าง & โช้คอัพ" },
+    { id: "all", label: isTh ? "ทุกระบบอะไหล่" : "All Part Categories" },
+    { id: "engine", label: isTh ? "น้ำมันเครื่อง & ของเหลว" : "Engine Oil & Fluids" },
+    { id: "brake", label: isTh ? "ระบบเบรก & จานเบรก" : "Brakes & Rotors" },
+    { id: "filter", label: isTh ? "ไส้กรองน้ำมัน & กรองอากาศ" : "Oil & Air Filters" },
+    { id: "battery", label: isTh ? "แบตเตอรี่ & ระบบสตาร์ต" : "Batteries & Starting System" },
+    { id: "suspension", label: isTh ? "ช่วงล่าง & โช้คอัพ" : "Suspension & Shocks" },
   ];
 
   // คัดกรองอะไหล่ที่ตรงรุ่นกับรถที่เลือก
@@ -78,11 +82,15 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
   const handleAdd = (part) => {
     const qty = quantities[part.part_id] || 1;
     if (qty > part.stock_qty) {
-      alert("จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!");
+      alert(isTh ? "จำนวนที่ต้องการสั่งเกินจำนวนคงเหลือในคลัง!" : "Requested quantity exceeds available stock!");
       return;
     }
     onAddToCart(part, qty);
-    setNotice(`เพิ่ม "${part.part_name}" (${qty} ชิ้น) สำหรับ ${selectedBrand} ${selectedModel} ลงตะกร้าแล้ว!`);
+    setNotice(
+      isTh
+        ? `เพิ่ม "${part.part_name}" (${qty} ชิ้น) สำหรับ ${selectedBrand} ${selectedModel} ลงตะกร้าแล้ว!`
+        : `Added "${part.part_name}" (${qty} pcs) for ${selectedBrand} ${selectedModel} to cart!`
+    );
     setQuantities({ ...quantities, [part.part_id]: 1 });
     setTimeout(() => setNotice(""), 3500);
   };
@@ -99,11 +107,17 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
         >
           <div className="d-flex align-items-center gap-2 mb-2">
             <span className="badge bg-warning text-sp-blue fw-bold px-2 py-1">VEHICLE MATCHER</span>
-            <span className="badge bg-light text-sp-blue small">ระบบค้นหาอะไหล่ตรงรุ่น</span>
+            <span className="badge bg-light text-sp-blue small">
+              {isTh ? "ระบบค้นหาอะไหล่ตรงรุ่น" : "Exact Fit Part Matcher"}
+            </span>
           </div>
-          <h3 className="fw-black mb-1">ค้นหาอะไหล่รถยนต์ตามยี่ห้อและรุ่นรถ</h3>
+          <h3 className="fw-black mb-1">
+            {isTh ? "ค้นหาอะไหล่รถยนต์ตามยี่ห้อและรุ่นรถ" : "Find Auto Parts by Vehicle Make & Model"}
+          </h3>
           <p className="text-light opacity-90 small mb-0">
-            เลือกรุ่นรถของคุณ ระบบจะคัดกรองเฉพาะอะไหล่แท้และอะไหล่ทดแทน OEM ที่เข้ากันได้ 100%
+            {isTh
+              ? "เลือกรุ่นรถของคุณ ระบบจะคัดกรองเฉพาะอะไหล่แท้และอะไหล่ทดแทน OEM ที่เข้ากันได้ 100%"
+              : "Select your vehicle model. Our system filters 100% compatible genuine OEM and certified replacement parts."}
           </p>
         </div>
 
@@ -113,7 +127,8 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
             {/* 1. ยี่ห้อรถ */}
             <div className="col-12 col-md-4">
               <label className="form-label fw-bold text-dark small mb-1">
-                <i className="bi bi-car-front-fill text-sp-blue me-1"></i> 1. ยี่ห้อรถยนต์ (Brand)
+                <i className="bi bi-car-front-fill text-sp-blue me-1"></i>{" "}
+                {isTh ? "1. ยี่ห้อรถยนต์ (Brand)" : "1. Vehicle Make (Brand)"}
               </label>
               <select
                 className="form-select"
@@ -134,7 +149,8 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
             {/* 2. รุ่นรถ */}
             <div className="col-12 col-md-4">
               <label className="form-label fw-bold text-dark small mb-1">
-                <i className="bi bi-tag-fill text-sp-blue me-1"></i> 2. รุ่นรถยนต์ (Model)
+                <i className="bi bi-tag-fill text-sp-blue me-1"></i>{" "}
+                {isTh ? "2. รุ่นรถยนต์ (Model)" : "2. Vehicle Model"}
               </label>
               <select
                 className="form-select"
@@ -152,7 +168,8 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
             {/* 3. หมวดหมู่อะไหล่ */}
             <div className="col-12 col-md-4">
               <label className="form-label fw-bold text-dark small mb-1">
-                <i className="bi bi-gear-fill text-sp-blue me-1"></i> 3. ระบบอะไหล่ที่ต้องการ
+                <i className="bi bi-gear-fill text-sp-blue me-1"></i>{" "}
+                {isTh ? "3. ระบบอะไหล่ที่ต้องการ" : "3. Mechanical Category"}
               </label>
               <select
                 className="form-select"
@@ -172,7 +189,8 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
           {vehicles && vehicles.length > 0 && (
             <div className="d-flex flex-wrap align-items-center gap-2 mt-3 pt-3 border-top">
               <span className="small text-muted fw-bold">
-                <i className="bi bi-bookmark-check-fill text-success me-1"></i> เลือกรถที่ลงทะเบียนไว้ในอู่:
+                <i className="bi bi-bookmark-check-fill text-success me-1"></i>{" "}
+                {isTh ? "เลือกรถที่ลงทะเบียนไว้ในอู่:" : "Select your registered vehicle:"}
               </span>
               {vehicles.map((v) => (
                 <button
@@ -206,7 +224,7 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
             <span>{notice}</span>
           </div>
           <button type="button" className="btn btn-sm btn-sp-primary" onClick={onGoToCart}>
-            <i className="bi bi-cart3 me-1"></i> ไปที่ตะกร้าสินค้า
+            <i className="bi bi-cart3 me-1"></i> {isTh ? "ไปที่ตะกร้าสินค้า" : "Go to Cart"}
           </button>
         </div>
       )}
@@ -216,9 +234,12 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
         <h5 className="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
           <i className="bi bi-check2-circle text-success fs-4"></i>
           <span>
-            รายการอะไหล่ที่เข้ากันได้กับ: <span className="text-sp-blue">{selectedBrand} {selectedModel}</span>
+            {isTh ? "รายการอะไหล่ที่เข้ากันได้กับ:" : "Compatible Auto Parts for:"}{" "}
+            <span className="text-sp-blue">{selectedBrand} {selectedModel}</span>
           </span>
-          <span className="badge bg-secondary ms-2">{matchedParts.length} รายการ</span>
+          <span className="badge bg-secondary ms-2">
+            {matchedParts.length} {isTh ? "รายการ" : "items"}
+          </span>
         </h5>
       </div>
 
@@ -226,8 +247,14 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
         {matchedParts.length === 0 ? (
           <div className="col-12 text-center py-5 bg-white rounded-3 shadow-sm">
             <i className="bi bi-search fs-1 text-muted d-block mb-2"></i>
-            <h5 className="fw-bold">ไม่พบอะไหล่ตรงรุ่นในหมวดหมู่นี้</h5>
-            <p className="text-muted small">กรุณาเลือกหมวดหมู่อะไหล่เป็น &quot;ทุกระบบอะไหล่&quot; เพื่อดูสินค้าทั้งหมด</p>
+            <h5 className="fw-bold">
+              {isTh ? "ไม่พบอะไหล่ตรงรุ่นในหมวดหมู่นี้" : "No exact-fit parts found in this category"}
+            </h5>
+            <p className="text-muted small">
+              {isTh
+                ? "กรุณาเลือกหมวดหมู่อะไหล่เป็น \"ทุกระบบอะไหล่\" เพื่อดูสินค้าทั้งหมด"
+                : "Please select \"All Part Categories\" to view all compatible items."}
+            </p>
           </div>
         ) : (
           matchedParts.map((part) => {
@@ -242,7 +269,7 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
                       {part.part_id}
                     </span>
                     <span className="badge bg-success-subtle text-success border border-success-subtle">
-                      <i className="bi bi-check-circle me-1"></i> ตรงรุ่น 100%
+                      <i className="bi bi-check-circle me-1"></i> {isTh ? "ตรงรุ่น 100%" : "100% Exact Fit"}
                     </span>
                   </div>
 
@@ -259,14 +286,14 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
 
                   <div className="d-flex align-items-baseline justify-content-between my-2">
                     <div className="fs-4 fw-bold text-sp-blue">
-                      ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
+                      ฿{part.price.toLocaleString(isTh ? "th-TH" : "en-US", { minimumFractionDigits: 2 })}
                     </div>
                     <div>
                       {isOutOfStock ? (
-                        <span className="badge bg-danger">สินค้าหมด</span>
+                        <span className="badge bg-danger">{isTh ? "สินค้าหมด" : "Out of Stock"}</span>
                       ) : (
                         <span className="badge bg-light text-muted border">
-                          คงเหลือ {part.stock_qty} ชิ้น
+                          {isTh ? `คงเหลือ ${part.stock_qty} ชิ้น` : `Stock: ${part.stock_qty} pcs`}
                         </span>
                       )}
                     </div>
@@ -304,12 +331,12 @@ export default function VehicleSearch({ parts, vehicles, onAddToCart, onGoToCart
                           onClick={() => handleAdd(part)}
                         >
                           <i className="bi bi-cart-plus"></i>
-                          <span>ใส่ตะกร้า</span>
+                          <span>{isTh ? "ใส่ตะกร้า" : "Add to Cart"}</span>
                         </button>
                       </>
                     ) : (
                       <button className="btn btn-secondary btn-sm w-100" disabled>
-                        สินค้าหมด
+                        {isTh ? "สินค้าหมด" : "Out of Stock"}
                       </button>
                     )}
                   </div>

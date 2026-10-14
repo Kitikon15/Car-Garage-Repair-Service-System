@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "./context/LanguageContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import StatsCards from "./components/StatsCards";
@@ -21,6 +22,9 @@ import CustomerChatWidget from "./components/CustomerChatWidget";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export default function Dashboard() {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   // เมนูแท็บ: 'dashboard' | 'vehicleSearch' | 'order' | 'parts' | 'jobs' | 'contact' | 'cart'
   const [activeTab, setActiveTab] = useState("dashboard");
   // โหมดการทำงานในหน้างานซ่อม: 'estimator' (ฟังชั่นประเมินราคา) | 'form' | 'invoices'
@@ -268,7 +272,9 @@ export default function Dashboard() {
   // เมื่องานบริการถูกสร้างสำเร็จ
   const handleJobCreated = (result) => {
     setLastCreatedMessage(
-      `สร้างใบสั่งซ่อม #${result.job?.job_id} (${result.job?.job_type === "REPAIR" ? "งานซ่อมทั่วไป" : "งานบำรุงรักษาตามระยะ"}) สำเร็จ! ยอดรวมสุทธิ: ฿${result.calculated_cost.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`
+      isTh
+        ? `สร้างใบสั่งซ่อม #${result.job?.job_id} (${result.job?.job_type === "REPAIR" ? "งานซ่อมทั่วไป" : "งานบำรุงรักษาตามระยะ"}) สำเร็จ! ยอดรวมสุทธิ: ฿${result.calculated_cost.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`
+        : `Service Job #${result.job?.job_id} (${result.job?.job_type === "REPAIR" ? "General Repair" : "Periodic Maintenance"}) created successfully! Net Total: ฿${result.calculated_cost.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
     );
     if (result.invoice) {
       setActiveInvoice(result.invoice);
@@ -374,8 +380,12 @@ export default function Dashboard() {
                     <i className="bi bi-shield-check"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">อะไหล่แท้มาตรฐาน OEM</h6>
-                    <small className="text-muted">คัดสรรตรงรุ่น พร้อมใบรับประกัน</small>
+                    <h6 className="fw-bold mb-0 text-dark">
+                      {isTh ? "อะไหล่แท้มาตรฐาน OEM" : "OEM Standard Parts"}
+                    </h6>
+                    <small className="text-muted">
+                      {isTh ? "คัดสรรตรงรุ่น พร้อมใบรับประกัน" : "Model-matched with full warranty"}
+                    </small>
                   </div>
                 </div>
               </div>
@@ -386,8 +396,12 @@ export default function Dashboard() {
                     <i className="bi bi-speedometer2"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">บริการด่วน ทันใจ</h6>
-                    <small className="text-muted">ตรวจเช็กแม่นยำ ส่งมอบตรงเวลา</small>
+                    <h6 className="fw-bold mb-0 text-dark">
+                      {isTh ? "บริการด่วน ทันใจ" : "Fast & Express Service"}
+                    </h6>
+                    <small className="text-muted">
+                      {isTh ? "ตรวจเช็กแม่นยำ ส่งมอบตรงเวลา" : "Accurate diagnostics & on-time delivery"}
+                    </small>
                   </div>
                 </div>
               </div>
@@ -398,8 +412,12 @@ export default function Dashboard() {
                     <i className="bi bi-receipt-cutoff"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">ราคาโปร่งใส มาตรฐาน</h6>
-                    <small className="text-muted">คำนวณค่าแรงและอะไหล่แม่นยำ</small>
+                    <h6 className="fw-bold mb-0 text-dark">
+                      {isTh ? "ราคาโปร่งใส มาตรฐาน" : "Transparent Pricing"}
+                    </h6>
+                    <small className="text-muted">
+                      {isTh ? "คำนวณค่าแรงและอะไหล่แม่นยำ" : "Accurate labor & itemized part pricing"}
+                    </small>
                   </div>
                 </div>
               </div>
@@ -410,8 +428,12 @@ export default function Dashboard() {
                     <i className="bi bi-person-gear"></i>
                   </div>
                   <div>
-                    <h6 className="fw-bold mb-0 text-dark">ช่างผู้เชี่ยวชาญดูแล</h6>
-                    <small className="text-muted">พร้อมเครื่องมือวิเคราะห์ครบครัน</small>
+                    <h6 className="fw-bold mb-0 text-dark">
+                      {isTh ? "ช่างผู้เชี่ยวชาญดูแล" : "Certified Technicians"}
+                    </h6>
+                    <small className="text-muted">
+                      {isTh ? "พร้อมเครื่องมือวิเคราะห์ครบครัน" : "Equipped with advanced diagnostic tools"}
+                    </small>
                   </div>
                 </div>
               </div>
@@ -427,15 +449,26 @@ export default function Dashboard() {
                 <div>
                   <h5 className="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
                     <i className="bi bi-box-seam text-danger"></i>
-                    <span>อะไหล่พร้อมใช้งานสำหรับงานบริการ (Service Replacement Parts)</span>
+                    <span>
+                      {isTh
+                        ? "อะไหล่พร้อมใช้งานสำหรับงานบริการ (Service Replacement Parts)"
+                        : "Ready-to-Use Service Replacement Parts"}
+                    </span>
                   </h5>
-                  <small className="text-muted">อะไหล่แท้มาตรฐาน OEM พร้อมเบิกจ่ายเข้าใบสั่งซ่อมบำรุงทันที</small>
+                  <small className="text-muted">
+                    {isTh
+                      ? "อะไหล่แท้มาตรฐาน OEM พร้อมเบิกจ่ายเข้าใบสั่งซ่อมบำรุงทันที"
+                      : "OEM certified components ready for immediate service order requisition"}
+                  </small>
                 </div>
                 <button
                   className="btn btn-outline-sp-primary btn-sm rounded-pill fw-semibold"
                   onClick={() => setActiveTab("order")}
                 >
-                  ดูคลังอะไหล่ทั้งหมด ({parts?.length} รายการ) <i className="bi bi-arrow-right ms-1"></i>
+                  {isTh
+                    ? `ดูคลังอะไหล่ทั้งหมด (${parts?.length} รายการ)`
+                    : `View All Inventory (${parts?.length} items)`}{" "}
+                  <i className="bi bi-arrow-right ms-1"></i>
                 </button>
               </div>
 
@@ -450,7 +483,7 @@ export default function Dashboard() {
                               {part.part_id}
                             </span>
                             <span className={`badge ${part.stock_qty > 5 ? "bg-success bg-opacity-25 text-success border border-success border-opacity-50" : "bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50"} small`}>
-                              สต็อก {part.stock_qty} ชิ้น
+                              {isTh ? `สต็อก ${part.stock_qty} ชิ้น` : `Stock: ${part.stock_qty} pcs`}
                             </span>
                           </div>
 
@@ -480,9 +513,9 @@ export default function Dashboard() {
                         <div className="mt-auto pt-2 border-top">
                           <div className="d-flex align-items-baseline justify-content-between mb-3">
                             <div className="fs-5 fw-bold text-danger">
-                              ฿{part.price.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
+                              ฿{part.price.toLocaleString(isTh ? "th-TH" : "en-US", { minimumFractionDigits: 2 })}
                             </div>
-                            <span className="text-muted small">ราคาต่อหน่วย</span>
+                            <span className="text-muted small">{isTh ? "ราคาต่อหน่วย" : "Unit Price"}</span>
                           </div>
 
                           <button
@@ -490,7 +523,7 @@ export default function Dashboard() {
                             onClick={() => handleAddToCart(part, 1)}
                           >
                             <i className="bi bi-cart-plus"></i>
-                            <span>เบิกอะไหล่รายการนี้</span>
+                            <span>{isTh ? "เบิกอะไหล่รายการนี้" : "Requisition This Part"}</span>
                           </button>
                         </div>
                       </div>
@@ -572,10 +605,16 @@ export default function Dashboard() {
                 <div>
                   <h4 className="fw-bold mb-1 text-sp-blue d-flex align-items-center gap-2">
                     <i className="bi bi-wrench-adjustable-circle"></i>
-                    <span>บริการงานซ่อมและใบเสร็จ (Service Jobs &amp; Invoices)</span>
+                    <span>
+                      {isTh
+                        ? "บริการงานซ่อมและใบเสร็จ (Service Jobs & Invoices)"
+                        : "Service Jobs & Billing Invoices"}
+                    </span>
                   </h4>
                   <p className="text-muted small mb-0">
-                    ระบบประเมินราคาค่าซ่อมและอะไหล่มาตรฐาน พร้อมออกใบสั่งซ่อมและใบเสร็จรับเงิน
+                    {isTh
+                      ? "ระบบประเมินราคาค่าซ่อมและอะไหล่มาตรฐาน พร้อมออกใบสั่งซ่อมและใบเสร็จรับเงิน"
+                      : "Standard repair cost estimator, itemized service orders, and automated invoice issuance."}
                   </p>
                 </div>
 
@@ -589,7 +628,8 @@ export default function Dashboard() {
                     }`}
                     onClick={() => setJobsSubTab("estimator")}
                   >
-                    <i className="bi bi-calculator-fill me-1 text-warning"></i> ฟังชั่นประเมินราคา
+                    <i className="bi bi-calculator-fill me-1 text-warning"></i>
+                    {isTh ? "ฟังชั่นประเมินราคา" : "Cost Estimator"}
                   </button>
                   <button
                     type="button"
@@ -600,7 +640,8 @@ export default function Dashboard() {
                     }`}
                     onClick={() => setJobsSubTab("form")}
                   >
-                    <i className="bi bi-file-earmark-plus-fill me-1"></i> เปิดใบสั่งซ่อมด่วน
+                    <i className="bi bi-file-earmark-plus-fill me-1"></i>
+                    {isTh ? "เปิดใบสั่งซ่อมด่วน" : "Quick Service Job"}
                   </button>
                   <button
                     type="button"
@@ -611,7 +652,10 @@ export default function Dashboard() {
                     }`}
                     onClick={() => setJobsSubTab("invoices")}
                   >
-                    <i className="bi bi-receipt me-1"></i> รายการใบเสร็จ ({invoices?.length})
+                    <i className="bi bi-receipt me-1"></i>
+                    {isTh
+                      ? `รายการใบเสร็จ (${invoices?.length})`
+                      : `Invoices (${invoices?.length})`}
                   </button>
                 </div>
               </div>

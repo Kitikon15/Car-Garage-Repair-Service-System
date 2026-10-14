@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ProductImage from "./ProductImage";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function CartView({
   cart,
@@ -12,6 +13,9 @@ export default function CartView({
   apiUrl,
   onOrderCompleted,
 }) {
+  const { lang } = useLanguage ? useLanguage() : { lang: "th" };
+  const isTh = lang !== "en";
+
   const [checkoutName, setCheckoutName] = useState("");
   const [checkoutPhone, setCheckoutPhone] = useState("");
   const [checkoutAddress, setCheckoutAddress] = useState("");
@@ -34,13 +38,13 @@ export default function CartView({
     if (couponCode.trim().toUpperCase() === "GARAGE35" || couponCode.trim().toUpperCase() === "SERVICE35") {
       setCouponDiscount(subtotal * 0.35);
       setCouponApplied(true);
-      alert("ใช้งานโค้ดส่วนลด 35% พิเศษสำหรับอู่ซ่อมรถสำเร็จ!");
+      alert(isTh ? "ใช้งานโค้ดส่วนลด 35% พิเศษสำหรับอู่ซ่อมรถสำเร็จ!" : "Garage 35% discount code applied successfully!");
     } else if (couponCode.trim().toUpperCase() === "VIP500") {
       setCouponDiscount(500);
       setCouponApplied(true);
-      alert("ใช้งานโค้ดส่วนลด ฿500 สำเร็จ!");
+      alert(isTh ? "ใช้งานโค้ดส่วนลด ฿500 สำเร็จ!" : "฿500 discount voucher applied successfully!");
     } else {
-      alert("โค้ดส่วนลดไม่ถูกต้อง ลองใช้โค้ด 'GARAGE35' หรือ 'VIP500'");
+      alert(isTh ? "โค้ดส่วนลดไม่ถูกต้อง ลองใช้โค้ด 'GARAGE35' หรือ 'VIP500'" : "Invalid promo code. Try 'GARAGE35' or 'VIP500'");
     }
   };
 
@@ -48,7 +52,7 @@ export default function CartView({
     e.preventDefault();
     if (cart.length === 0) return;
     if (!checkoutName || !checkoutPhone) {
-      alert("กรุณากรอกชื่อและเบอร์โทรศัพท์สำหรับจัดส่ง");
+      alert(isTh ? "กรุณากรอกชื่อและเบอร์โทรศัพท์สำหรับจัดส่ง" : "Please enter recipient name and phone number for delivery");
       return;
     }
 
@@ -59,21 +63,25 @@ export default function CartView({
         orderId: `ORD-${Date.now().toString().slice(-6)}`,
         customerName: checkoutName,
         phone: checkoutPhone,
-        address: checkoutAddress || "รับที่ศูนย์บริการ ServiceGarage",
-        paymentMethod: paymentMethod === "transfer" ? "โอนเงินผ่านธนาคาร (QR PromptPay)" : paymentMethod === "cod" ? "เก็บเงินปลายทาง (COD)" : "บัตรเครดิต / เดบิต",
+        address: checkoutAddress || (isTh ? "รับที่ศูนย์บริการ ServiceGarage" : "Pick up at ServiceGarage Center"),
+        paymentMethod: paymentMethod === "transfer" 
+          ? (isTh ? "โอนเงินผ่านธนาคาร (QR PromptPay)" : "Bank Transfer (PromptPay QR)") 
+          : paymentMethod === "cod" 
+          ? (isTh ? "เก็บเงินปลายทาง (COD)" : "Cash on Delivery (COD)") 
+          : (isTh ? "บัตรเครดิต / เดบิต" : "Credit / Debit Card"),
         items: [...cart],
         subtotal: subtotal,
         discount: discountAmount,
         vat: vat,
         total: grandTotal,
-        date: new Date().toLocaleString("th-TH"),
+        date: new Date().toLocaleString(isTh ? "th-TH" : "en-US"),
       };
 
       setOrderSuccess(orderData);
       onClearCart();
       if (onOrderCompleted) onOrderCompleted(orderData);
     } catch (err) {
-      alert(`การสั่งซื้อผิดพลาด: ${err.message}`);
+      alert(isTh ? `การสั่งซื้อผิดพลาด: ${err.message}` : `Checkout error: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -87,7 +95,7 @@ export default function CartView({
           <div className="container-fluid px-3 px-lg-4">
             <h1 className="shop-charcoal-title mb-0 d-flex align-items-center gap-2">
               <i className="bi bi-check2-circle text-success"></i>
-              <span>ยืนยันการสั่งซื้อสำเร็จ</span>
+              <span>{isTh ? "ยืนยันการสั่งซื้อสำเร็จ" : "Order Placed Successfully"}</span>
             </h1>
           </div>
         </div>
@@ -102,27 +110,27 @@ export default function CartView({
                 <i className="bi bi-check-lg fs-1"></i>
               </div>
             </div>
-            <h3 className="fw-black text-dark mb-2">สั่งซื้ออะไหล่สำเร็จเรียบร้อย!</h3>
+            <h3 className="fw-black text-dark mb-2">{isTh ? "สั่งซื้ออะไหล่สำเร็จเรียบร้อย!" : "Your Order Has Been Confirmed!"}</h3>
             <p className="text-muted">
-              หมายเลขคำสั่งซื้อ: <strong className="font-monospace text-primary fs-5">{orderSuccess.orderId}</strong>
+              {isTh ? "หมายเลขคำสั่งซื้อ:" : "Order ID:"} <strong className="font-monospace text-primary fs-5">{orderSuccess.orderId}</strong>
             </p>
 
             <div className="card bg-light border-0 p-4 mx-auto my-3 text-start rounded-3" style={{ maxWidth: "600px" }}>
               <div className="d-flex justify-content-between mb-2">
-                <span className="text-muted">ผู้รับสินค้า:</span>
+                <span className="text-muted">{isTh ? "ผู้รับสินค้า:" : "Recipient:"}</span>
                 <strong className="text-dark">{orderSuccess.customerName} ({orderSuccess.phone})</strong>
               </div>
               <div className="d-flex justify-content-between mb-2">
-                <span className="text-muted">สถานที่จัดส่ง:</span>
+                <span className="text-muted">{isTh ? "สถานที่จัดส่ง:" : "Delivery Address:"}</span>
                 <span className="text-dark text-end">{orderSuccess.address}</span>
               </div>
               <div className="d-flex justify-content-between mb-2">
-                <span className="text-muted">วิธีชำระเงิน:</span>
+                <span className="text-muted">{isTh ? "วิธีชำระเงิน:" : "Payment Method:"}</span>
                 <span className="badge bg-secondary-subtle text-secondary-emphasis">{orderSuccess.paymentMethod}</span>
               </div>
               <hr />
               <div className="d-flex justify-content-between fs-5 fw-black text-dark">
-                <span>ยอดชำระสุทธิ:</span>
+                <span>{isTh ? "ยอดชำระสุทธิ:" : "Total Amount:"}</span>
                 <span className="text-sp-blue">฿{orderSuccess.total.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
@@ -135,7 +143,7 @@ export default function CartView({
                   onContinueShopping();
                 }}
               >
-                <i className="bi bi-bag-plus-fill me-1"></i> เลือกซื้ออะไหล่รายการอื่นต่อ
+                <i className="bi bi-bag-plus-fill me-1"></i> {isTh ? "เลือกซื้ออะไหล่รายการอื่นต่อ" : "Continue Shopping for Parts"}
               </button>
             </div>
           </div>
@@ -153,10 +161,12 @@ export default function CartView({
             <div>
               <h1 className="shop-charcoal-title mb-1 d-flex align-items-center gap-2">
                 <i className="bi bi-cart-check-fill text-warning"></i>
-                <span>รายการเบิกอะไหล่ &amp; คำสั่งซื้อ</span>
+                <span>{isTh ? "รายการเบิกอะไหล่ & คำสั่งซื้อ" : "Parts Requisition & Order Hub"}</span>
               </h1>
               <p className="text-white opacity-90 small mb-0 fw-medium">
-                สรุปรายการชิ้นส่วนอะไหล่ คำนวณภาษี และบันทึกประวัติการเบิกใช้อะไหล่ของศูนย์บริการ
+                {isTh
+                  ? "สรุปรายการชิ้นส่วนอะไหล่ คำนวณภาษี และบันทึกประวัติการเบิกใช้อะไหล่ของศูนย์บริการ"
+                  : "Itemized parts summary, tax calculation, and garage requisition management."}
               </p>
             </div>
 
@@ -164,7 +174,7 @@ export default function CartView({
               className="btn btn-outline-light btn-sm px-3 py-2 rounded-3"
               onClick={onContinueShopping}
             >
-              <i className="bi bi-arrow-left me-1"></i> เลือกดูอะไหล่ต่อ
+              <i className="bi bi-arrow-left me-1"></i> {isTh ? "เลือกดูอะไหล่ต่อ" : "Back to Catalog"}
             </button>
           </div>
 
@@ -172,23 +182,23 @@ export default function CartView({
           <div className="d-flex gap-2 flex-wrap overflow-x-auto scrollbar-none pt-2 pb-1">
             <span className="shop-banner-link active">
               <i className="bi bi-bag-check-fill"></i>
-              <span>รายการเบิกในตะกร้า ({totalItemCount} ชิ้น)</span>
+              <span>{isTh ? `รายการเบิกในตะกร้า (${totalItemCount} ชิ้น)` : `Cart Items (${totalItemCount} items)`}</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-shield-check"></i>
-              <span>ตรวจสอบสเปกชิ้นส่วนตรงรุ่น</span>
+              <span>{isTh ? "ตรวจสอบสเปกชิ้นส่วนตรงรุ่น" : "100% Exact OEM Spec Fit"}</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-patch-check-fill"></i>
-              <span>อะไหล่แท้ห้างและเกรดพรีเมียม</span>
+              <span>{isTh ? "อะไหล่แท้ห้างและเกรดพรีเมียม" : "Genuine & Premium OEM Quality"}</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-credit-card-2-front-fill"></i>
-              <span>รองรับชำระเงินหลายรูปแบบ &amp; โอนชำระ</span>
+              <span>{isTh ? "รองรับชำระเงินหลายรูปแบบ & โอนชำระ" : "Multiple Payment & Transfer Options"}</span>
             </span>
             <span className="shop-banner-link">
               <i className="bi bi-receipt"></i>
-              <span>ออกใบเสร็จรับเงิน / ใบสั่งซ่อมทางการ</span>
+              <span>{isTh ? "ออกใบเสร็จรับเงิน / ใบสั่งซ่อมทางการ" : "Official Tax Invoice & Service Slip"}</span>
             </span>
           </div>
         </div>
@@ -200,16 +210,16 @@ export default function CartView({
           <ol className="breadcrumb mb-0 fw-semibold" style={{ fontSize: "0.95rem" }}>
             <li className="breadcrumb-item">
               <a href="#" className="text-decoration-none text-muted" onClick={(e) => { e.preventDefault(); onContinueShopping(); }}>
-                หน้าแรก
+                {isTh ? "หน้าแรก" : "Home"}
               </a>
             </li>
             <li className="breadcrumb-item">
               <a href="#" className="text-decoration-none text-muted" onClick={(e) => { e.preventDefault(); onContinueShopping(); }}>
-                คลังเบิก-จ่ายอะไหล่
+                {isTh ? "คลังเบิก-จ่ายอะไหล่" : "Parts Inventory"}
               </a>
             </li>
             <li className="breadcrumb-item active text-dark" aria-current="page">
-              รายการเบิกอะไหล่
+              {isTh ? "รายการเบิกอะไหล่" : "Parts Requisition Cart"}
             </li>
           </ol>
         </nav>
@@ -222,8 +232,8 @@ export default function CartView({
                 <i className="bi bi-box-seam-fill"></i>
               </div>
               <div>
-                <small className="text-muted fw-bold">จำนวนสินค้าทั้งหมด</small>
-                <h5 className="fw-black mb-0 text-dark">{totalItemCount} ชิ้น</h5>
+                <small className="text-muted fw-bold">{isTh ? "จำนวนสินค้าทั้งหมด" : "Total Items"}</small>
+                <h5 className="fw-black mb-0 text-dark">{totalItemCount} {isTh ? "ชิ้น" : "items"}</h5>
               </div>
             </div>
           </div>
@@ -234,7 +244,7 @@ export default function CartView({
                 <i className="bi bi-cash-stack"></i>
               </div>
               <div>
-                <small className="text-muted fw-bold">ยอดรวมอะไหล่</small>
+                <small className="text-muted fw-bold">{isTh ? "ยอดรวมอะไหล่" : "Subtotal Parts"}</small>
                 <h5 className="fw-black mb-0 text-sp-blue">฿{subtotal.toLocaleString("th-TH")}</h5>
               </div>
             </div>
@@ -246,7 +256,7 @@ export default function CartView({
                 <i className="bi bi-file-earmark-text-fill"></i>
               </div>
               <div>
-                <small className="text-muted fw-bold">VAT 7% (รวมในบิล)</small>
+                <small className="text-muted fw-bold">{isTh ? "VAT 7% (รวมในบิล)" : "VAT 7% (Tax Included)"}</small>
                 <h5 className="fw-black mb-0 text-dark">฿{vat.toLocaleString("th-TH", { maximumFractionDigits: 0 })}</h5>
               </div>
             </div>
@@ -258,8 +268,8 @@ export default function CartView({
                 <i className="bi bi-truck"></i>
               </div>
               <div>
-                <small className="text-muted fw-bold">บริการจัดส่งด่วน</small>
-                <h5 className="fw-black mb-0 text-success">ฟรีทั่วไทย</h5>
+                <small className="text-muted fw-bold">{isTh ? "บริการจัดส่งด่วน" : "Express Shipping"}</small>
+                <h5 className="fw-black mb-0 text-success">{isTh ? "ฟรีทั่วไทย" : "Free Nationwide"}</h5>
               </div>
             </div>
           </div>
@@ -271,13 +281,15 @@ export default function CartView({
             <div className="mb-3">
               <i className="bi bi-cart-x text-muted" style={{ fontSize: "4.5rem" }}></i>
             </div>
-            <h4 className="fw-bold text-dark mb-2">ยังไม่มีรายการอะไหล่ในตะกร้า</h4>
+            <h4 className="fw-bold text-dark mb-2">{isTh ? "ยังไม่มีรายการอะไหล่ในตะกร้า" : "Your Parts Cart is Empty"}</h4>
             <p className="text-muted">
-              สามารถเข้าไปเลือกดูอะไหล่แท้และ OEM จากคลังสินค้า ServiceGarage ได้ทันที
+              {isTh
+                ? "สามารถเข้าไปเลือกดูอะไหล่แท้และ OEM จากคลังสินค้า ServiceGarage ได้ทันที"
+                : "Browse our catalog of genuine OEM parts and supplies for your vehicle."}
             </p>
             <div className="mt-3">
               <button className="btn btn-garage-unique px-4 py-2" onClick={onContinueShopping}>
-                <i className="bi bi-search me-1"></i> ไปยังหน้าร้านค้าอะไหล่
+                <i className="bi bi-search me-1"></i> {isTh ? "ไปยังหน้าร้านค้าอะไหล่" : "Go to Parts Catalog"}
               </button>
             </div>
           </div>
@@ -290,13 +302,13 @@ export default function CartView({
                 <div className="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
                   <h5 className="fw-black text-dark mb-0 d-flex align-items-center gap-2">
                     <i className="bi bi-list-check text-sp-blue"></i>
-                    <span>รายการอะไหล่ในคำสั่งซื้อ ({cart.length} ชนิด)</span>
+                    <span>{isTh ? `รายการอะไหล่ในคำสั่งซื้อ (${cart.length} ชนิด)` : `Cart Items (${cart.length} items)`}</span>
                   </h5>
                   <button
                     className="btn btn-outline-secondary btn-sm rounded-pill px-3"
                     onClick={onClearCart}
                   >
-                    <i className="bi bi-trash3 me-1"></i> ล้างตะกร้า
+                    <i className="bi bi-trash3 me-1"></i> {isTh ? "ล้างตะกร้า" : "Clear Cart"}
                   </button>
                 </div>
 
@@ -304,11 +316,11 @@ export default function CartView({
                   <table className="table align-middle">
                     <thead className="table-light">
                       <tr className="small text-muted text-uppercase">
-                        <th style={{ width: "90px" }}>รูปสินค้า</th>
-                        <th>รายละเอียดอะไหล่</th>
-                        <th className="text-center" style={{ width: "130px" }}>ราคาต่อชิ้น</th>
-                        <th className="text-center" style={{ width: "130px" }}>จำนวน</th>
-                        <th className="text-end" style={{ width: "120px" }}>ยอดรวม</th>
+                        <th style={{ width: "90px" }}>{isTh ? "รูปสินค้า" : "Image"}</th>
+                        <th>{isTh ? "รายละเอียดอะไหล่" : "Part Details"}</th>
+                        <th className="text-center" style={{ width: "130px" }}>{isTh ? "ราคาต่อชิ้น" : "Unit Price"}</th>
+                        <th className="text-center" style={{ width: "130px" }}>{isTh ? "จำนวน" : "Quantity"}</th>
+                        <th className="text-end" style={{ width: "120px" }}>{isTh ? "ยอดรวม" : "Total"}</th>
                         <th className="text-center" style={{ width: "50px" }}></th>
                       </tr>
                     </thead>
@@ -340,7 +352,7 @@ export default function CartView({
                                 {item.part_name}
                               </div>
                               <small className="text-muted">
-                                สต็อกคงเหลือ: {item.stock_qty} ชิ้น
+                                {isTh ? `สต็อกคงเหลือ: ${item.stock_qty} ชิ้น` : `In Stock: ${item.stock_qty} pcs`}
                               </small>
                             </td>
 
@@ -387,7 +399,7 @@ export default function CartView({
                               <button
                                 className="btn btn-link text-danger p-0"
                                 onClick={() => onRemoveItem(item.part_id)}
-                                title="ลบรายการนี้"
+                                title={isTh ? "ลบรายการนี้" : "Remove this item"}
                               >
                                 <i className="bi bi-x-circle fs-5"></i>
                               </button>
@@ -404,11 +416,11 @@ export default function CartView({
                     className="btn btn-outline-sp-primary btn-sm px-3 rounded-pill"
                     onClick={onContinueShopping}
                   >
-                    <i className="bi bi-plus-lg me-1"></i> เพิ่มอะไหล่รายการอื่น
+                    <i className="bi bi-plus-lg me-1"></i> {isTh ? "เพิ่มอะไหล่รายการอื่น" : "Add More Parts"}
                   </button>
 
                   <div className="text-end text-muted small">
-                    ราคาส่งมาตรฐาน ServiceGarage คำนวณตามจริง
+                    {isTh ? "ราคาส่งมาตรฐาน ServiceGarage คำนวณตามจริง" : "Standard wholesale pricing with transparent calculation"}
                   </div>
                 </div>
               </div>
@@ -418,58 +430,58 @@ export default function CartView({
             <div className="col-12 col-lg-4">
               <div className="card border-0 shadow-sm bg-white rounded-4 p-4 mb-4">
                 <h5 className="fw-black text-dark mb-3 pb-2 border-bottom">
-                  สรุปการสั่งซื้อ (Order Summary)
+                  {isTh ? "สรุปการสั่งซื้อ (Order Summary)" : "Order Summary"}
                 </h5>
 
                 {/* โค้ดส่วนลด */}
                 <form onSubmit={handleApplyCoupon} className="mb-3">
-                  <label className="form-label small fw-bold text-muted">โค้ดส่วนลดโปรโมชั่น</label>
+                  <label className="form-label small fw-bold text-muted">{isTh ? "โค้ดส่วนลดโปรโมชั่น" : "Promotion / Coupon Code"}</label>
                   <div className="input-group input-group-sm">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="ใส่โค้ด เช่น GARAGE35"
+                      placeholder={isTh ? "ใส่โค้ด เช่น GARAGE35" : "e.g. GARAGE35"}
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                     />
                     <button className="btn btn-garage-unique btn-sm px-3" type="submit">
-                      ใช้งาน
+                      {isTh ? "ใช้งาน" : "Apply"}
                     </button>
                   </div>
                   {couponApplied && (
                     <small className="text-success fw-bold mt-1 d-block">
-                      <i className="bi bi-check-circle-fill"></i> ใช้งานส่วนลดแล้ว -฿{couponDiscount.toLocaleString("th-TH")}
+                      <i className="bi bi-check-circle-fill"></i> {isTh ? `ใช้งานส่วนลดแล้ว -฿${couponDiscount.toLocaleString("th-TH")}` : `Discount applied -฿${couponDiscount.toLocaleString("th-TH")}`}
                     </small>
                   )}
                 </form>
 
                 {/* รายการคำนวณราคา */}
                 <div className="d-flex justify-content-between mb-2 small">
-                  <span className="text-muted">ยอดรวมสินค้า ({totalItemCount} ชิ้น):</span>
+                  <span className="text-muted">{isTh ? `ยอดรวมสินค้า (${totalItemCount} ชิ้น):` : `Subtotal (${totalItemCount} items):`}</span>
                   <span className="fw-semibold">฿{subtotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
                 </div>
 
                 {couponApplied && (
                   <div className="d-flex justify-content-between mb-2 small text-success">
-                    <span>ส่วนลดโปรโมชั่น:</span>
+                    <span>{isTh ? "ส่วนลดโปรโมชั่น:" : "Promo Discount:"}</span>
                     <span>-฿{couponDiscount.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
                   </div>
                 )}
 
                 <div className="d-flex justify-content-between mb-2 small">
-                  <span className="text-muted">ภาษีมูลค่าเพิ่ม (VAT 7%):</span>
+                  <span className="text-muted">{isTh ? "ภาษีมูลค่าเพิ่ม (VAT 7%):" : "VAT (7%):"}</span>
                   <span className="fw-semibold">฿{vat.toLocaleString("th-TH", { minimumFractionDigits: 2 })}</span>
                 </div>
 
                 <div className="d-flex justify-content-between mb-3 small">
-                  <span className="text-muted">ค่าจัดส่งด่วน:</span>
-                  <span className="text-success fw-bold">ฟรี (Free Shipping)</span>
+                  <span className="text-muted">{isTh ? "ค่าจัดส่งด่วน:" : "Express Shipping:"}</span>
+                  <span className="text-success fw-bold">{isTh ? "ฟรี (Free Shipping)" : "Free"}</span>
                 </div>
 
                 <hr />
 
                 <div className="d-flex justify-content-between align-items-baseline mb-4">
-                  <span className="fw-black text-dark fs-5">ยอดรวมสุทธิ:</span>
+                  <span className="fw-black text-dark fs-5">{isTh ? "ยอดรวมสุทธิ:" : "Grand Total:"}</span>
                   <span className="fw-black text-sp-blue fs-3" style={{ letterSpacing: "-0.5px" }}>
                     ฿{grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
                   </span>
@@ -479,12 +491,12 @@ export default function CartView({
                 <form onSubmit={handleCheckout}>
                   <div className="mb-2">
                     <label className="form-label small fw-bold text-dark mb-1">
-                      ชื่อผู้ติดต่อ / อู่ซ่อม <span className="text-danger">*</span>
+                      {isTh ? "ชื่อผู้ติดต่อ / อู่ซ่อม" : "Contact / Garage Name"} <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
                       className="form-control form-control-sm"
-                      placeholder="เช่น สมชาย การช่าง"
+                      placeholder={isTh ? "เช่น สมชาย การช่าง" : "e.g. John Miller"}
                       value={checkoutName}
                       onChange={(e) => setCheckoutName(e.target.value)}
                       required
@@ -493,12 +505,12 @@ export default function CartView({
 
                   <div className="mb-2">
                     <label className="form-label small fw-bold text-dark mb-1">
-                      เบอร์โทรศัพท์ติดต่อ <span className="text-danger">*</span>
+                      {isTh ? "เบอร์โทรศัพท์ติดต่อ" : "Phone Number"} <span className="text-danger">*</span>
                     </label>
                     <input
                       type="tel"
                       className="form-control form-control-sm"
-                      placeholder="เช่น 081-234-5678"
+                      placeholder={isTh ? "เช่น 081-234-5678" : "e.g. 081-234-5678"}
                       value={checkoutPhone}
                       onChange={(e) => setCheckoutPhone(e.target.value)}
                       required
@@ -507,12 +519,12 @@ export default function CartView({
 
                   <div className="mb-3">
                     <label className="form-label small fw-bold text-dark mb-1">
-                      ที่อยู่จัดส่ง / สาขาอู่
+                      {isTh ? "ที่อยู่จัดส่ง / สาขาอู่" : "Delivery Address / Garage Branch"}
                     </label>
                     <textarea
                       className="form-control form-control-sm"
                       rows="2"
-                      placeholder="ระบุสถานที่จัดส่งหรือมารับเอง"
+                      placeholder={isTh ? "ระบุสถานที่จัดส่งหรือมารับเอง" : "Enter delivery address or request garage pickup"}
                       value={checkoutAddress}
                       onChange={(e) => setCheckoutAddress(e.target.value)}
                     ></textarea>
@@ -520,7 +532,7 @@ export default function CartView({
 
                   {/* วิธีชำระเงิน */}
                   <div className="mb-4">
-                    <label className="form-label small fw-bold text-dark mb-2">ช่องทางชำระเงิน</label>
+                    <label className="form-label small fw-bold text-dark mb-2">{isTh ? "ช่องทางชำระเงิน" : "Payment Method"}</label>
                     <div className="d-flex flex-column gap-2 small">
                       <label className="form-check d-flex align-items-center gap-2 p-2 border rounded-3 cursor-pointer">
                         <input
@@ -530,7 +542,7 @@ export default function CartView({
                           checked={paymentMethod === "transfer"}
                           onChange={() => setPaymentMethod("transfer")}
                         />
-                        <span><i className="bi bi-qr-code-scan text-primary me-1"></i> โอนเงินผ่าน PromptPay / ธนาคาร</span>
+                        <span><i className="bi bi-qr-code-scan text-primary me-1"></i> {isTh ? "โอนเงินผ่าน PromptPay / ธนาคาร" : "Bank Transfer / PromptPay QR"}</span>
                       </label>
                       <label className="form-check d-flex align-items-center gap-2 p-2 border rounded-3 cursor-pointer">
                         <input
@@ -540,7 +552,7 @@ export default function CartView({
                           checked={paymentMethod === "cod"}
                           onChange={() => setPaymentMethod("cod")}
                         />
-                        <span><i className="bi bi-cash text-success me-1"></i> เก็บเงินปลายทาง (COD)</span>
+                        <span><i className="bi bi-cash text-success me-1"></i> {isTh ? "เก็บเงินปลายทาง (COD)" : "Cash on Delivery (COD)"}</span>
                       </label>
                     </div>
                   </div>
@@ -552,11 +564,11 @@ export default function CartView({
                     disabled={loading}
                   >
                     {loading ? (
-                      <span>กำลังดำเนินการ...</span>
+                      <span>{isTh ? "กำลังดำเนินการ..." : "Processing..."}</span>
                     ) : (
                       <>
                         <i className="bi bi-check2-circle fs-5"></i>
-                        <span>ยืนยันการสั่งซื้อ (฿{grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 0 })})</span>
+                        <span>{isTh ? `ยืนยันการสั่งซื้อ (฿${grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 0 })})` : `Confirm Order (฿${grandTotal.toLocaleString("th-TH", { minimumFractionDigits: 0 })})`}</span>
                       </>
                     )}
                   </button>
