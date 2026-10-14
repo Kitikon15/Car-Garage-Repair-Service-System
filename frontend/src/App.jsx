@@ -792,7 +792,6 @@ export default function Dashboard() {
         {activeTab === "contact" && (
           <ContactSales
             apiUrl={API_BASE_URL}
-            onGoToAdminChat={handleGoToAdminChat}
           />
         )}
 

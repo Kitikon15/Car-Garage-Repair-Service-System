@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToAdminChat }) {
+export default function ContactSales({ apiUrl = "http://localhost:8000" }) {
   const { lang } = useLanguage ? useLanguage() : { lang: "th" };
   const isTh = lang !== "en";
 
   const [loading, setLoading] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: isTh ? "สมชาย วงศ์สว่าง" : "John Miller",
     phone: "081-234-5678",
@@ -18,6 +19,7 @@ export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToA
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitSuccess(false);
 
     try {
       const topicText = formData.topic || (isTh ? "ติดต่อฝ่ายขาย" : "Sales Inquiry");
@@ -26,7 +28,7 @@ export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToA
       const chatText = `[${topicText}] ${detailText}${phoneText}`.trim();
       const customerName = formData.name.trim() || (isTh ? "ลูกค้าทั่วไป (หน้าเว็บ)" : "Guest Customer");
 
-      // 1. ส่งข้อความเข้าสู่ศูนย์ Live Chat Desk ผ่าน REST API
+      // ส่งข้อความเข้าสู่ศูนย์ Live Chat Desk ผ่าน REST API
       await fetch(`${apiUrl}/api/chat/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,27 +40,11 @@ export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToA
         }),
       });
 
-      // 2. บันทึก Session การล็อกอินของแอดมินสำหรับเดโม
-      sessionStorage.setItem("garage_admin_token", "admin-session-demo");
-      sessionStorage.setItem("garage_admin_name", "ผู้ดูแลระบบอู่ (Garage Admin)");
-      sessionStorage.setItem("garage_admin_tab", "chat");
-      sessionStorage.setItem("garage_admin_conv", "CUST-GUEST");
-
-      // 3. เด้งไปยังหน้าศูนย์ตอบแชทลูกค้า (Admin Live Chat Desk) ทันที
-      if (onGoToAdminChat) {
-        onGoToAdminChat("CUST-GUEST", formData);
-      } else {
-        window.location.href = "/admin?tab=chat&conv=CUST-GUEST";
-      }
+      setSubmitSuccess(true);
+      setFormData((prev) => ({ ...prev, message: "" }));
     } catch (err) {
       console.warn("Error sending contact message:", err);
-      // Fallback: แม้เน็ตเวิร์กช้าก็ให้เด้งไปหน้าแชทตามคำสั่ง
-      sessionStorage.setItem("garage_admin_token", "admin-session-demo");
-      if (onGoToAdminChat) {
-        onGoToAdminChat("CUST-GUEST", formData);
-      } else {
-        window.location.href = "/admin?tab=chat&conv=CUST-GUEST";
-      }
+      setSubmitSuccess(true);
     } finally {
       setLoading(false);
     }
@@ -117,75 +103,101 @@ export default function ContactSales({ apiUrl = "http://localhost:8000", onGoToA
           <div className="card border-0 shadow-sm bg-white p-4 h-100">
             <h5 className="fw-bold mb-3 text-dark border-bottom pb-2">{isTh ? "ส่งข้อความถึงฝ่ายขาย" : "Send an Inquiry to Sales"}</h5>
 
-              <form onSubmit={handleSubmit}>
-                <div className="row g-3 mb-3">
-                  <div className="col-12 col-md-6">
-                    <label className="form-label small fw-semibold">{isTh ? "ชื่อ-นามสกุล ผู้ติดต่อ *" : "Full Name *"}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder={isTh ? "เช่น สมชาย วงศ์สว่าง" : "e.g. John Miller"}
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="col-12 col-md-6">
-                    <label className="form-label small fw-semibold">{isTh ? "เบอร์โทรศัพท์ติดต่อ *" : "Phone Number *"}</label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      placeholder={isTh ? "เช่น 081-234-5678" : "e.g. 081-234-5678"}
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    />
-                  </div>
+            {submitSuccess && (
+              <div className="alert alert-success d-flex align-items-start gap-3 p-3 rounded-3 shadow-sm mb-4 border-success">
+                <i className="bi bi-check-circle-fill text-success fs-3 flex-shrink-0 mt-1"></i>
+                <div className="flex-grow-1">
+                  <h6 className="fw-bold mb-1 text-success">
+                    {isTh ? "ส่งข้อมูลถึงฝ่ายขายเรียบร้อยแล้ว!" : "Inquiry Sent Successfully!"}
+                  </h6>
+                  <p className="mb-1 text-dark small">
+                    {isTh
+                      ? `เจ้าหน้าที่ฝ่ายขายและทีมช่างเทคนิคได้รับข้อความของคุณแล้ว และจะติดต่อกลับที่เบอร์ ${formData.phone || "ที่ระบุไว้"} โดยเร็วที่สุด`
+                      : `Our sales advisors have received your inquiry and will follow up via ${formData.phone || "your phone number"} shortly.`}
+                  </p>
+                  <small className="text-muted d-block">
+                    {isTh
+                      ? "ท่านยังสามารถสอบถามสดเพิ่มเติมได้ที่วิดเจ็ตแชทมุมขวาล่างของหน้าจอ"
+                      : "You can also chat directly with our mechanic team using the live chat widget at the bottom right."}
+                  </small>
                 </div>
-
-                <div className="mb-3">
-                  <label className="form-label small fw-semibold">{isTh ? "เรื่องที่ต้องการติดต่อ" : "Inquiry Subject"}</label>
-                  <select
-                    className="form-select"
-                    value={formData.topic}
-                    onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                  >
-                    <option value="ขอใบเสนอราคาอะไหล่ราคาส่ง">{isTh ? "ขอใบเสนอราคาอะไหล่ราคาส่ง (สำหรับอู่/ร้านค้า)" : "Request Wholesale Parts Quotation"}</option>
-                    <option value="สอบถามการนำรถเข้าเช็กระยะ">{isTh ? "สอบถามการนำรถเข้าเช็กระยะ / ซ่อมใหญ่" : "Periodic Maintenance / Major Service"}</option>
-                    <option value="ปรึกษาปัญหาทางเทคนิค">{isTh ? "ปรึกษาปัญหาเครื่องยนต์และอาการผิดปกติ" : "Technical Diagnostics Consultation"}</option>
-                    <option value="อื่นๆ">{isTh ? "เรื่องอื่นๆ" : "Other Inquiries"}</option>
-                  </select>
-                </div>
-
-                <div className="mb-4">
-                  <label className="form-label small fw-semibold">{isTh ? "รายละเอียดที่ต้องการแจ้งเพิ่มเติม" : "Additional Details / Message"}</label>
-                  <textarea
-                    className="form-control"
-                    rows="4"
-                    placeholder={isTh ? "ระบุรุ่นรถ, ปีที่ผลิต, หรือรายการอะไหล่ที่ต้องการ..." : "Specify vehicle brand, model, year, or requested parts..."}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  ></textarea>
-                </div>
-
                 <button
-                  type="submit"
-                  className="btn btn-primary px-4 py-2 fw-semibold d-flex align-items-center gap-2"
-                  disabled={loading}
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setSubmitSuccess(false)}
+                ></button>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <div className="row g-3 mb-3">
+                <div className="col-12 col-md-6">
+                  <label className="form-label small fw-semibold">{isTh ? "ชื่อ-นามสกุล ผู้ติดต่อ *" : "Full Name *"}</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder={isTh ? "เช่น สมชาย วงศ์สว่าง" : "e.g. John Miller"}
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
+                <div className="col-12 col-md-6">
+                  <label className="form-label small fw-semibold">{isTh ? "เบอร์โทรศัพท์ติดต่อ *" : "Phone Number *"}</label>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    placeholder={isTh ? "เช่น 081-234-5678" : "e.g. 081-234-5678"}
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label small fw-semibold">{isTh ? "เรื่องที่ต้องการติดต่อ" : "Inquiry Subject"}</label>
+                <select
+                  className="form-select"
+                  value={formData.topic}
+                  onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
                 >
-                  {loading ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      <span>{isTh ? "กำลังส่งและเปิดศูนย์ตอบแชท..." : "Connecting to support desk..."}</span>
-                    </>
-                  ) : (
-                    <>
-                      <i className="bi bi-send-fill"></i>
-                      <span>{isTh ? "ส่งข้อมูลถึงฝ่ายขาย" : "Send Inquiry"}</span>
-                    </>
-                  )}
-                </button>
-              </form>
+                  <option value="ขอใบเสนอราคาอะไหล่ราคาส่ง">{isTh ? "ขอใบเสนอราคาอะไหล่ราคาส่ง (สำหรับอู่/ร้านค้า)" : "Request Wholesale Parts Quotation"}</option>
+                  <option value="สอบถามการนำรถเข้าเช็กระยะ">{isTh ? "สอบถามการนำรถเข้าเช็กระยะ / ซ่อมใหญ่" : "Periodic Maintenance / Major Service"}</option>
+                  <option value="ปรึกษาปัญหาทางเทคนิค">{isTh ? "ปรึกษาปัญหาเครื่องยนต์และอาการผิดปกติ" : "Technical Diagnostics Consultation"}</option>
+                  <option value="อื่นๆ">{isTh ? "เรื่องอื่นๆ" : "Other Inquiries"}</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="form-label small fw-semibold">{isTh ? "รายละเอียดที่ต้องการแจ้งเพิ่มเติม" : "Additional Details / Message"}</label>
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  placeholder={isTh ? "ระบุรุ่นรถ, ปีที่ผลิต, หรือรายการอะไหล่ที่ต้องการ..." : "Specify vehicle brand, model, year, or requested parts..."}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary px-4 py-2 fw-semibold d-flex align-items-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span>{isTh ? "กำลังส่งข้อมูล..." : "Sending inquiry..."}</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-send-fill"></i>
+                    <span>{isTh ? "ส่งข้อมูลถึงฝ่ายขาย" : "Send Inquiry"}</span>
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
       </div>
